@@ -1,0 +1,85 @@
+#!/bin/sh
+
+#set -e # exit on >0.
+#set -x # debug
+
+## Config.
+init="/sbin/init"
+root="/dev/mapper/rootfs"
+enc_root="/dev/sda2"
+####
+
+. /functions.sh
+
+einfo "Mounting /proc"
+run mount -t proc proc /proc
+
+einfo "Mounting /sys"
+run mount -t sysfs sysfs /sys
+
+#Disable kernel messages from popping onto the screen
+echo 0 > /proc/sys/kernel/printk
+#Clear the screen
+clear
+
+einfo "Create all the symlinks to /bin/busybox."
+run busybox --install -s
+
+einfo "Initiating /dev dir"
+run mknod /dev/null c 1 3
+run mknod /dev/tty c 5 0
+run echo /sbin/mdev > /proc/sys/kernel/hotplug
+run mdev -s
+
+#Process command line options
+for i in $(cat /proc/cmdline); do
+	case "${i}" in
+		root\=*)
+			root=$(get_opt $i)
+			;;
+		init\=*)
+			init=$(get_opt $i)
+			;;
+		enc_root\=*)
+			enc_root=$(get_opt $i)
+			;;
+	esac
+done
+
+einfo "Opening encrypted partition to create /dev/mapper/rootfs"
+run cryptsetup luksOpen "${enc_root}" rootfs
+
+#Get LVM volumes up
+#lvm vgchange -a y
+
+#tuxonice resume
+#test -f /sys/power/tuxonice/do_resume && \
+#echo 1 > /sys/power/tuxonice/do_resume
+
+#Mount the root device
+einfo "Mounting rootfs in read-only mode."
+run mount -o ro,noatime "${root}" /newroot
+
+# /usr squashfs updater.
+#test -f /newroot/var/_squash/usr/usr_new.sqfs && \
+#mount -o remount,rw,noatime /newroot && \
+#mv /newroot/var/_squash/usr/usr.sqfs /newroot/var/_squash/usr/usr_old.sqfs && \
+#mv /newroot/var/_squash/usr/usr_new.sqfs /newroot/var/_squash/usr/usr.sqfs && \
+#mv /newroot/var/_squash/usr/rw /newroot/var/_squash/usr/rw_old && \
+#mkdir /newroot/var/_squash/usr/rw && \
+#mount -o remount,ro,noatime /newroot
+
+
+#Unmount all other mounts so that the ram used by
+#the initramfs can be cleared after switch_root
+einfo "Umounting /sys and /proc."
+run umount /sys /proc
+
+#Switch to the new root and execute init
+if [[ -x "/newroot/${init}" ]] ; then
+	einfo "Doing switch_root and run /sbin/init."
+	exec switch_root /newroot "${init}"
+fi
+
+ewarn "Something goes wrong."
+droptoshell

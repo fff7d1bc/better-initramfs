@@ -1,0 +1,4 @@
+initramfs.cpio
+initramfs.igz
+initramfs_root/bin/cryptsetup
+initramfs_root/bin/busybox
