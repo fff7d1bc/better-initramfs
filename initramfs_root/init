@@ -47,7 +47,7 @@ for i in $(cat /proc/cmdline); do
 done
 
 einfo "Getting LVM volumes up (if any)."
-run lvm lgscan
+run lvm vgscan
 run lvm vgchange -a y
 
 einfo "Opening encrypted partition to create /dev/mapper/rootfs"
