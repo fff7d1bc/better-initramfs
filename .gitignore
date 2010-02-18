@@ -1,4 +1,4 @@
 initramfs.cpio
 initramfs.igz
 initramfs_root/bin/*
-!*/.keep
+!*.keep
