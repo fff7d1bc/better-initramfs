@@ -1,1 +1,47 @@
-PLACEHOLDER
+better-initramfs
+================
+
+Piotr Karbowski <jabberuser@gmail.com>
+
+This project *may* have some code from initramfs projects what you can find on github, gentoo-wiki.com and jootamam.net.
+
+Goal
+====
+Goal is to make easy to use initramfs what support dmcrypted rootfs, rootfs over LVM array and support remote rescue shell (sshd). 
+
+Status
+======
+dmcrypt support - work.
+lvm rootfs support - work.
+dmcrypt rootfs over lvm - should work, not tested.
+lvm rootfs over dmcrypt - same as above.
+remote rescue shell - not yet.
+
+Usage
+=====
+This docs is based on Funtoo/Gentoo GNU/Linux so packages name etc. can be diff than in your distro.
+
+build with static use flag:
+sys-apps/busybox
+sys-fs/cryptsetup
+sys-fs/lvm2
+
+go to initramfs_root/bin dir and:
+cp -v /bin/busybox busybox
+cp -v /sbin/cryptsetup cryptsetup
+cp -v /sbin/lvm.static lvm
+ln -s busybox sh
+ln -s busybox bb
+
+Now, copy one of config.example to 'config' and edit it. Each env like root, lvm etc can be set from kernel boot parametr. Now, go to outside initramfs_root dir (cd ..) and do 'sh testbindir.sh', you should got something like:
+[ OK ] busybox found.
+[ OK ] lvm found.
+[ OK ] cryptsetup found.
+[ OK ] bb is symlink to busybox.
+[ OK ] sh is symlink to busybox.
+
+Now just pack your initramfs image by 'sh make_initramfs.sh' and you should got shiny brand-new initramfs.cpio.gz ready for use.
+
+PS.
+===
+Feel free to report any issue or feature request direct to me, also, feel free to send patch for my buggy english or other buggy code in this project. ;-)

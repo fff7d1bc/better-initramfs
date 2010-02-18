@@ -3,19 +3,40 @@
 #set -e # exit on >0.
 #set -x # debug
 
-## Config.
-init="/sbin/init"
-root="/dev/mapper/rootfs"
-enc_root="/dev/sda2"
-####
-
+# Load functions.
 . /functions.sh
 
+# Basic
 einfo "Mounting /proc"
 run mount -t proc proc /proc
 
 einfo "Mounting /sys"
 run mount -t sysfs sysfs /sys
+
+## Config.
+. /config
+
+# Process command line options
+for i in $(cat /proc/cmdline); do
+	case "${i}" in
+		root\=*)
+			root=$(get_opt $i)
+		;;
+		init\=*)
+			init=$(get_opt $i)
+		;;
+		enc_root\=*)
+			enc_root=$(get_opt $i)
+		;;
+		dmcrypt_rootfs\=*)
+			dmcrypt_rootfs=$(get_opt $i)
+		;;
+		lvm\=*)
+			lvm=$(get_opt $i)
+		;;
+	esac
+done
+####
 
 #Disable kernel messages from popping onto the screen
 echo 0 > /proc/sys/kernel/printk
@@ -31,27 +52,21 @@ run mknod /dev/tty c 5 0
 run echo /sbin/mdev > /proc/sys/kernel/hotplug
 run mdev -s
 
-#Process command line options
-for i in $(cat /proc/cmdline); do
-	case "${i}" in
-		root\=*)
-			root=$(get_opt $i)
-			;;
-		init\=*)
-			init=$(get_opt $i)
-			;;
-		enc_root\=*)
-			enc_root=$(get_opt $i)
-			;;
-	esac
-done
+if [ $lvm = "true" ]; then
+	einfo "Getting LVM volumes up (if any)."
+	run lvm vgscan
+	run lvm vgchange -a y
+fi
 
-einfo "Getting LVM volumes up (if any)."
-run lvm vgscan
-run lvm vgchange -a y
-
-einfo "Opening encrypted partition to create /dev/mapper/rootfs"
-run cryptsetup luksOpen "${enc_root}" rootfs
+if [ $dmcrypt_rootfs = "true" ]; then
+	einfo "Opening encrypted partition and mapping to /dev/mapper/rootfs."
+	run cryptsetup luksOpen "${enc_root}" rootfs
+	if [ $lvm = "true" ]; then
+		einfo "Again, getting LVM volumes up (if any, after map dmcrypt)."
+		run lvm vgscan
+		run lvm vgchange -a y
+	fi
+fi
 
 #tuxonice resume
 #test -f /sys/power/tuxonice/do_resume && \

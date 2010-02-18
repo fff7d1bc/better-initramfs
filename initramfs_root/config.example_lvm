@@ -1,0 +1,18 @@
+#!/bin/sh
+# better-initramfs config file.
+# true == enabled.
+# false (or anything else) == disabled.
+
+# Basic
+init="/sbin/init"
+
+# dmcrypted root
+dmcrypt_rootfs="false" #Enable?
+enc_root="/dev/sda2" #Encrypted partition with rootfs.
+
+# lvm
+lvm="true" #Enable?
+
+# rootfs mount
+#root="/dev/mapper/rootfs" #dmcrypted rootfs
+root="/dev/mapper/vg-myrootfs" #lvm-based rootfs

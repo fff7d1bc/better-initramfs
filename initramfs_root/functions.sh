@@ -6,6 +6,7 @@ eerror() { echo -ne "\033[1;30m>\033[0;31m>\033[1;31m> ${@}\033[0m\n" ;}
 
 droptoshell() {
 	ewarn "Dropping to shell."
+	ewarn "\tYou can reboot by press control-alt-delete."
 	exec sh
 	}
 
