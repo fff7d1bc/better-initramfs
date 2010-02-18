@@ -46,11 +46,12 @@ for i in $(cat /proc/cmdline); do
 	esac
 done
 
+einfo "Getting LVM volumes up (if any)."
+run lvm lgscan
+run lvm vgchange -a y
+
 einfo "Opening encrypted partition to create /dev/mapper/rootfs"
 run cryptsetup luksOpen "${enc_root}" rootfs
-
-#Get LVM volumes up
-#lvm vgchange -a y
 
 #tuxonice resume
 #test -f /sys/power/tuxonice/do_resume && \
