@@ -3,23 +3,23 @@ better-initramfs
 
 Piotr Karbowski <jabberuser@gmail.com>
 
-This project *may* have some code from initramfs projects what you can find on github, gentoo-wiki.com and jootamam.net.
+This project *may* contain some code from initramfs projects that can be found on github, gentoo-wiki.com and jootamam.net.
 
 Goal
 ====
-Goal is to make easy to use initramfs what support dmcrypted rootfs, rootfs over LVM array and support remote rescue shell (sshd). 
+The goal is to make an easy to use initramfs with support for dmcrypted rootfs, rootfs over LVM array and the remote rescue shell (sshd). 
 
 Status
 ======
-dmcrypt support - work.
-lvm rootfs support - work.
+dmcrypt support - works.
+lvm rootfs support - works.
 dmcrypt rootfs over lvm - should work, not tested.
 lvm rootfs over dmcrypt - same as above.
 remote rescue shell - not yet.
 
 Usage
 =====
-This docs is based on Funtoo/Gentoo GNU/Linux so packages name etc. can be diff than in your distro.
+This docs is based on Funtoo/Gentoo GNU/Linux so package names etc. can be different than in your distro.
 
 build with static use flag:
 sys-apps/busybox
@@ -33,14 +33,14 @@ cp -v /sbin/lvm.static lvm
 ln -s busybox sh
 ln -s busybox bb
 
-Now, copy one of config.example to 'config' and edit it. Each env like root, lvm etc can be set from kernel boot parametr. Now, go to outside initramfs_root dir (cd ..) and do 'sh testbindir.sh', you should got something like:
+Now, copy one of config.example to 'config' and edit it. Each env like root, lvm etc can be set with a kernel boot parameter. Now, go up one level outside the initramfs_root dir (cd ..) and execute 'sh testbindir.sh', you should get something like:
 [ OK ] busybox found.
 [ OK ] lvm found.
 [ OK ] cryptsetup found.
 [ OK ] bb is symlink to busybox.
 [ OK ] sh is symlink to busybox.
 
-Now just pack your initramfs image by 'sh make_initramfs.sh' and you should got shiny brand-new initramfs.cpio.gz ready for use.
+Now just pack your initramfs image by 'sh make_initramfs.sh' and you should have a shiny brand-new initramfs.cpio.gz ready for use.
 
 PS.
 ===
