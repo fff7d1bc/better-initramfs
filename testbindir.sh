@@ -17,7 +17,7 @@ test_symlinks() {
 			echo "{ !! } $1 is symlink but NOT to $2."
 		fi
 	else
-		echo "[ !! ] $1 isn't symlink!"
+		echo "[ !! ] $1 not exist or isn't symlink!"
 	fi
 }
 
