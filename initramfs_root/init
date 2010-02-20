@@ -75,7 +75,7 @@ fi
 #test -f /sys/power/tuxonice/do_resume && \
 #echo 1 > /sys/power/tuxonice/do_resume
 
-if [ $rescueshell = "true" ]; then
+if [ ! -z $rescueshell ] && [ $rescueshell = "true" ]; then
 	ewarn "'rescueshell' option detected, exit to shell before mount rootfs."
 	droptoshell
 fi
