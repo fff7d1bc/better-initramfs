@@ -34,6 +34,9 @@ for i in $(cat /proc/cmdline); do
 		lvm\=*)
 			lvm=$(get_opt $i)
 		;;
+		rescueshell)
+			rescueshell=true
+		;;
 	esac
 done
 ####
@@ -71,6 +74,12 @@ fi
 #tuxonice resume
 #test -f /sys/power/tuxonice/do_resume && \
 #echo 1 > /sys/power/tuxonice/do_resume
+
+if [ $rescueshell = "true" ]; then
+	ewarn "'rescueshell' option detected, exit to shell before mount rootfs."
+	droptoshell
+fi
+
 
 #Mount the root device
 einfo "Mounting rootfs in read-only mode."
