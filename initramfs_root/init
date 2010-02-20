@@ -18,11 +18,14 @@ echo 0 > /proc/sys/kernel/printk
 #Clear the screen
 clear
 
+einfo "better-initramfs started.\n"
+
 ## Config.
 if [ -f /config ]; then
 	. /config
 else
-	ewarn "There is no /config file, don't panic, this is not fatal. I hope you have all needed env set by kernel boot parametr."
+	ewarn "Config file do not exist. (don't worry, nothing fatal)"
+	ewarn "All settings will be from kernel boot parametrs."
 fi
 
 # Process command line options
