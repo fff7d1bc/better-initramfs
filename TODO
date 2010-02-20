@@ -1,2 +1,5 @@
 * Support Remote Rescue Shell [dropbear ssh]
 * Rewrite make_initramfs.sh.
+* Support loadable kernel modules.
+* Support TuxOnIce resume.
+* Support software raid.
