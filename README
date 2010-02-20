@@ -15,6 +15,7 @@ dmcrypt support - works.
 lvm rootfs support - works.
 dmcrypt rootfs over lvm - should work, not tested.
 lvm rootfs over dmcrypt - same as above.
+rescue shell (drop to busybox sh before mount rootfs) - works
 remote rescue shell - not yet.
 
 Usage
@@ -33,7 +34,14 @@ cp -v /sbin/lvm.static lvm
 ln -s busybox sh
 ln -s busybox bb
 
-Now, copy one of config.example to 'config' and edit it. Each env like root, lvm etc can be set with a kernel boot parameter. Now, go up one level outside the initramfs_root dir (cd ..) and execute 'sh testbindir.sh', you should get something like:
+Now, copy one of config.example to 'config' and edit it. Each env like root, enc_root, lvm etc can be set with a kernel boot parameter. Available kernel boot parameters:
+rescueshell		(drop to busybox sh just before mount rootfs to /newroot)
+lvm=true		(or =false. Enable getting up LVM volumes if any, set true if you have rootfs on LVM.)
+dmcrypt_rootfs=true	(or =false. Enable cryptsetup luksOpen on selected enc_root, set true if you have encrypted rootfs.)
+enc_root=device		(for example =/dev/sda2 if sda2 is your encrypted rootfs. This env is ignored if dmcrypt_rootfs isn't set to true.)
+root=device		(for example =/dev/mapper/rootfs if you have dmcrypted rootfs, =/dev/mapper/vg-rootfs or similar if lvm or just =/dev/sdXX if you don't have lvm based or dmcrypted rootfs.)
+
+Now, go up one level outside the initramfs_root dir (cd ..) and execute 'sh testbindir.sh', you should get something like:
 [ OK ] busybox found.
 [ OK ] lvm found.
 [ OK ] cryptsetup found.
@@ -41,6 +49,25 @@ Now, copy one of config.example to 'config' and edit it. Each env like root, lvm
 [ OK ] sh is symlink to busybox.
 
 Now just pack your initramfs image by 'sh make_initramfs.sh' and you should have a shiny brand-new initramfs.cpio.gz ready for use.
+
+Example
+=======
+Few example on grub(1) config, all new set by kernel boot parametr.
+
+Dmcrypted rootfs:
+title Funtoo bzImage-2.6.32-gentoo-r5
+kernel /bzImage-2.6.32-gentoo-r5 root=/dev/mapper/rootfs enc_root=/dev/sda2 dmcrypt_rootfs=true
+initrd /initramfs.cpio.gz
+
+LVM based rootfs:
+title Funtoo bzImage-2.6.32-gentoo-r5
+kernel /bzImage-2.6.32-gentoo-r5 root=/dev/mapper/main-rootfs lvm=true
+initrd /initramfs.cpio.gz
+
+LVM based rootfs, rescueshell (to be honest, you can drop root= env here, init will drop to busybox sh before mount rootfs to /newroot):
+title Funtoo bzImage-2.6.32-gentoo-r5
+kernel /bzImage-2.6.32-gentoo-r5 root=/dev/mapper/main-rootfs lvm=true rescueshell
+initrd /initramfs.cpio.gz
 
 PS.
 ===
