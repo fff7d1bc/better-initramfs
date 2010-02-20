@@ -1,9 +1,11 @@
 better-initramfs
 ================
 
-Piotr Karbowski <jabberuser@gmail.com>
-
-This project *may* contain some code from initramfs projects that can be found on github, gentoo-wiki.com and jootamam.net.
+What can it be useful for?
+==========================
+- Debug your brand-new kernel. For example, you got kernel panic unable to mount rootfs and you really don't know where is problem, missing filesystems support in kernel or maybe missing support for your SCSI/SATA/whatever or your 2nd sata controller driver started before 1st and your 'sda' is 'sdb'. Really, initramfs sh is very useful.
+- You have encrypted with dmcrypt luks rootfs and you dont want use genkernel-based initramfs or write your own initramfs.
+- You have LVM-based rootfs, same as above.
 
 Goal
 ====
@@ -23,9 +25,9 @@ Usage
 This docs is based on Funtoo/Gentoo GNU/Linux so package names etc. can be different than in your distro.
 
 build with static use flag:
-sys-apps/busybox
-sys-fs/cryptsetup
-sys-fs/lvm2
+sys-apps/busybox (must-have)
+sys-fs/cryptsetup (optimal, if you don't use dmcrypt and dmcrypt_rootfs=false)
+sys-fs/lvm2 (optimal, if you don't use LVM and lvm=false)
 
 go to initramfs_root/bin dir and:
 cp -v /bin/busybox busybox
@@ -52,7 +54,7 @@ Now just pack your initramfs image by 'sh make_initramfs.sh' and you should have
 
 Example
 =======
-Few example on grub(1) config, all new set by kernel boot parametr.
+Few example on grub(1) config, all env set by kernel boot parametr.
 
 Dmcrypted rootfs:
 title Funtoo bzImage-2.6.32-gentoo-r5
@@ -72,6 +74,16 @@ initrd /initramfs.cpio.gz
 Known Issues
 ============
 If you dropped to busybox sh and manual mounted rootfs to /newroot, you did switch_root /newroot /sbin/init but you got "switch_root: no rootfs" first, umount /sys and /proc, this have nothing to do with this error but just do it. ;-) Your problem is missing exec cmd before switch_root. Do "exec switch_root /newroot /sbin/init". Why? Boot your distro and check man exec.
+
+License
+=======
+This project *may* contain some code from initramfs projects that can be found by googling around, gentoo-wiki.com and jootamam.net.
+This code is under Simplified BSD License, see LICENSE for more info.
+
+Author
+======
+Piotr Karbowski <jabberuser@gmail.com>
+slashbeast at irc freenode.
 
 PS.
 ===

@@ -1,4 +1,7 @@
 #!/bin/sh
+# This code is under Simplified BSD License, see LICENSE for more info
+# Copyright (c) 2010, Piotr Karbowski
+# All rights reserved.
 
 #set -e # exit on >0.
 #set -x # debug
