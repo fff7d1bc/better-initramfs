@@ -14,7 +14,7 @@ The goal is to make an easy to use initramfs with support for dmcrypted rootfs, 
 Status
 ======
 dmcrypt support - works.
-lvm rootfs support - works.
+lvm support - works.
 dmcrypt rootfs over lvm - should work, not tested.
 lvm rootfs over dmcrypt - same as above.
 rescue shell (drop to busybox sh before mount rootfs) - works
