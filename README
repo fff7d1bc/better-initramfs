@@ -69,6 +69,10 @@ title Funtoo bzImage-2.6.32-gentoo-r5
 kernel /bzImage-2.6.32-gentoo-r5 root=/dev/mapper/main-rootfs lvm=true rescueshell
 initrd /initramfs.cpio.gz
 
+Known Issues
+============
+If you dropped to busybox sh and manual mounted rootfs to /newroot, you did switch_root /newroot /sbin/init but you got "switch_root: no rootfs" first, umount /sys and /proc, this have nothing to do with this error but just do it. ;-) Your problem is missing exec cmd before switch_root. Do "exec switch_root /newroot /sbin/init". Why? Boot your distro and check man exec.
+
 PS.
 ===
 Feel free to report any issue or feature request direct to me, also, feel free to send patch for my buggy english or other buggy code in this project. ;-)
