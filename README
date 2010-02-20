@@ -3,7 +3,7 @@ better-initramfs
 
 What can it be useful for?
 ==========================
-- Debug your brand-new kernel. For example, you got kernel panic unable to mount rootfs and you really don't know where is problem, missing filesystems support in kernel or maybe missing support for your SCSI/SATA/whatever or your 2nd sata controller driver started before 1st and your 'sda' is 'sdb'. Really, initramfs sh is very useful.
+- Debug your brand-new kernel. For example, you got kernel panic unable to mount rootfs and you really don't know where is problem, missing filesystems support in kernel or maybe missing support for your SCSI/SATA/whatever or your 2nd sata controller driver started before 1st and your 'sda' is 'sdb'. Really, initramfs sh is very useful. You can check dmesg, you can check /dev for devices and try manual mount rootfs to get error.
 - You have encrypted with dmcrypt luks rootfs and you dont want use genkernel-based initramfs or write your own initramfs.
 - You have LVM-based rootfs, same as above.
 
