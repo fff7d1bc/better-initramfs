@@ -1,1 +1,2 @@
 * Support Remote Rescue Shell [dropbear ssh]
+* Rewrite make_initramfs.sh.
