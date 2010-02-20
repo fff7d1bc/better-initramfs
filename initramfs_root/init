@@ -14,7 +14,11 @@ einfo "Mounting /sys"
 run mount -t sysfs sysfs /sys
 
 ## Config.
-. /config
+if [ -f /config ]; then
+	. /config
+else
+	ewarn "There is no /config file, don't panic, this is not fatal. I hope you have all needed env set by kernel boot parametr."
+fi
 
 # Process command line options
 for i in $(cat /proc/cmdline); do
@@ -55,16 +59,31 @@ run mknod /dev/tty c 5 0
 run echo /sbin/mdev > /proc/sys/kernel/hotplug
 run mdev -s
 
-if [ $lvm = "true" ]; then
+if [ -z $root ]; then
+        eerror "Your root= env is empty, this is fatal."
+        droptoshell
+fi
+
+if [ -z $init ]; then
+	init="/sbin/init"
+fi
+
+if [ ! -z $lvm ] && [ $lvm = "true" ]; then
 	einfo "Getting LVM volumes up (if any)."
 	run lvm vgscan
 	run lvm vgchange -a y
 fi
 
-if [ $dmcrypt_rootfs = "true" ]; then
+if [ ! -z $dmcrypt_rootfs ] && [ $dmcrypt_rootfs = "true" ]; then
+	if [ -z $enc_root ]; then
+		eerror "You have dmcrypt_rootfs=true but enc_root env is empty."
+		droptoshell
+	fi
+	
 	einfo "Opening encrypted partition and mapping to /dev/mapper/rootfs."
 	run cryptsetup luksOpen "${enc_root}" rootfs
-	if [ $lvm = "true" ]; then
+
+	if [ ! -z $lvm ] && [ $lvm = "true" ]; then
 		einfo "Again, getting LVM volumes up (if any, after map dmcrypt)."
 		run lvm vgscan
 		run lvm vgchange -a y
