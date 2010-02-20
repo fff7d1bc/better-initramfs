@@ -13,6 +13,11 @@ run mount -t proc proc /proc
 einfo "Mounting /sys"
 run mount -t sysfs sysfs /sys
 
+#Disable kernel messages from popping onto the screen
+echo 0 > /proc/sys/kernel/printk
+#Clear the screen
+clear
+
 ## Config.
 if [ -f /config ]; then
 	. /config
@@ -44,11 +49,6 @@ for i in $(cat /proc/cmdline); do
 	esac
 done
 ####
-
-#Disable kernel messages from popping onto the screen
-echo 0 > /proc/sys/kernel/printk
-#Clear the screen
-clear
 
 einfo "Create all the symlinks to /bin/busybox."
 run busybox --install -s
