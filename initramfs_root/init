@@ -116,7 +116,6 @@ if [ ! -z $tuxonice_resume ] && [ $tuxonice_resume = "true" ]; then
 fi
 
 if [ ! -z $rescueshell ] && [ $rescueshell = "true" ]; then
-	ewarn "'rescueshell' option detected, exit to shell before mount rootfs."
 	droptoshell
 fi
 
