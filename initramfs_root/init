@@ -124,16 +124,6 @@ fi
 einfo "Mounting rootfs in read-only mode."
 run mount -o ro,noatime "${root}" /newroot
 
-# /usr squashfs updater.
-#test -f /newroot/var/_squash/usr/usr_new.sqfs && \
-#mount -o remount,rw,noatime /newroot && \
-#mv /newroot/var/_squash/usr/usr.sqfs /newroot/var/_squash/usr/usr_old.sqfs && \
-#mv /newroot/var/_squash/usr/usr_new.sqfs /newroot/var/_squash/usr/usr.sqfs && \
-#mv /newroot/var/_squash/usr/rw /newroot/var/_squash/usr/rw_old && \
-#mkdir /newroot/var/_squash/usr/rw && \
-#mount -o remount,ro,noatime /newroot
-
-
 #Unmount all other mounts so that the ram used by
 #the initramfs can be cleared after switch_root
 einfo "Umounting /sys and /proc."
