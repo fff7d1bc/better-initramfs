@@ -26,8 +26,8 @@ This docs is based on Funtoo/Gentoo GNU/Linux so package names etc. can be diffe
 
 build with static use flag:
 sys-apps/busybox (must-have)
-sys-fs/cryptsetup (optimal, if you don't use dmcrypt and dmcrypt_rootfs=false)
-sys-fs/lvm2 (optimal, if you don't use LVM and lvm=false)
+sys-fs/cryptsetup (optional, if you don't use dmcrypt and dmcrypt_rootfs=false)
+sys-fs/lvm2 (optional, if you don't use LVM and lvm=false)
 
 go to initramfs_root/bin dir and:
 cp -v /bin/busybox busybox
@@ -36,7 +36,7 @@ cp -v /sbin/lvm.static lvm
 ln -s busybox sh
 ln -s busybox bb
 
-Now, copy one of config.example to 'config' and edit it (config file is optimal). Each env like root, enc_root, lvm etc can be set with a kernel boot parameter. Available kernel boot parameters:
+Now, copy one of config.example to 'config' and edit it (config file is optional). Each env like root, enc_root, lvm etc can be set with a kernel boot parameter. Available kernel boot parameters:
 rescueshell		(drop to busybox sh just before mount rootfs to /newroot)
 lvm=true		(or =false. Enable getting up LVM volumes if any, set true if you have rootfs on LVM.)
 dmcrypt_rootfs=true	(or =false. Enable cryptsetup luksOpen on selected enc_root, set true if you have encrypted rootfs.)
