@@ -47,7 +47,7 @@ dmcrypt_rootfs=<boolean>	- enable cryptsetup luksOpen on selected enc_root, set 
 enc_root=device			- for example =/dev/sda2 if sda2 is your encrypted rootfs. This env is ignored if dmcrypt_rootfs enabled.
 root=device			- for example =/dev/mapper/rootfs if you have dmcrypted rootfs, =/dev/mapper/vg-rootfs or similar if lvm or just =/dev/sdXX if you don't have lvm based or dmcrypted rootfs.
 
-All boolean are default false, enable if needed.)
+All boolean are default false, enable if needed.
 
 Now, go up one level outside the initramfs_root dir (cd ..) and execute 'sh testbindir.sh', you should get something like:
 [ OK ] busybox found.
