@@ -19,6 +19,8 @@ dmcrypt rootfs over lvm - should work, not tested.
 lvm rootfs over dmcrypt - same as above.
 rescue shell (drop to busybox sh before mount rootfs) - works
 remote rescue shell - not yet.
+tuxonice support - implemented but *not* tested.
+
 
 Usage
 =====
@@ -38,6 +40,7 @@ ln -s busybox bb
 
 Now, copy one of config.example to 'config' and edit it (config file is optional). Each env like root, enc_root, lvm etc can be set with a kernel boot parameter. Available kernel boot parameters:
 rescueshell=<boolean>		(drop to busybox sh just before mount rootfs to /newroot. Default false.)
+tuxonice_resume=<boolean>	(try resume using TuxOnIce. Remember to set resume= env by *kernel* boot params.)
 lvm=<boolean>			(enable getting up LVM volumes if any, set true if you have rootfs on LVM. Default false.)
 dmcrypt_rootfs=<boolean>	(enable cryptsetup luksOpen on selected enc_root, set true if you have encrypted rootfs. Default false.)
 enc_root=device			(for example =/dev/sda2 if sda2 is your encrypted rootfs. This env is ignored if dmcrypt_rootfs isn't set to true.)

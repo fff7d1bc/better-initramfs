@@ -52,6 +52,12 @@ for i in $(cat /proc/cmdline); do
 		rescueshell\=*)
 			rescueshell=$(get_opt $i)
 		;;
+		tuxonice_resume\=*)
+			tuxonice_resume=$(get_opt $i)
+		;;
+		resume\=*)
+			resume=$(get_opt $i)
+		;;
 	esac
 done
 ####
@@ -96,9 +102,18 @@ if [ ! -z $dmcrypt_rootfs ] && [ $dmcrypt_rootfs = "true" ]; then
 	fi
 fi
 
-#tuxonice resume
-#test -f /sys/power/tuxonice/do_resume && \
-#echo 1 > /sys/power/tuxonice/do_resume
+if [ ! -z $tuxonice_resume ] && [ $tuxonice_resume = "true" ]; then
+	if [ ! -z $resume ]; then
+		if [ ! -f /sys/power/tuxonice/do_resume ]; then
+			ewarn "Your kernel do not support TuxOnIce.";
+		else
+			einfo "Sending do_resume signal to TuxOnIce."
+			run echo 1 > /sys/power/tuxonice/do_resume
+		fi
+	else
+		ewarn "resume= env is empty, not cool, skipping tuxonice_resume."
+	fi
+fi
 
 if [ ! -z $rescueshell ] && [ $rescueshell = "true" ]; then
 	ewarn "'rescueshell' option detected, exit to shell before mount rootfs."
