@@ -49,8 +49,8 @@ for i in $(cat /proc/cmdline); do
 		lvm\=*)
 			lvm=$(get_opt $i)
 		;;
-		rescueshell)
-			rescueshell=true
+		rescueshell\=*)
+			rescueshell=$(get_opt $i)
 		;;
 	esac
 done

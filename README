@@ -37,11 +37,11 @@ ln -s busybox sh
 ln -s busybox bb
 
 Now, copy one of config.example to 'config' and edit it (config file is optional). Each env like root, enc_root, lvm etc can be set with a kernel boot parameter. Available kernel boot parameters:
-rescueshell		(drop to busybox sh just before mount rootfs to /newroot)
-lvm=true		(or =false. Enable getting up LVM volumes if any, set true if you have rootfs on LVM.)
-dmcrypt_rootfs=true	(or =false. Enable cryptsetup luksOpen on selected enc_root, set true if you have encrypted rootfs.)
-enc_root=device		(for example =/dev/sda2 if sda2 is your encrypted rootfs. This env is ignored if dmcrypt_rootfs isn't set to true.)
-root=device		(for example =/dev/mapper/rootfs if you have dmcrypted rootfs, =/dev/mapper/vg-rootfs or similar if lvm or just =/dev/sdXX if you don't have lvm based or dmcrypted rootfs.)
+rescueshell=<boolean>		(drop to busybox sh just before mount rootfs to /newroot. Default false.)
+lvm=<boolean>			(enable getting up LVM volumes if any, set true if you have rootfs on LVM. Default false.)
+dmcrypt_rootfs=<boolean>	(enable cryptsetup luksOpen on selected enc_root, set true if you have encrypted rootfs. Default false.)
+enc_root=device			(for example =/dev/sda2 if sda2 is your encrypted rootfs. This env is ignored if dmcrypt_rootfs isn't set to true.)
+root=device			(for example =/dev/mapper/rootfs if you have dmcrypted rootfs, =/dev/mapper/vg-rootfs or similar if lvm or just =/dev/sdXX if you don't have lvm based or dmcrypted rootfs.)
 
 Now, go up one level outside the initramfs_root dir (cd ..) and execute 'sh testbindir.sh', you should get something like:
 [ OK ] busybox found.
