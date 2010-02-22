@@ -74,7 +74,7 @@ initrd /initramfs.cpio.gz
 
 LVM based rootfs, rescueshell:
 title Funtoo bzImage-2.6.32-gentoo-r5
-kernel /bzImage-2.6.32-gentoo-r5 root=/dev/mapper/main-rootfs lvm=true rescueshell
+kernel /bzImage-2.6.32-gentoo-r5 root=/dev/mapper/main-rootfs lvm=true rescueshell=true
 initrd /initramfs.cpio.gz
 
 Known Issues
