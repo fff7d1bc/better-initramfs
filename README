@@ -38,7 +38,7 @@ cp -v /sbin/lvm.static lvm
 ln -s busybox sh
 ln -s busybox bb
 
-Now, copy one of config.example to 'config' and edit it (config file is optional). Each env like root, enc_root, lvm etc can be set with a kernel boot parameter. Available kernel boot parameters:
+Now, go up one level outside, to the initramfs_root dir (cd ..) and copy one of config.example to 'config' and edit it (config file is optional). Each env like root, enc_root, lvm etc can be set with a kernel boot parameter. Available kernel boot parameters:
 
 rescueshell=<boolean>		- drop to busybox sh just before mount rootfs to /newroot.
 tuxonice_resume=<boolean>	- try resume using TuxOnIce. Remember to set resume= env by *kernel* boot params.
@@ -49,7 +49,7 @@ root=device			- for example =/dev/mapper/rootfs if you have dmcrypted rootfs, =/
 
 All boolean are default false, enable if needed.
 
-Now, go up one level outside the initramfs_root dir (cd ..) and execute 'sh testbindir.sh', you should get something like:
+Now execute 'sh testbindir.sh', you should get something like:
 [ OK ] busybox found.
 [ OK ] lvm found.
 [ OK ] cryptsetup found.
