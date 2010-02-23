@@ -13,6 +13,12 @@ enc_root="/dev/sda2" #Encrypted partition with rootfs.
 # lvm
 lvm="true" #Enable?
 
+# Rescue Shell, this is not good idea to set it here. Better would be kernel boot parameter.
+#rescueshell="true"
+
+# TuxOnIce
+tuxonice_resume="false"
+
 # rootfs mount
 #root="/dev/mapper/rootfs" #dmcrypted rootfs
 root="/dev/mapper/vg-myrootfs" #lvm-based rootfs
