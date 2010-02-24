@@ -58,6 +58,9 @@ for i in $(cat /proc/cmdline); do
 		resume\=*)
 			resume=$(get_opt $i)
 		;;
+		rootfstype\=*
+			rootfstype=$(get_opt $i)
+		;;
 	esac
 done
 ####
@@ -121,8 +124,14 @@ fi
 
 
 #Mount the root device
-einfo "Mounting rootfs in read-only mode."
-run mount -o ro,noatime "${root}" /newroot
+mountparams="-o ro"
+
+if [ ! -z $rootfstype ]; then
+	mountparams="$mountparams -t $rootfstype"
+fi
+
+einfo "Mounting rootfs to /newroot"
+run mount $mountparams "${root}" /newroot
 
 #Unmount all other mounts so that the ram used by
 #the initramfs can be cleared after switch_root
@@ -131,7 +140,7 @@ run umount /sys /proc
 
 #Switch to the new root and execute init
 if [[ -x "/newroot/${init}" ]] ; then
-	einfo "Doing switch_root and run /sbin/init."
+	einfo "Switching root to /newroot and run /sbin/init."
 	exec switch_root /newroot "${init}"
 fi
 
