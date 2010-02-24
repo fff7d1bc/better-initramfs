@@ -140,7 +140,7 @@ run umount /sys /proc
 
 #Switch to the new root and execute init
 if [[ -x "/newroot/${init}" ]] ; then
-	einfo "Switching root to /newroot and run /sbin/init."
+	einfo "Switching root to /newroot and executing /sbin/init."
 	exec switch_root /newroot "${init}"
 fi
 
