@@ -46,6 +46,7 @@ lvm=<boolean>			- enable getting up LVM volumes if any, set true if you have roo
 dmcrypt_rootfs=<boolean>	- enable cryptsetup luksOpen on selected enc_root, set true if you have encrypted rootfs.
 enc_root=device			- for example =/dev/sda2 if sda2 is your encrypted rootfs. This env is ignored if dmcrypt_rootfs enabled.
 root=device			- for example =/dev/mapper/rootfs if you have dmcrypted rootfs, =/dev/mapper/vg-rootfs or similar if lvm or just =/dev/sdXX if you don't have lvm based or dmcrypted rootfs.
+rootfstype=<filesystem type>	- Set type of filesystem on your rootfs if you do not want to use 'auto', for example ext4.
 
 All boolean are default false, enable if needed.
 
