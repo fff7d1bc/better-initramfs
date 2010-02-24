@@ -55,7 +55,7 @@ for i in $(cat /proc/cmdline); do
 		resume\=*)
 			resume=$(get_opt $i)
 		;;
-		rootfstype\=*
+		rootfstype\=*)
 			rootfstype=$(get_opt $i)
 		;;
 	esac
