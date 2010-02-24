@@ -26,9 +26,6 @@ einfo "better-initramfs started.\n"
 ## Config.
 if [ -f /config ]; then
 	. /config
-else
-	ewarn "Config file do not exist. (don't worry, nothing fatal)"
-	ewarn "All settings will be from kernel boot parametrs."
 fi
 
 # Process command line options
