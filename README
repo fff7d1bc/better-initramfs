@@ -15,9 +15,9 @@ Status
 ======
 dmcrypt support - works.
 lvm support - works.
-dmcrypt rootfs over lvm - should work, not tested.
-lvm rootfs over dmcrypt - same as above.
-rescue shell (drop to busybox sh before mount rootfs) - works
+dmcrypt rootfs over lvm (encrypted lv) - should work, not tested.
+lvm rootfs over dmcrypt (encrypted pv) - works.
+rescue shell (drop to busybox sh before mount rootfs) - works.
 remote rescue shell - not yet.
 tuxonice support - implemented but *not* tested.
 
@@ -78,10 +78,11 @@ title Funtoo bzImage-2.6.32-gentoo-r5
 kernel /bzImage-2.6.32-gentoo-r5 root=/dev/mapper/main-rootfs lvm=true rescueshell=true
 initrd /initramfs.cpio.gz
 
-Rootfs on LVM over dmcrypt:
-title Funtoo bzImage-2.6.32-gentoo-r5
-kernel /bzImage-2.6.32-gentoo-r5 enc_root=/dev/sda2 dmcrypt_root=true root=/dev/mapper/main-rootfs lvm=true 
+Rootfs on LVM over dmcrypt (encrypted pv):
+title Funtoo bzImage-2.6.33
+kernel /bzImage-2.6.33 dmcrypt_root=true enc_root=/dev/sda2 lvm=true root=/dev/mapper/vg-rootfs rootfstype=ext4
 initrd /initramfs.cpio.gz
+
 
 Known Issues
 ============
