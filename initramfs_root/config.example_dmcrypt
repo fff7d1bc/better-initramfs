@@ -7,7 +7,7 @@
 init="/sbin/init"
 
 # dmcrypted root
-dmcrypt_rootfs="true" #Enable?
+dmcrypt_root="true" #Enable?
 enc_root="/dev/sda2" #Encrypted partition with rootfs.
 
 # lvm
@@ -20,5 +20,5 @@ lvm="false" #Enable?
 tuxonice_resume="false"
 
 # rootfs mount
-root="/dev/mapper/rootfs" #dmcrypted rootfs
+root="/dev/mapper/dmcrypt_root" #dmcrypted rootfs
 #root="/dev/mapper/vg-myrootfs" #lvm-based rootfs
