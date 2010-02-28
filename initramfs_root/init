@@ -21,7 +21,7 @@ echo 0 > /proc/sys/kernel/printk
 #Clear the screen
 clear
 
-einfo "better-initramfs started.\n"
+einfo "better-initramfs started. Kernel version $(uname -r).\n"
 
 ## Config.
 if [ -f /config ]; then
