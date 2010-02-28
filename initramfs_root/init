@@ -102,6 +102,10 @@ if [ ! -z $dmcrypt_root ] && [ $dmcrypt_root = "true" ]; then
 	fi
 fi
 
+if [ ! -z $rescueshell ] && [ $rescueshell = "true" ]; then
+	droptoshell
+fi
+
 if [ ! -z $tuxonice_resume ] && [ $tuxonice_resume = "true" ]; then
 	if [ ! -z $resume ]; then
 		if [ ! -f /sys/power/tuxonice/do_resume ]; then
@@ -114,11 +118,6 @@ if [ ! -z $tuxonice_resume ] && [ $tuxonice_resume = "true" ]; then
 		ewarn "resume= env is empty, not cool, skipping tuxonice_resume."
 	fi
 fi
-
-if [ ! -z $rescueshell ] && [ $rescueshell = "true" ]; then
-	droptoshell
-fi
-
 
 #Mount the root device
 mountparams="-o ro"
