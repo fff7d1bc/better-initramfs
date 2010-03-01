@@ -58,12 +58,20 @@ for i in $(cat /proc/cmdline); do
 		rootfstype\=*)
 			rootfstype=$(get_opt $i)
 		;;
+		rootdelay\=*)
+			rootdelay=$(get_opt $i)
+		;;
 	esac
 done
 ####
 
 einfo "Create all the symlinks to /bin/busybox."
 run busybox --install -s
+
+if [ ! -z rootdelay ]; then
+	einfo "Waiting $(get_opt $rootdelay) sec."
+	sleep $(get_opt $rootdelay)
+fi
 
 einfo "Initiating /dev dir"
 run mknod /dev/null c 1 3
