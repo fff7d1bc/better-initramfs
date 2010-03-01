@@ -19,7 +19,7 @@ dmcrypt rootfs over lvm (encrypted lv) - should work, not tested.
 lvm rootfs over dmcrypt (encrypted pv) - works.
 rescue shell (drop to busybox sh before mount rootfs) - works.
 remote rescue shell - not yet.
-tuxonice support - implemented but *not* tested.
+tuxonice support - works, tested on swap over encrypted lvm.
 
 
 Usage

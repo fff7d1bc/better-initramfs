@@ -21,7 +21,7 @@ echo 0 > /proc/sys/kernel/printk
 #Clear the screen
 clear
 
-einfo "better-initramfs started.\n"
+einfo "better-initramfs started. Kernel version $(uname -r).\n"
 
 ## Config.
 if [ -f /config ]; then
@@ -58,12 +58,20 @@ for i in $(cat /proc/cmdline); do
 		rootfstype\=*)
 			rootfstype=$(get_opt $i)
 		;;
+		rootdelay\=*)
+			rootdelay=$(get_opt $i)
+		;;
 	esac
 done
 ####
 
 einfo "Create all the symlinks to /bin/busybox."
 run busybox --install -s
+
+if [ ! -z rootdelay ]; then
+	ewarn "Waiting $(get_opt $rootdelay) sec before init /dev."
+	run sleep $(get_opt $rootdelay)
+fi
 
 einfo "Initiating /dev dir"
 run mknod /dev/null c 1 3
@@ -102,6 +110,10 @@ if [ ! -z $dmcrypt_root ] && [ $dmcrypt_root = "true" ]; then
 	fi
 fi
 
+if [ ! -z $rescueshell ] && [ $rescueshell = "true" ]; then
+	droptoshell
+fi
+
 if [ ! -z $tuxonice_resume ] && [ $tuxonice_resume = "true" ]; then
 	if [ ! -z $resume ]; then
 		if [ ! -f /sys/power/tuxonice/do_resume ]; then
@@ -114,11 +126,6 @@ if [ ! -z $tuxonice_resume ] && [ $tuxonice_resume = "true" ]; then
 		ewarn "resume= env is empty, not cool, skipping tuxonice_resume."
 	fi
 fi
-
-if [ ! -z $rescueshell ] && [ $rescueshell = "true" ]; then
-	droptoshell
-fi
-
 
 #Mount the root device
 mountparams="-o ro"
