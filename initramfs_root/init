@@ -70,7 +70,7 @@ run busybox --install -s
 
 if [ ! -z rootdelay ]; then
 	ewarn "Waiting $(get_opt $rootdelay) sec before init /dev."
-	sleep $(get_opt $rootdelay)
+	run sleep $(get_opt $rootdelay)
 fi
 
 einfo "Initiating /dev dir"
