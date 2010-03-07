@@ -2,3 +2,4 @@
 * Rewrite make_initramfs.sh.
 * Support loadable kernel modules.
 * Support software raid.
+* Support UUID.

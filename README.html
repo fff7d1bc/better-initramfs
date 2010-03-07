@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.6: http://docutils.sourceforge.net/" />
+<title>better-initramfs</title>
+<style type="text/css">
+
+/* 
+Modified version of default cascading style sheet for the HTML output of Docutils.
+*/
+
+
+body {
+	font-family: DejaVu Sans, Helvetica, sans-serif; font-size:12px;
+}
+
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+dl.docutils dt {
+  font-weight: bold }
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left, .figure.align-left{
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+img.align-right, .figure.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+.align-left {
+  text-align: left }
+
+.align-center {
+  clear: both ;
+  text-align: center }
+
+.align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+div.align-right {
+  text-align: left }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block {
+  margin-left: 2em;
+  margin-right: 2em;
+
+padding: 10px 10px 10px 10px;
+color: #072A66;
+background: #F0F5FA;
+border: 1px solid #C2CFDF;
+left: 5px;
+right: 10px;
+
+}
+
+tt.docutils {
+	background: #F0F5FA;
+	padding: 0px 0.5em 0px 0.5em;
+}
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document" id="better-initramfs">
+<h1 class="title">better-initramfs</h1>
+
+<div class="section" id="what-can-it-be-useful-for">
+<h1>What can it be useful for?</h1>
+<ul class="simple">
+<li>Debug your brand-new kernel. For example, you got kernel panic unable to mount rootfs and you really don't know where is problem, missing filesystems support in kernel or maybe missing support for your SCSI/SATA/whatever or your 2nd sata controller driver started before 1st and your 'sda' is 'sdb'. Really, initramfs sh is very useful. You can check dmesg, you can check /dev for devices and try manual mount rootfs to get error.</li>
+<li>You have encrypted with dmcrypt luks rootfs and you dont want use genkernel-based initramfs or write your own initramfs.</li>
+<li>You have LVM-based rootfs, same as above.</li>
+</ul>
+</div>
+<div class="section" id="goal">
+<h1>Goal</h1>
+<p>The goal is to make an easy to use initramfs with support for dmcrypted rootfs, rootfs over LVM array and the remote rescue shell (sshd).</p>
+</div>
+<div class="section" id="status">
+<h1>Status</h1>
+<ul class="simple">
+<li><strong>dmcrypt support</strong> -- works.</li>
+<li><strong>lvm support</strong> -- works.</li>
+<li><strong>dmcrypted rootfs over lvm (encrypted lv)</strong> -- should work, not tested.</li>
+<li><strong>lvm rootfs over dmcrypt (encrypted pv)</strong> -- works.</li>
+</ul>
+</div>
+<div class="section" id="usage">
+<h1>Usage</h1>
+<p>This docs is based on Funtoo/Gentoo GNU/Linux so package names etc. can be different than in your distro.</p>
+<p>build with static use flag:</p>
+<pre class="literal-block">
+sys-apps/busybox (must-have)
+sys-fs/cryptsetup (optional, if you don't use dmcrypt)
+sys-fs/lvm2 (optional, if you don't use LVM)
+</pre>
+<p>go to initramfs_root/bin dir and:</p>
+<pre class="literal-block">
+cp -v /bin/busybox busybox
+cp -v /sbin/cryptsetup cryptsetup
+cp -v /sbin/lvm.static lvm
+ln -s busybox sh
+ln -s busybox bb
+</pre>
+<p>Now, go up one level outside, to the initramfs_root dir (<tt class="docutils literal">cd ..</tt>) and copy one of config.example to 'config' and edit it (config file is optional). Each env like root, enc_root, lvm etc can be set with a kernel boot parameter. Available kernel boot parameters:</p>
+<dl class="docutils">
+<dt>rescueshell=&lt;boolean&gt;</dt>
+<dd>drop to busybox sh just before mount rootfs to /newroot.</dd>
+<dt>tuxonice_resume=&lt;boolean&gt;</dt>
+<dd>try resume using TuxOnIce. Remember to set resume= env by <em>kernel</em> boot params.</dd>
+<dt>resume=&lt;path&gt;</dt>
+<dd>This is tuxonice env, set resume device/file. This have nothing to do with initramfs, set it normally, like for normal tuxonice. You <strong>cannot</strong> set it in config file.</dd>
+<dt>lvm=&lt;boolean&gt;</dt>
+<dd>enable getting up LVM volumes if any, set true if you have rootfs on LVM.</dd>
+<dt>dmcrypt_root=&lt;boolean&gt;</dt>
+<dd>enable cryptsetup luksOpen on selected enc_root, set true if you have encrypted rootfs.</dd>
+<dt>enc_root=&lt;device&gt;</dt>
+<dd>for example =/dev/sda2 if sda2 is your encrypted rootfs. This env is ignored if dmcrypt_root isn't enabled.</dd>
+<dt>root=&lt;device&gt;</dt>
+<dd>for example =/dev/mapper/dmcrypt_root if you have dmcrypted rootfs, =/dev/mapper/vg-rootfs or similar if lvm or just =/dev/sdXX if you don't have lvm based or dmcrypted rootfs.</dd>
+<dt>rootfstype=&lt;filesystem type&gt;</dt>
+<dd>Set type of filesystem on your rootfs if you do not want to use 'auto', for example ext4.</dd>
+</dl>
+<p>All boolean are 'false' by default, enable if needed.</p>
+<p>Now execute '<tt class="docutils literal">sh testbindir.sh</tt>', you should get something like:</p>
+<pre class="literal-block">
+[ OK ] busybox found.
+[ OK ] lvm found.
+[ OK ] cryptsetup found.
+[ OK ] bb is symlink to busybox.
+[ OK ] sh is symlink to busybox.
+</pre>
+<p>Now just pack your initramfs image by '<tt class="docutils literal">sh make_initramfs.sh</tt>' and you should have a shiny brand-new initramfs.cpio.gz ready for use.</p>
+</div>
+<div class="section" id="example">
+<h1>Example</h1>
+<p>Few example on grub(1) config, all env set by kernel boot parametr</p>
+<p>Dmcrypted rootfs:</p>
+<pre class="literal-block">
+title Funtoo bzImage-2.6.32-gentoo-r5
+kernel /bzImage-2.6.32-gentoo-r5 root=/dev/mapper/dmcrypt_root enc_root=/dev/sda2 dmcrypt_root=true
+initrd /initramfs.cpio.gz
+</pre>
+<p>LVM based rootfs:</p>
+<pre class="literal-block">
+title Funtoo bzImage-2.6.32-gentoo-r5
+kernel /bzImage-2.6.32-gentoo-r5 root=/dev/mapper/main-rootfs lvm=true
+initrd /initramfs.cpio.gz
+</pre>
+<p>LVM based rootfs, rescueshell:</p>
+<pre class="literal-block">
+title Funtoo bzImage-2.6.32-gentoo-r5
+kernel /bzImage-2.6.32-gentoo-r5 root=/dev/mapper/main-rootfs lvm=true rescueshell=true
+initrd /initramfs.cpio.gz
+</pre>
+<p>Rootfs on LVM over dmcrypt (encrypted pv) with tuxonice and rootfstype env:</p>
+<pre class="literal-block">
+title Funtoo bzImage-2.6.33
+kernel /bzImage-2.6.33 dmcrypt_root=true enc_root=/dev/sda2 lvm=true root=/dev/mapper/vg-rootfs rootfstype=ext4 resume=swap:/dev/mapper/vg-swap tuxonice_resume=true
+initrd /initramfs.cpio.gz
+</pre>
+</div>
+<div class="section" id="known-issues">
+<h1>Known Issues</h1>
+<dl class="docutils">
+<dt>switch_root: no rootfs</dt>
+<dd>If you dropped to busybox sh and manual mounted rootfs to /newroot, you did switch_root /newroot /sbin/init but you got &quot;switch_root: no rootfs&quot; first, umount /sys and /proc, this have nothing to do with this error but just do it. ;-) Your problem is missing <tt class="docutils literal">exec</tt> before switch_root. Do <tt class="docutils literal">exec switch_root /newroot /sbin/init</tt>. Why? Boot your distro and check man exec.</dd>
+</dl>
+</div>
+<div class="section" id="license">
+<h1>License</h1>
+<p>This project <em>may</em> contain some code from initramfs projects that can be found by googling around, gentoo-wiki.com and jootamam.net.
+This code is under Simplified BSD License, see LICENSE for more info</p>
+</div>
+<div class="section" id="author">
+<h1>Author</h1>
+<p>Piotr Karbowski &lt;<a class="reference external" href="mailto:jabberuser&#64;gmail.com">jabberuser&#64;gmail.com</a>&gt;</p>
+<p>slashbeast at irc freenode.</p>
+</div>
+<div class="section" id="ps">
+<h1>PS.</h1>
+<p>Feel free to report any issue or feature request direct to me, also, feel free to send patch for my buggy english or other buggy code in this project. ;-)</p>
+</div>
+</div>
+</body>
+</html>
