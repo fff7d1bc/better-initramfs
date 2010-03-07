@@ -68,7 +68,7 @@ done
 einfo "Create all the symlinks to /bin/busybox."
 run busybox --install -s
 
-if [ ! -z rootdelay ]; then
+if [ ! -z $rootdelay ]; then
 	ewarn "Waiting $(get_opt $rootdelay) sec before init /dev."
 	run sleep $(get_opt $rootdelay)
 fi
