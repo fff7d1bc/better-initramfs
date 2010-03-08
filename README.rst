@@ -45,7 +45,7 @@ rescueshell=<boolean>
   drop to busybox sh just before mount rootfs to /newroot.
 tuxonice_resume=<boolean>
   try resume using TuxOnIce. Remember to set resume= env by *kernel* boot params.
-resume=<path>
+resume=<device/path>
   This is tuxonice env, set resume device/file. This have nothing to do with initramfs, set it normally, like for normal tuxonice. You **cannot** set it in config file.
 lvm=<boolean>
   enable getting up LVM volumes if any, set true if you have rootfs on LVM.
@@ -57,6 +57,8 @@ root=<device>
   for example =/dev/mapper/dmcrypt_root if you have dmcrypted rootfs, =/dev/mapper/vg-rootfs or similar if lvm or just =/dev/sdXX if you don't have lvm based or dmcrypted rootfs.
 rootfstype=<filesystem type>
   Set type of filesystem on your rootfs if you do not want to use 'auto', for example ext4.
+rootdelay=<integer>
+  Set how many secunds initramfs should wait before init /dev dir. Useful for rootfs on USB device. Default 0 (no wait).
 
 All boolean are 'false' by default, enable if needed.
 

@@ -362,7 +362,7 @@ ln -s busybox bb
 <dd>drop to busybox sh just before mount rootfs to /newroot.</dd>
 <dt>tuxonice_resume=&lt;boolean&gt;</dt>
 <dd>try resume using TuxOnIce. Remember to set resume= env by <em>kernel</em> boot params.</dd>
-<dt>resume=&lt;path&gt;</dt>
+<dt>resume=&lt;device/path&gt;</dt>
 <dd>This is tuxonice env, set resume device/file. This have nothing to do with initramfs, set it normally, like for normal tuxonice. You <strong>cannot</strong> set it in config file.</dd>
 <dt>lvm=&lt;boolean&gt;</dt>
 <dd>enable getting up LVM volumes if any, set true if you have rootfs on LVM.</dd>
@@ -374,6 +374,8 @@ ln -s busybox bb
 <dd>for example =/dev/mapper/dmcrypt_root if you have dmcrypted rootfs, =/dev/mapper/vg-rootfs or similar if lvm or just =/dev/sdXX if you don't have lvm based or dmcrypted rootfs.</dd>
 <dt>rootfstype=&lt;filesystem type&gt;</dt>
 <dd>Set type of filesystem on your rootfs if you do not want to use 'auto', for example ext4.</dd>
+<dt>rootdelay=&lt;integer&gt;</dt>
+<dd>Set how many secunds initramfs should wait before init /dev dir. Useful for rootfs on USB device. Default 0 (no wait).</dd>
 </dl>
 <p>All boolean are 'false' by default, enable if needed.</p>
 <p>Now execute '<tt class="docutils literal">sh testbindir.sh</tt>', you should get something like:</p>
