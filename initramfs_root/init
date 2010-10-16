@@ -90,7 +90,7 @@ fi
 
 if [ ! -z $lvm ] && [ $lvm = "true" ]; then
 	einfo "Getting LVM volumes up (if any)."
-	run lvm vgscan
+	#run lvm vgscan
 	run lvm vgchange -a y
 fi
 

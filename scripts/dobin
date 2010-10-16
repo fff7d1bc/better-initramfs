@@ -1,0 +1,31 @@
+#!/bin/bash
+
+workdir="$(readlink -f $(dirname $0))"
+. $workdir/core.sh || exit 1
+
+if [[ -z $1 ]]; then
+	die "You shouldn't run this."
+fi
+
+source="$1"
+if [[ ! -z $2 ]]; then
+	target="$initramfs_root/bin/$(basename $2)"
+else
+	target="$initramfs_root/bin/$(basename $source)"
+fi
+
+addbin() {
+	if ! ldd $source >> /dev/null; then
+		einfo "adding $source..."
+		cp $source $target
+	else
+		die "$source isn't linked staticly."
+	fi
+}
+
+if [[ -f $source ]]; then
+	if [[ -f $target ]] && [[ $(md5sum $source | cut -d " " -f 1) != $(md5sum $target | cut -d " " -f 1) ]]; then ewarn "Looks like we have old copy of '$source'. Upgrading..." && addbin; fi
+	if [[ ! -f $target ]]; then addbin; fi
+else 
+	ewarn "Missing binary: $source, skipping."
+fi
