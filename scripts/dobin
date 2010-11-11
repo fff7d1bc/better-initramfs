@@ -16,7 +16,7 @@ fi
 
 addbin() {
 	if ! ldd $source >> /dev/null; then
-		einfo "adding $source..."
+		einfo "Adding $source..."
 		cp $source $target
 	else
 		die "$source isn't linked staticly."
