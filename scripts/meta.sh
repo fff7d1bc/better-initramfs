@@ -8,16 +8,24 @@ workdir="$(readlink -f $(dirname $0))"
 ewarn "New better-initramfs is not backward compatible, read ChangeLog file.\n"
 
 bin() {
-	$workdir/dobin /bin/busybox && ( cd $initramfs_root/bin && [ ! -h sh ] && ln -s busybox sh )
+	einfo 'Preparing binary files...'
+	$workdir/dobin /bin/busybox && ( cd $initramfs_root/bin && if [ ! -h sh ]; then ln -s busybox sh; fi )
 	$workdir/dobin /sbin/cryptsetup
 	$workdir/dobin /sbin/lvm.static lvm
 }
 
 image() {
+	einfo 'Building image...'
 	$workdir/doimage.sh
 }
 
 case $1 in
+	bin)
+		bin
+	;;
+	image)
+		image
+	;;
 	all)
 		bin && image
 	;;
