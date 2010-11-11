@@ -5,6 +5,7 @@ set -e
 workdir="$(readlink -f $(dirname $0))"
 . $workdir/core.sh || exit 1
 
+ewarn "New better-initramfs is not backward compatibility, read ChangeLog file.\n"
 
 bin() {
 	$workdir/dobin /bin/busybox && ( cd $initramfs_root/bin && [ ! -h sh ] && ln -s busybox sh )
