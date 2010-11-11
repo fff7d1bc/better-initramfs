@@ -40,17 +40,17 @@ for i in $(cat /proc/cmdline); do
 		enc_root\=*)
 			enc_root=$(get_opt $i)
 		;;
-		dmcrypt_root\=*)
-			dmcrypt_root=$(get_opt $i)
+		luks)
+			luks=true
 		;;
-		lvm\=*)
-			lvm=$(get_opt $i)
+		lvm)
+			lvm=true
 		;;
 		rescueshell\=*)
 			rescueshell=$(get_opt $i)
 		;;
-		tuxonice_resume\=*)
-			tuxonice_resume=$(get_opt $i)
+		tuxonice)
+			tuxonice=true
 		;;
 		resume\=*)
 			resume=$(get_opt $i)
@@ -94,14 +94,14 @@ if [ ! -z $lvm ] && [ $lvm = "true" ]; then
 	run lvm vgchange -a y
 fi
 
-if [ ! -z $dmcrypt_root ] && [ $dmcrypt_root = "true" ]; then
+if [ ! -z $luks ] && [ $luks = "true" ]; then
 	if [ -z $enc_root ]; then
-		eerror "You have dmcrypt_root=true but enc_root env is empty."
+		eerror "You have enabled luks but your \$enc_root variable is empty."
 		droptoshell
 	fi
 	
-	einfo "Opening encrypted partition and mapping to /dev/mapper/dmcrypt_root."
-	run cryptsetup luksOpen "${enc_root}" dmcrypt_root
+	einfo "Opening encrypted partition and mapping to /dev/mapper/enc_root."
+	run cryptsetup luksOpen "${enc_root}" enc_root
 
 	if [ ! -z $lvm ] && [ $lvm = "true" ]; then
 		einfo "Again, getting LVM volumes up (if any, after map dmcrypt)."
@@ -114,7 +114,7 @@ if [ ! -z $rescueshell ] && [ $rescueshell = "true" ]; then
 	droptoshell
 fi
 
-if [ ! -z $tuxonice_resume ] && [ $tuxonice_resume = "true" ]; then
+if [ ! -z $tuxonice ] && [ $tuxonice = "true" ]; then
 	if [ ! -z $resume ]; then
 		if [ ! -f /sys/power/tuxonice/do_resume ]; then
 			ewarn "Your kernel do not support TuxOnIce.";
@@ -123,7 +123,7 @@ if [ ! -z $tuxonice_resume ] && [ $tuxonice_resume = "true" ]; then
 			run echo 1 > /sys/power/tuxonice/do_resume
 		fi
 	else
-		ewarn "resume= env is empty, not cool, skipping tuxonice_resume."
+		ewarn "resume= variable is empty, not cool, skipping tuxonice."
 	fi
 fi
 
