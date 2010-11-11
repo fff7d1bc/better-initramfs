@@ -14,7 +14,7 @@ The goal is to make an easy to use initramfs with support for dmcrypted rootfs, 
 
 Status
 ------
-- **dmcrypt support** -- works.
+- **dmcrypt luks support** -- works.
 - **lvm support** -- works.
 - **dmcrypted rootfs over lvm (encrypted lv)** -- should work, not tested.
 - **lvm rootfs over dmcrypt (encrypted pv)** -- works.
@@ -23,14 +23,19 @@ Usage
 -----
 This docs is based on Funtoo/Gentoo GNU/Linux so package names etc. can be different than in your distro.
 
-build with static use flag:
+Prepare static linked binary files (emerge with USE=static):
 ::
 
         sys-apps/busybox (must-have)
         sys-fs/cryptsetup (optional, if you don't use dmcrypt)
         sys-fs/lvm2 (optional, if you don't use LVM)
 
-go to initramfs_root/bin dir and:
+Build initramfs:
+::
+
+        make
+
+If you does not have Funtoo/Gentoo-based system, you may need install binary files manualy, go to initramfs_root/bin dir and:
 ::
 
         cp -v /bin/busybox busybox
@@ -39,40 +44,33 @@ go to initramfs_root/bin dir and:
         ln -s busybox sh
         ln -s busybox bb
 
-Now, go up one level outside, to the initramfs_root dir (``cd ..``) and copy one of config.example to 'config' and edit it (config file is optional). Each env like root, enc_root, lvm etc can be set with a kernel boot parameter. Available kernel boot parameters:
+Then build image with:
+::
 
-rescueshell=<boolean>
+        make image
+
+
+Available kernel boot parameters:
+
+rescueshell
   drop to busybox sh just before mount rootfs to /newroot.
-tuxonice_resume=<boolean>
+tuxonice
   try resume using TuxOnIce. Remember to set resume= env by *kernel* boot params.
 resume=<device/path>
   This is tuxonice env, set resume device/file. This have nothing to do with initramfs, set it normally, like for normal tuxonice. You **cannot** set it in config file.
-lvm=<boolean>
+lvm
   enable getting up LVM volumes if any, set true if you have rootfs on LVM.
-dmcrypt_root=<boolean>
+luks
   enable cryptsetup luksOpen on selected enc_root, set true if you have encrypted rootfs.
 enc_root=<device>
   for example =/dev/sda2 if sda2 is your encrypted rootfs. This env is ignored if dmcrypt_root isn't enabled.
 root=<device>
-  for example =/dev/mapper/dmcrypt_root if you have dmcrypted rootfs, =/dev/mapper/vg-rootfs or similar if lvm or just =/dev/sdXX if you don't have lvm based or dmcrypted rootfs.
+  for example =/dev/mapper/enc_root if you have dmcrypted rootfs, =/dev/mapper/vg-rootfs or similar if lvm or just =/dev/sdXX if you don't have lvm based or dmcrypted rootfs.
 rootfstype=<filesystem type>
   Set type of filesystem on your rootfs if you do not want to use 'auto', for example ext4.
 rootdelay=<integer>
   Set how many secunds initramfs should wait before init /dev dir. Useful for rootfs on USB device. Default 0 (no wait).
 
-All boolean are 'false' by default, enable if needed.
-
-Now execute '``sh testbindir.sh``', you should get something like:
-
-::
-
-        [ OK ] busybox found.
-        [ OK ] lvm found.
-        [ OK ] cryptsetup found.
-        [ OK ] bb is symlink to busybox.
-        [ OK ] sh is symlink to busybox.
-
-Now just pack your initramfs image by '``sh make_initramfs.sh``' and you should have a shiny brand-new initramfs.cpio.gz ready for use.
 
 Example
 -------
@@ -82,25 +80,25 @@ Few example on grub(1) config, all env set by kernel boot parametr
 Dmcrypted rootfs::
 
         title Funtoo bzImage-2.6.32-gentoo-r5
-        kernel /bzImage-2.6.32-gentoo-r5 root=/dev/mapper/dmcrypt_root enc_root=/dev/sda2 dmcrypt_root=true
+        kernel /bzImage-2.6.32-gentoo-r5 root=/dev/mapper/enc_root enc_root=/dev/sda2 luks
         initrd /initramfs.cpio.gz
 
 LVM based rootfs::
 
         title Funtoo bzImage-2.6.32-gentoo-r5
-        kernel /bzImage-2.6.32-gentoo-r5 root=/dev/mapper/main-rootfs lvm=true
+        kernel /bzImage-2.6.32-gentoo-r5 root=/dev/mapper/main-rootfs lvm
         initrd /initramfs.cpio.gz
 
 LVM based rootfs, rescueshell::
 
         title Funtoo bzImage-2.6.32-gentoo-r5
-        kernel /bzImage-2.6.32-gentoo-r5 root=/dev/mapper/main-rootfs lvm=true rescueshell=true
+        kernel /bzImage-2.6.32-gentoo-r5 root=/dev/mapper/main-rootfs lvm rescueshell
         initrd /initramfs.cpio.gz
 
 Rootfs on LVM over dmcrypt (encrypted pv) with tuxonice and rootfstype env::
 
         title Funtoo bzImage-2.6.33
-        kernel /bzImage-2.6.33 dmcrypt_root=true enc_root=/dev/sda2 lvm=true root=/dev/mapper/vg-rootfs rootfstype=ext4 resume=swap:/dev/mapper/vg-swap tuxonice_resume=true
+        kernel /bzImage-2.6.33 luks enc_root=/dev/sda2 lvm root=/dev/mapper/vg-rootfs rootfstype=ext4 resume=swap:/dev/mapper/vg-swap tuxonice
         initrd /initramfs.cpio.gz
 
 Known Issues
