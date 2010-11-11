@@ -46,8 +46,8 @@ for i in $(cat /proc/cmdline); do
 		lvm)
 			lvm=true
 		;;
-		rescueshell\=*)
-			rescueshell=$(get_opt $i)
+		rescueshell)
+			rescueshell=true
 		;;
 		tuxonice)
 			tuxonice=true

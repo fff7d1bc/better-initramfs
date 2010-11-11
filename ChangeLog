@@ -2,5 +2,6 @@ v0.3-git
 
 	* Option 'dmcrypt_root=true' was replaced with 'luks'
 	* Option 'lvm=true' was replaced with 'luks'
-	* Option 'tuxonice_resume=true' was changed with 'tuxonice'
+	* Option 'tuxonice_resume=true' was replaced with 'tuxonice'
+	* Option 'rescueshell=true' wqas replaced with 'rescueshell'
 
