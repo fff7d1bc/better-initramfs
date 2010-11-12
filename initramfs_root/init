@@ -46,13 +46,13 @@ fi
 for i in $(cat /proc/cmdline); do
 	case "${i}" in
 		root\=*)
-			root=$(get_opt $i)
+			root=$(get_device $i)
 		;;
 		init\=*)
 			init=$(get_opt $i)
 		;;
 		enc_root\=*)
-			enc_root=$(get_opt $i)
+			enc_root=$(get_device $i)
 		;;
 		luks)
 			luks=true

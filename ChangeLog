@@ -1,4 +1,5 @@
 v0.3-git
+	* Support for LABEL and UUID based root and enc_root variables, thanks to ac1965 and his code example with findfs.
 	* Support for DEVTMPFS by default, if it fail to mount, fallback to old mdev mechanism (devtmpfs idea from ac1965's fork).
 	* Some code cleanups (thanks to ac1965)
 	* Option 'dmcrypt_root=true' was replaced with 'luks'

@@ -1,5 +1,3 @@
 * Support Remote Rescue Shell [dropbear ssh]
 * Support loadable kernel modules.
 * Support software raid.
-* Support UUID.
-* Replace <lvm|dmcrypt>=true with just <lvm|dmcrypt>.

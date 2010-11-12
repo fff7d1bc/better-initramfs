@@ -16,7 +16,18 @@ droptoshell() {
 run() { "$@" || ( eerror $@ 'failed.' ; droptoshell ) ;}
 
 get_opt() {
-	echo "$@" | cut -d "=" -f 2
+	echo "$@" | cut -d "=" -f 2,3
 }
 
+get_device() {
+	device="$(get_opt $1)"
+	case $device in
+		LABEL\=*|UUID\=*)
+			findfs $device
+		;;
+		*)
+			echo $device
+		;;
+	esac
+}
 
