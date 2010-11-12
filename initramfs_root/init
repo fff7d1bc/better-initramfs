@@ -9,8 +9,6 @@
 # Load functions.
 . /functions.sh
 
-# Disable kernel messages from popping onto the screen
-echo 0 > /proc/sys/kernel/printk
 # Clear the screen
 clear
 
@@ -31,6 +29,9 @@ einfo "better-initramfs started. Kernel version $(uname -r).\n"
 
 einfo "Mounting /proc"
 run mount -t proc proc /proc
+
+# Disable kernel messages from popping onto the screen
+echo 0 > /proc/sys/kernel/printk
 
 einfo "Mounting /sys"
 run mount -t sysfs sysfs /sys
