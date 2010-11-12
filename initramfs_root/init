@@ -46,13 +46,13 @@ fi
 for i in $(cat /proc/cmdline); do
 	case "${i}" in
 		root\=*)
-			root=$(get_device $i)
+			root=$(get_opt $i)
 		;;
 		init\=*)
 			init=$(get_opt $i)
 		;;
 		enc_root\=*)
-			enc_root=$(get_device $i)
+			enc_root=$(get_opt $i)
 		;;
 		luks)
 			luks=true
@@ -95,19 +95,17 @@ if [ $mdev_fallback = "true" ]; then
 	run mdev -s
 fi
 
-if [ -z $root ]; then
-        eerror "Your root= env is empty, this is fatal."
-        droptoshell
-fi
-
 if [ -z $init ]; then
 	init="/sbin/init"
 fi
 
+if [ -z $root ]; then
+	eerror "\$root variable is empty. This is fatal."
+fi
+
 if [ $lvm = "true" ]; then
 	einfo "Getting LVM volumes up (if any)."
-	#run lvm vgscan
-	run lvm vgchange -a y
+	run lvm vgscan && run lvm vgchange -a y
 fi
 
 if [ $luks = "true" ]; then
@@ -117,12 +115,18 @@ if [ $luks = "true" ]; then
 	fi
 	
 	einfo "Opening encrypted partition and mapping to /dev/mapper/enc_root."
+	# Resolve possible UUID or LABEL of enc_root now, after getting lvm up.
+	enc_root="$(get_device $enc_root)"
+	if [ -z $enc_root ]; then
+        	eerror "\$enc_root variable is empty. Wrong UUID/LABEL?"
+	        droptoshell
+	fi
+
 	run cryptsetup luksOpen "${enc_root}" enc_root
 
 	if [ $lvm = "true" ]; then
 		einfo "Again, getting LVM volumes up (if any, after map dmcrypt)."
-		run lvm vgscan
-		run lvm vgchange -a y
+		run lvm vgscan && run lvm vgchange -a y
 	fi
 fi
 
@@ -151,6 +155,13 @@ if [ ! -z $rootfstype ]; then
 fi
 
 einfo "Mounting rootfs to /newroot."
+# Resolve $root now, after getting up lvm and dmcrypt (and lvm ;p).
+root=$(get_device $root)
+if [ -z $root ]; then
+	eerror "\$root variable is empty. Wrong UUID/LABEL?"
+	droptoshell
+fi
+
 run mount $mountparams "${root}" /newroot
 
 #Unmount all other mounts so that the ram used by

@@ -20,7 +20,7 @@ get_opt() {
 }
 
 get_device() {
-	device="$(get_opt $1)"
+	device=$1
 	case $device in
 		LABEL\=*|UUID\=*)
 			findfs $device
