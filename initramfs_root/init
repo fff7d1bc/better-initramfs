@@ -23,6 +23,12 @@ clear
 
 einfo "better-initramfs started. Kernel version $(uname -r).\n"
 
+## Import default value
+luks=false
+lvm=false
+rescueshell=false
+tuxonice=false
+
 ## Config.
 if [ -f /config ]; then
 	. /config
@@ -88,13 +94,13 @@ if [ -z $init ]; then
 	init="/sbin/init"
 fi
 
-if [ ! -z $lvm ] && [ $lvm = "true" ]; then
+if [ $lvm = "true" ]; then
 	einfo "Getting LVM volumes up (if any)."
 	#run lvm vgscan
 	run lvm vgchange -a y
 fi
 
-if [ ! -z $luks ] && [ $luks = "true" ]; then
+if [ $luks = "true" ]; then
 	if [ -z $enc_root ]; then
 		eerror "You have enabled luks but your \$enc_root variable is empty."
 		droptoshell
@@ -103,18 +109,18 @@ if [ ! -z $luks ] && [ $luks = "true" ]; then
 	einfo "Opening encrypted partition and mapping to /dev/mapper/enc_root."
 	run cryptsetup luksOpen "${enc_root}" enc_root
 
-	if [ ! -z $lvm ] && [ $lvm = "true" ]; then
+	if [ $lvm = "true" ]; then
 		einfo "Again, getting LVM volumes up (if any, after map dmcrypt)."
 		run lvm vgscan
 		run lvm vgchange -a y
 	fi
 fi
 
-if [ ! -z $rescueshell ] && [ $rescueshell = "true" ]; then
+if [ $rescueshell = "true" ]; then
 	droptoshell
 fi
 
-if [ ! -z $tuxonice ] && [ $tuxonice = "true" ]; then
+if [ $tuxonice = "true" ]; then
 	if [ ! -z $resume ]; then
 		if [ ! -f /sys/power/tuxonice/do_resume ]; then
 			ewarn "Your kernel do not support TuxOnIce.";
