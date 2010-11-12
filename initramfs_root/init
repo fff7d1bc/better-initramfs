@@ -9,29 +9,37 @@
 # Load functions.
 . /functions.sh
 
+# Disable kernel messages from popping onto the screen
+echo 0 > /proc/sys/kernel/printk
+# Clear the screen
+clear
+
+# Default values.
+luks=false
+lvm=false
+rescueshell=false
+tuxonice=false
+mdev_fallback=false
+
+## Config.
+if [ -f /config ]; then
+        . /config
+fi
+
 # Basic
+einfo "better-initramfs started. Kernel version $(uname -r).\n"
+
 einfo "Mounting /proc"
 run mount -t proc proc /proc
 
 einfo "Mounting /sys"
 run mount -t sysfs sysfs /sys
 
-#Disable kernel messages from popping onto the screen
-echo 0 > /proc/sys/kernel/printk
-#Clear the screen
-clear
-
-einfo "better-initramfs started. Kernel version $(uname -r).\n"
-
-## Default values.
-luks=false
-lvm=false
-rescueshell=false
-tuxonice=false
-
-## Config.
-if [ -f /config ]; then
-	. /config
+einfo "Initiating /dev (devtmpfs)."
+if ! mount -t devtmpfs devtmpfs /dev; then
+	ewarn "Unable to mount devtmpfs, missing CONFIG_DEVTMPFS?"
+	ewarn "Fallback to busybox's mdev."
+	mdev_fallback="true"
 fi
 
 # Process command line options
@@ -79,11 +87,13 @@ if [ ! -z $rootdelay ]; then
 	run sleep $(get_opt $rootdelay)
 fi
 
-einfo "Initiating /dev dir"
-run mknod /dev/null c 1 3
-run mknod /dev/tty c 5 0
-run echo /sbin/mdev > /proc/sys/kernel/hotplug
-run mdev -s
+if [ $mdev_fallback = "true" ]; then
+	einfo "Initiating /dev (mdev)."
+	run mknod /dev/null c 1 3
+	run mknod /dev/tty c 5 0
+	run echo /sbin/mdev > /proc/sys/kernel/hotplug
+	run mdev -s
+fi
 
 if [ -z $root ]; then
         eerror "Your root= env is empty, this is fatal."
@@ -109,7 +119,7 @@ if [ $luks = "true" ]; then
 	einfo "Opening encrypted partition and mapping to /dev/mapper/enc_root."
 	run cryptsetup luksOpen "${enc_root}" enc_root
 
-	if { $lvm = "true" ]; then
+	if [ $lvm = "true" ]; then
 		einfo "Again, getting LVM volumes up (if any, after map dmcrypt)."
 		run lvm vgscan
 		run lvm vgchange -a y
@@ -140,13 +150,19 @@ if [ ! -z $rootfstype ]; then
 	mountparams="$mountparams -t $rootfstype"
 fi
 
-einfo "Mounting rootfs to /newroot"
+einfo "Mounting rootfs to /newroot."
 run mount $mountparams "${root}" /newroot
 
 #Unmount all other mounts so that the ram used by
 #the initramfs can be cleared after switch_root
 einfo "Umounting /sys and /proc."
 run umount /sys /proc
+
+if [ $mdev_fallback = "false" ]; then
+	einfo "Unmounting /dev."
+	run umount /dev
+fi
+
 
 #Switch to the new root and execute init
 if [[ -x "/newroot/${init}" ]] ; then

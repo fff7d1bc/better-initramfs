@@ -1,5 +1,6 @@
 v0.3-git
-
+	* Support for DEVTMPFS by default, if it fail to mount, fallback to old mdev mechanism (devtmpfs idea from ac1965's fork).
+	* Some code cleanups (thanks to ac1965)
 	* Option 'dmcrypt_root=true' was replaced with 'luks'
 	* Option 'lvm=true' was replaced with 'luks'
 	* Option 'tuxonice_resume=true' was replaced with 'tuxonice'
