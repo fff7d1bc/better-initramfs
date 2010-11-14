@@ -27,6 +27,9 @@ fi
 # Basic
 einfo "better-initramfs started. Kernel version $(uname -r).\n"
 
+# Prepare dirs.
+run dodir /dev /newroot /sbin /proc /sys /etc
+
 einfo "Mounting /proc"
 run mount -t proc proc /proc
 
@@ -90,6 +93,7 @@ fi
 
 if [ $mdev_fallback = "true" ]; then
 	einfo "Initiating /dev (mdev)."
+	touch /etc/mdev.conf # Do we really need this empty file?
 	run mknod /dev/null c 1 3
 	run mknod /dev/tty c 5 0
 	run echo /sbin/mdev > /proc/sys/kernel/hotplug
@@ -122,6 +126,10 @@ if [ $luks = "true" ]; then
         	eerror "\$enc_root variable is empty. Wrong UUID/LABEL?"
 	        droptoshell
 	fi
+
+	# Hack for cryptsetup which trying to run /sbin/udevadm.
+	run echo -e "#!/bin/sh\nexit 0" > /sbin/udevadm
+	run chmod 755 /sbin/udevadm
 
 	run cryptsetup luksOpen "${enc_root}" enc_root
 

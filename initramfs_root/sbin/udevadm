@@ -1,5 +1,0 @@
-#!/bin/sh
-# Why this file exist? Cause cryptsetup is stupid and really wanna run this. >_<
-# -- slashbeast.
-true
-

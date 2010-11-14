@@ -31,3 +31,9 @@ get_device() {
 	esac
 }
 
+dodir() {
+	for dir in $*; do
+		[ ! -d $dir ] && mkdir $dir
+	done
+}
+
