@@ -145,12 +145,18 @@ if [ $luks = "true" ]; then
 	run echo -e "#!/bin/sh\nexit 0" > /sbin/udevadm
 	run chmod 755 /sbin/udevadm
 
-	run cryptsetup luksOpen "${enc_root}" enc_root
-
-	if [ $lvm = "true" ]; then
+        if cryptsetup isLuks $enc_root > /dev/null 2>&1; then
+	    run cryptsetup luksOpen "${enc_root}" enc_root
+	    if [ $lvm = "true" ]; then
 		einfo "Again, getting LVM volumes up (if any, after map dmcrypt)."
 		run lvm vgscan && run lvm vgchange -a y
-	fi
+	    fi
+        else
+            eerror "device ($enc_root) is not LUKS."
+	    droptoshell
+        fi
+        
+
 fi
 
 if [ $rescueshell = "true" ]; then
