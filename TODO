@@ -1,6 +1,5 @@
 * Support Remote Rescue Shell [dropbear ssh]
 * Support loadable kernel modules.
 * Support software raid.
-* Display better-initramfs version while booting.
 * Support for key on external device (enc_keydev and enc_keyfile).
 * Make rootdelay variable accept only numbers.

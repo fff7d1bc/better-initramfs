@@ -26,7 +26,11 @@ if [ -f /config ]; then
 fi
 
 # Basic
-einfo "better-initramfs started. Kernel version $(uname -r).\n"
+kernelver="$(uname -r)"
+ver="$(cat /VERSION)"
+
+einfo "better-initramfs v${ver}"
+einfo "kernel ${kernelver}\n"
 
 # Prepare dirs.
 run dodir /dev /newroot /sbin /proc /sys /etc
