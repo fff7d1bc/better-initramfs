@@ -64,11 +64,11 @@ for i in $(cat /proc/cmdline); do
 		enc_root\=*)
 			enc_root=$(get_opt $i)
 		;;
-		enc_keydev\=*)
-			enc_keydev=$(get_opt $i)
+		enc_root_keydev\=*)
+			enc_root_keydev=$(get_opt $i)
 		;;
-		enc_keyfile\=*)
-			enc_keyfile=$(get_opt $i)
+		enc_root_keyfile\=*)
+			enc_root_keyfile=$(get_opt $i)
 		;;
 		luks)
 			luks=true
@@ -155,37 +155,37 @@ if [ $luks = "true" ]; then
 
         # LUKS device check
         if cryptsetup isLuks $enc_root > /dev/null 2>&1; then
-            if [ -n $enc_keydev ]; then
-                enc_keydev="$(get_device $enc_keydev)"
-                if [ -n $enc_keyfile ]; then
-                    einfo "\$enc_keydev=$enc_keydev, \$enc_keyfile=$enc_keyfile"
-                    if [ -b $enc_keydev ]; then
-                        einfo "Using key device $enc_keydev"
+            if [ -n $enc_root_keydev ]; then
+                enc_root_keydev="$(get_device $enc_root_keydev)"
+                if [ -n $enc_root_keyfile ]; then
+                    einfo "\$enc_root_keydev=$enc_root_keydev, \$enc_root_keyfile=$enc_root_keyfile"
+                    if [ -b $enc_root_keydev ]; then
+                        einfo "Using key device '$enc_root_keydev'"
                     else
-                        einfo "Please insert removable device $enc_keydev"
+                        einfo "Please insert removable device $enc_root_keydev"
                         count=10 # wait 10sec
                         while [ ${count} -gt 0 ]; do
                             count=$((count-1))
                             sleep 1
-                            if [ -b $enc_keydev ]; then
-                                einfo "device $enc_keydev detected."
+                            if [ -b $enc_root_keydev ]; then
+                                einfo "device $enc_root_keydev detected."
                                 break
                             fi
                         done
                     fi
                     [ -d $mntkey ] || mkdir -p $mntkey
-                    if mount -t auto -o ro $enc_keydev $mntkey >/dev/null 2>&1; then
+                    if mount -t auto -o ro $enc_root_keydev $mntkey >/dev/null 2>&1; then
                         sync; sync; sync
-                        if [ -e "${mntkey}${enc_keyfile}" ]; then
-                            cryptsetup_options="-d ${mntkey}${enc_keyfile}"
-                            einfo "mount $enc_keydev, using option '$cryptsetup_options'"
+                        if [ -e "${mntkey}${enc_root_keyfile}" ]; then
+                            cryptsetup_options="-d ${mntkey}${enc_root_keyfile}"
+                            einfo "mount $enc_root_keydev, using option '$cryptsetup_options'"
                         else
-                            ewarn "keyfile ($enc_keyfile) not found, umount $mntkey"
+                            ewarn "keyfile ($enc_root_keyfile) not found, umount $mntkey"
                             umount $mntkey
                         fi
-                    else
-		        ewarn "enc_keyfile= variable is empty, skipping"
                     fi
+                else
+		    ewarn "enc_root_keyfile= variable is empty, skipping"
                 fi
             fi
 
