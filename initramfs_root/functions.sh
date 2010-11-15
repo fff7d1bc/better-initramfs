@@ -11,7 +11,7 @@ droptoshell() {
 	ewarn "Dropping to shell."
 	ewarn "\tIn order to reboot press control-alt-delete."
 	exec sh
-	}
+}
 
 run() { "$@" || ( eerror $@ 'failed.' ; droptoshell ) ;}
 
