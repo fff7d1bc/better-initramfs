@@ -13,6 +13,7 @@
 clear
 
 # Default values.
+dodebug=false
 luks=false
 lvm=false
 rescueshell=false
@@ -79,6 +80,9 @@ for i in $(cat /proc/cmdline); do
 		rootdelay\=*)
 			rootdelay=$(get_opt $i)
 		;;
+		dodebug)
+			dodebug=true
+		;;
 	esac
 done
 ####
@@ -88,6 +92,12 @@ run busybox --install -s
 
 if [ ! -z $rootdelay ]; then
 	ewarn "Waiting $(get_opt $rootdelay) sec before init /dev."
+        case $rootdelay in
+            *[![:digit:].]*)
+	        ewarn "rootdelay must numeric/rootdelay(=$rootdelay) collect 5sec."
+                rootdelay=5
+                ;;
+        esac
 	run sleep $(get_opt $rootdelay)
 fi
 
@@ -106,6 +116,10 @@ fi
 
 if [ -z $root ]; then
 	eerror "\$root variable is empty. This is fatal."
+fi
+
+if [ $dodebug = "true" ]; then
+        droptoshell
 fi
 
 if [ $lvm = "true" ]; then
