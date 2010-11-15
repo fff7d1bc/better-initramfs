@@ -132,6 +132,10 @@ if [ $luks = "true" ]; then
 		eerror "You have enabled luks but your \$enc_root variable is empty."
 		droptoshell
 	fi
+	if [ ! -e /bin/cryptsetup ]; then
+		eerror "The ramdisk does not support LUKS"
+		droptoshell
+	fi
 	
 	einfo "Opening encrypted partition and mapping to /dev/mapper/enc_root."
 	# Resolve possible UUID or LABEL of enc_root now, after getting lvm up.
