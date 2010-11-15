@@ -10,7 +10,7 @@ eerror() { echo -ne "\033[1;30m>\033[0;31m>\033[1;31m> ${@}\033[0m\n" ;}
 droptoshell() {
 	ewarn "Dropping to shell."
 	ewarn "\tIn order to reboot press control-alt-delete."
-	exec sh
+	/bin/sh
 }
 
 run() { "$@" || ( eerror $@ 'failed.' ; droptoshell ) ;}
