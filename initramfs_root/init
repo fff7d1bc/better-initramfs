@@ -18,6 +18,8 @@ lvm=false
 rescueshell=false
 tuxonice=false
 mdev_fallback=false
+cryptsetup_options=""
+mntkey='/mnt/key'
 
 ## Config.
 if [ -f /config ]; then
@@ -61,6 +63,12 @@ for i in $(cat /proc/cmdline); do
 		;;
 		enc_root\=*)
 			enc_root=$(get_opt $i)
+		;;
+		enc_keydev\=*)
+			enc_keydev=$(get_opt $i)
+		;;
+		enc_keyfile\=*)
+			enc_keyfile=$(get_opt $i)
 		;;
 		luks)
 			luks=true
@@ -145,8 +153,49 @@ if [ $luks = "true" ]; then
 	run echo -e "#!/bin/sh\nexit 0" > /sbin/udevadm
 	run chmod 755 /sbin/udevadm
 
+        # LUKS device check
         if cryptsetup isLuks $enc_root > /dev/null 2>&1; then
-	    run cryptsetup luksOpen "${enc_root}" enc_root
+            if [ -n $enc_keydev ]; then
+                enc_keydev="$(get_device $enc_keydev)"
+                if [ -n $enc_keyfile ]; then
+                    einfo "\$enc_keydev=$enc_keydev, \$enc_keyfile=$enc_keyfile"
+                    if [ -b $enc_keydev ]; then
+                        einfo "Using key device $enc_keydev"
+                    else
+                        einfo "Please insert removable device $enc_keydev"
+                        count=10 # wait 10sec
+                        while [ ${count} -gt 0 ]; do
+                            count=$((count-1))
+                            sleep 1
+                            if [ -b $enc_keydev ]; then
+                                einfo "device $enc_keydev detected."
+                                break
+                            fi
+                        done
+                    fi
+                    [ -d $mntkey ] || mkdir -p $mntkey
+                    if mount -t auto -o ro $enc_keydev $mntkey >/dev/null 2>&1; then
+                        sync; sync; sync
+                        if [ -e "${mntkey}${enc_keyfile}" ]; then
+                            cryptsetup_options="-d ${mntkey}${enc_keyfile}"
+                            einfo "mount $enc_keydev, using option '$cryptsetup_options'"
+                        else
+                            ewarn "keyfile ($enc_keyfile) not found, umount $mntkey"
+                            umount $mntkey
+                        fi
+                    else
+		        ewarn "enc_keyfile= variable is empty, skipping"
+                    fi
+                fi
+            fi
+
+	    run cryptsetup $cryptsetup_options luksOpen $enc_root enc_root
+
+            if [ x"$cryptsetup_options" != x"" ]; then
+		einfo "Umounting $mntkey"
+                umount $mntkey
+            fi
+
 	    if [ $lvm = "true" ]; then
 		einfo "Again, getting LVM volumes up (if any, after map dmcrypt)."
 		run lvm vgscan && run lvm vgchange -a y
