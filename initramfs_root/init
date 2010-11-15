@@ -158,7 +158,6 @@ if [ $luks = "true" ]; then
             if [ -n $enc_root_keydev ]; then
                 enc_root_keydev="$(get_device $enc_root_keydev)"
                 if [ -n $enc_root_keyfile ]; then
-                    einfo "\$enc_root_keydev=$enc_root_keydev, \$enc_root_keyfile=$enc_root_keyfile"
                     if [ -b $enc_root_keydev ]; then
                         einfo "Using key device '$enc_root_keydev'"
                     else
@@ -175,7 +174,9 @@ if [ $luks = "true" ]; then
                     fi
                     [ -d $mntkey ] || mkdir -p $mntkey
                     if mount -t auto -o ro $enc_root_keydev $mntkey >/dev/null 2>&1; then
+                        # FIXME: delay need?
                         sync; sync; sync
+                        sleep 3
                         if [ -e "${mntkey}${enc_root_keyfile}" ]; then
                             cryptsetup_options="-d ${mntkey}${enc_root_keyfile}"
                             einfo "mount $enc_root_keydev, using option '$cryptsetup_options'"
