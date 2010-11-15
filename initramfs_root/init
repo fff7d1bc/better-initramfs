@@ -13,7 +13,6 @@
 clear
 
 # Default values.
-dodebug=false
 luks=false
 lvm=false
 rescueshell=false
@@ -84,9 +83,6 @@ for i in $(cat /proc/cmdline); do
 		rootdelay\=*)
 			rootdelay=$(get_opt $i)
 		;;
-		dodebug)
-			dodebug=true
-		;;
 	esac
 done
 ####
@@ -120,10 +116,6 @@ fi
 
 if [ -z $root ]; then
 	eerror "\$root variable is empty. This is fatal."
-fi
-
-if [ $dodebug = "true" ]; then
-        droptoshell
 fi
 
 if [ $lvm = "true" ]; then
