@@ -157,11 +157,11 @@ if [ $luks = "true" ]; then
 
         # LUKS device check
         if cryptsetup isLuks $enc_root > /dev/null 2>&1; then
-            if [ -n $enc_root_keydev ]; then
+            if [ x"${enc_root_keydev}" != x"" ]; then
                 enc_root_keydev="$(get_device $enc_root_keydev)"
-                if [ -n $enc_root_keyfile ]; then
+                if [ x"${enc_root_keyfile}" != x"" ] && [ x"${enc_root_keydev}" != x"" ]; then
                     if [ -b $enc_root_keydev ]; then
-                        einfo "Using key device '$enc_root_keydev'"
+                        einfo "Using key device=$enc_root_keydev and keyfile=${enc_root_keyfile}"
                     else
                         einfo "Please insert removable device $enc_root_keydev"
                         count=10 # wait 10sec
@@ -173,6 +173,7 @@ if [ $luks = "true" ]; then
                                 break
                             fi
                         done
+                        test $count -eq 0 && ewarn "device $enc_root_keydev not found, skipping"
                     fi
                     [ -d $mntkey ] || mkdir -p $mntkey
                     if mount -n -t auto -o ro $enc_root_keydev $mntkey >/dev/null 2>&1; then
