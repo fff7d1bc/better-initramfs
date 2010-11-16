@@ -2,3 +2,5 @@
 * Support loadable kernel modules.
 * Support software raid.
 * Support for key on external device (enc_keydev and enc_keyfile).
+* Check if needed binary is in place when enabled by option (while booting).
+* Print version number when building image.
