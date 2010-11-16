@@ -7,9 +7,9 @@ boot {
 
 "better initramfs LVM & Enc" {
 	kernel /kernel-x86[-v]
-	initrd initramfs.cpio.gz
+	initrd /initramfs.cpio.gz
 	params += luks enc_root=uuid=6db23e98-6730-47e1-be69-59f93e2ad788
-	params += enc_keydev=uuid=d8de7366-e995-4ba8-ad7a-77a96109f622 enc_keyfile=/keyfile
+	params += enc_root_keydev=uuid=d8de7366-e995-4ba8-ad7a-77a96109f622 enc_root_keyfile=/keyfile
 	params += lvm root=/dev/mapper/work-root
 	params += rootfstype=ext4
 	params += resume=swap:/dev/mapper/work-swap
