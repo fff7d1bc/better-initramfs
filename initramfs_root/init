@@ -18,6 +18,8 @@ lvm=false
 rescueshell=false
 tuxonice=false
 mdev_fallback=false
+enc_root_keydev=""
+enc_root_keyfile=""
 cryptsetup_options=""
 mntkey='/mnt/key'
 
@@ -173,16 +175,15 @@ if [ $luks = "true" ]; then
                         done
                     fi
                     [ -d $mntkey ] || mkdir -p $mntkey
-                    if mount -t auto -o ro $enc_root_keydev $mntkey >/dev/null 2>&1; then
-                        # FIXME: delay need?
-                        sync; sync; sync
-                        sleep 3
+                    if mount -n -t auto -o ro $enc_root_keydev $mntkey >/dev/null 2>&1; then
+                        # # FIXME: delay need?
+                        # sync; sync; sync
+                        # sleep 3
                         if [ -e "${mntkey}${enc_root_keyfile}" ]; then
                             cryptsetup_options="-d ${mntkey}${enc_root_keyfile}"
-                            einfo "mount $enc_root_keydev, using option '$cryptsetup_options'"
                         else
                             ewarn "keyfile ($enc_root_keyfile) not found, umount $mntkey"
-                            umount $mntkey
+                            umount -n $mntkey
                         fi
                     fi
                 else
@@ -194,7 +195,7 @@ if [ $luks = "true" ]; then
 
             if [ x"$cryptsetup_options" != x"" ]; then
 		einfo "Umounting $mntkey"
-                umount $mntkey
+                umount -n $mntkey
             fi
 
 	    if [ $lvm = "true" ]; then
