@@ -9,6 +9,17 @@
 # Load functions.
 . /functions.sh
 
+# Prepare dirs
+run dodir /dev /newroot /sbin /proc /sys /etc
+
+# Basic /dev content, we need it as fast as possible.
+[ ! -e /dev/console ]	&& run mknod /dev/console c 5 1
+[ ! -e /dev/null ]	&& run mknod /dev/null c 1 3
+[ ! -e /dev/tty ]	&& run mknod /dev/tty c 5 0
+[ ! -e /dev/urandom ]	&& run mknod /dev/urandom c 1 9
+[ ! -e /dev/random ]	&& run mknod /dev/random c 1 8
+[ ! -e /dev/zero ]	&& run mknod /dev/zero c 1 5
+
 # Clear the screen
 clear
 
@@ -37,9 +48,6 @@ ver="$(cat /VERSION)"
 einfo "better-initramfs v${ver}"
 einfo "kernel ${kernelver}\n"
 
-# Prepare dirs.
-run dodir /dev /newroot /sbin /proc /sys /etc
-
 einfo "Mounting /proc"
 run mount -t proc proc /proc
 
@@ -48,13 +56,6 @@ echo 0 > /proc/sys/kernel/printk
 
 einfo "Mounting /sys"
 run mount -t sysfs sysfs /sys
-
-einfo "Initiating /dev (devtmpfs)."
-if ! mount -t devtmpfs devtmpfs /dev; then
-	ewarn "Unable to mount devtmpfs, missing CONFIG_DEVTMPFS?"
-	ewarn "Fallback to busybox's mdev."
-	mdev_fallback="true"
-fi
 
 # Process command line options
 for i in $(cat /proc/cmdline); do
@@ -68,12 +69,12 @@ for i in $(cat /proc/cmdline); do
 		enc_root\=*)
 			enc_root=$(get_opt $i)
 		;;
-        enc_root_keydev\=*)
-            enc_root_keydev=$(get_opt $i)
-        ;;
-        enc_root_keyfile\=*)
-            enc_root_keyfile=$(get_opt $i)
-        ;;
+	        enc_root_keydev\=*)
+       			enc_root_keydev=$(get_opt $i)
+        	;;
+        	enc_root_keyfile\=*)
+            		enc_root_keyfile=$(get_opt $i)
+        	;;
 		luks)
 			luks=true
 		;;
@@ -83,12 +84,12 @@ for i in $(cat /proc/cmdline); do
 		rescueshell)
 			rescueshell=true
 		;;
-        nic\=*)
-            nic=$(get_opt $i)
-        ;;
-        ipaddr\=*)
-            ipaddr=$(get_opt $i)
-        ;;
+        	nic\=*)
+            		nic=$(get_opt $i)
+        	;;
+        	ipaddr\=*)
+            		ipaddr=$(get_opt $i)
+        	;;
 		tuxonice)
 			tuxonice=true
 		;;
@@ -110,20 +111,22 @@ run busybox --install -s
 
 if [ ! -z $rootdelay ]; then
 	ewarn "Waiting $(get_opt $rootdelay) sec before init /dev."
-    case $roodtdelay in
-        *[![:digit:].]*)
-            ewarn "rootdelay must numeric/rootdelay(=$rootdelay) collect 5sec."
-            rootdelay=5
-    ;;
-    esac
+    	case $roodtdelay in
+   		*[![:digit:].]*)
+       			ewarn "rootdelay must numeric/rootdelay(=$rootdelay) collect 5sec."
+            		rootdelay=5
+    		;;
+    	esac
 	run sleep $(get_opt $rootdelay)
 fi
 
-if [ $mdev_fallback = "true" ]; then
+einfo "Initiating /dev (devtmpfs)."
+if ! mount -t devtmpfs devtmpfs /dev 2>/dev/null; then
+	ewarn "Unable to mount devtmpfs, missing CONFIG_DEVTMPFS? Switching to busybox's mdev."
+	mdev_fallback="true"
+
 	einfo "Initiating /dev (mdev)."
 	touch /etc/mdev.conf # Do we really need this empty file?
-	run mknod /dev/null c 1 3
-	run mknod /dev/tty c 5 0
 	run echo /sbin/mdev > /proc/sys/kernel/hotplug
 	run mdev -s
 fi
@@ -147,11 +150,11 @@ if [ $luks = "true" ]; then
 		droptoshell
 	fi
 	
-    # cryptsetup exist?
-    if [ ! -e /bin/cryptsetup ]; then
-        eerror "The ramdisk does not support LUKS."
-        dropshell
-    fi
+	# cryptsetup exist?
+	if [ ! -e /bin/cryptsetup ]; then
+        	eerror "The ramdisk does not support LUKS."
+        	dropshell
+    	fi
 
 	einfo "Opening encrypted partition and mapping to /dev/mapper/enc_root."
 	# Resolve possible UUID or LABEL of enc_root now, after getting lvm up.
@@ -165,44 +168,52 @@ if [ $luks = "true" ]; then
 	run echo -e "#!/bin/sh\nexit 0" > /sbin/udevadm
 	run chmod 755 /sbin/udevadm
 
-    # LUKS device check
-    if cryptsetup isLuks $enc_root > /dev/null 2>&1; then
-        enc_root_keydev="$(get_device $enc_root_kedydev)"
-        if [ x"${enc_root_keyfile}" != x"" ] && [ x"${enc_root_keydev}" != x"" ]; then
-            if [ -b $enc_root_keydev ]; then
-                einfo "Using key device=$enc_root_keydev and keyfile=${enc_root_keyfile}."
-            else
-                einfo "Please insert removable device ${enc_root_kedev}."
-                count=10 # wait 10sec
-                while [ ${count} -gt 0 ]; do
-                    count=$((count-1))
-                    sleep 1
-                    if [ -b $enc_root_keydev ]; then
-                        einfo "device (${enc_root_keydev}) detected."
-                        break
-                    fi
-                done
-                test $count -eq 0 && ewarn "device (${enc_root_keydev}) not found, skipping"
-                [ -d $mntkey ] || mkdir -p $mntkey
-                if mount -n -t auto -o ro $enc_root_keydev $mntkey >/dev/null 2>&1; then
-                    if [ -e "${mntkey}${enc_root_keyfile}" ]; then
-                        cryptsetup_options="-d ${mntkey}${enc_root_keyfile}"
-                    else
-                        ewarn "keyfile (${enc_root_keyfile}) not found, umount ${mntkey}"
-                        umount -n $mntkey
-                    fi
-                fi
-        else
-            ewarn "enc_root_keyfile= variable is empty, skipping"
-        fi
-    fi
+	# LUKS device check
+	if cryptsetup isLuks $enc_root > /dev/null 2>&1; then
+		key_error=0
+        	if [ x"${enc_root_keyfile}" != x"" ] && [ x"${enc_root_keydev}" != x"" ]; then
+			enc_root_keydev="$(get_device $enc_root_kedydev)"
+            		if [ -b $enc_root_keydev ]; then
+                		einfo "Using key device=$enc_root_keydev and keyfile=${enc_root_keyfile}."
+            		else
+                		einfo "Please insert removable device ${enc_root_kedev}."
+                		count=10 # wait 10sec
+                		while [ ${count} -gt 0 ]; do
+                    			count=$((count-1))
+                    			if [ -b $enc_root_keydev ]; then
+                        			einfo "device (${enc_root_keydev}) detected."
+                    			fi
+                		done
+				if [ $count -eq 0 ]; then
+                			ewarn "device (${enc_root_keydev}) not found, skipping"
+					key_error=1
+				fi
+            		fi
+        	else
+            		ewarn "enc_root_keydev=/enc_root_keyfile= variable is empty, skipping"
+            		ewarn "(enc_root_keydev=${enc_root_keydev}, enc_root_keyfile=${enc_root_keyfile})"
+			key_error=1
+        	fi
 
-	run cryptsetup $cryptsetup_options luksOpen $enc_root enc_root
+		if [ $key_error -eq 0 ]; then
+                	[ -d $mntkey ] || mkdir -p $mntkey
+                	if mount -n -t auto -o ro $enc_root_keydev $mntkey >/dev/null 2>&1; then
+                    		if [ -e "${mntkey}${enc_root_keyfile}" ]; then
+                        		cryptsetup_options="-d ${mntkey}${enc_root_keyfile}"
+                    		else
+                        		ewarn "keyfile (${enc_root_keyfile}) not found, umount ${mntkey}"
+                        		umount -n $mntkey
+                    		fi
+                	fi
+		fi
 
-    if [ x"${cryptsetup_options}" != x"" ]; then
-        einfo "Unmounting $mntkey"
-        umount -n $mntkey
-    fi
+		run cryptsetup $cryptsetup_options luksOpen $enc_root enc_root
+
+		if [ x"${cryptsetup_options}" != x"" ]; then
+        		einfo "Unmounting $mntkey"
+        		umount -n $mntkey
+    		fi
+	fi # end of LUKS device check
 
 	if [ $lvm = "true" ]; then
 		einfo "Again, getting LVM volumes up (if any, after map dmcrypt)."
@@ -214,45 +225,44 @@ else
 fi
 
 if [ $rescueshell = "true" ]; then
-    if [ -n $ipaddr ]; then
-        einfo "try getting IPaddress (${ipaddr})."
-        ifconfig $nic $ipaddr up
-        if [ "$?" -eq 0 ]; then
-            if [ -x /bin/dropbear ]; then
-                # sanitalyze
-                for f in /etc/passwd /etc/shadow /etc/group /etc/nsswitch.conf /etc/localtime /bin/dropbear; do
-                    test -f $f && chown root:root $f
-                done
-                chmod 600 /etc/shadow
-                run hostname mybox
+	if [ -n $ipaddr ]; then
+       		einfo "try getting IPaddress (${ipaddr})."
+        	if ifconfig $nic $ipaddr up >/dev/null 2>&1; then
+            		if [ -x /bin/dropbear ]; then
+                		# sanitalyze
+                		for f in /etc/passwd /etc/shadow /etc/group /etc/nsswitch.conf /etc/localtime /bin/dropbear
+				do
+                    			test -f $f && chown root:root $f
+                		done
+                		chmod 600 /etc/shadow
+                		run hostname mybox
 
-                # make banner
-                [ ! -e /etc/dropbear/ ] && mkdir -p /etc/dropbear
-                echo "" > /etc/dropbear/banner
-                echo "better-iinitramfs v${ver}" >> /etc/dropbear/banner
-                echo "kernel ${kernelver}" >> /etc/dropbear/banner
-                echo "" >> /etc/dropbear/banner
+				# make banner
+                		[ ! -e /etc/dropbear/ ] && mkdir -p /etc/dropbear
+                		echo "" > /etc/dropbear/banner
+				echo "better-iinitramfs v${ver}" >> /etc/dropbear/banner
+				echo "kernel ${kernelver}" >> /etc/dropbear/banner
+				echo "" >> /etc/dropbear/banner
 
-                # make hostkey
-                [ ! -e /etc/dropbear/dropbear_dss_host_key ] && (
-                    einfo "Generating DSS-Hostkey..."
-                    dropbearkey -t dss -f /etc/dropbear/dropbear_dss_host_key
-                 )
-                [ ! -e /etc/dropbear/dropbear_rsa_host_key ] && (
-                    einfo "Generating RSA-Hostkey..."
-                    dropbearkey -t rsa -f /etc/dropbear/dropbear_rsa_host_key
-                )
+				# make hostkey
+				[ ! -e /etc/dropbear/dropbear_dss_host_key ] && (
+					einfo "Generating DSS-Hostkey..."
+				    	dropbearkey -t dss -f /etc/dropbear/dropbear_dss_host_key
+				)
+				[ ! -e /etc/dropbear/dropbear_rsa_host_key ] && (
+                    			einfo "Generating RSA-Hostkey..."
+                    			dropbearkey -t rsa -f /etc/dropbear/dropbear_rsa_host_key
+                		)
 
-                [ -d /var/run ] || mkdir -p /var/run
-                einfo "Starting dropbear"
-                dropbear -b /etc/dropbear/banner -F 2>&1 | tee /var/run/dropbear.log > /dev/tty10 &
-            fi
-        else
-            error "could not get IPaddr ${ipaddr}"
+				[ -d /var/run ] || mkdir -p /var/run
+                		einfo "Starting dropbear"
+                		dropbear -b /etc/dropbear/banner -F 2>&1 | tee /var/run/dropbear.log > /dev/tty10 &
+            		fi
+        	else
+            		error "could not get IPaddr ${ipaddr}"
         fi
-    fi
 	droptoshell
-    [ -e /var/run/dropbear.pid ] && kill "$(cat /var/run/dropbear.pid)"
+    	[ -e /var/run/dropbear.pid ] && kill "$(cat /var/run/dropbear.pid)"
 fi
 
 if [ $tuxonice = "true" ]; then
