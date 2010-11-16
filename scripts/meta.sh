@@ -19,13 +19,6 @@ bin() {
 	$workdir/dobin /usr/bin/dbscp
 	$workdir/dobin /usr/bin/dropbearkey
 	$workdir/dobin /usr/sbin/dropbear
-	$workdir/dobin /sbin/modprobe
-	$workdir/dobin /sbin/modinfo
-	$workdir/dobin /sbin/update-modules
-	$workdir/dobin /sbin/depmod
-	$workdir/dobin /sbin/rmmod
-	$workdir/dobin /sbin/lsmod
-	$workdir/dobin /sbin/insmod
 	$workdir/dobin /usr/bin/strace
 	
 }
