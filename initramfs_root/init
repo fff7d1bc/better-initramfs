@@ -25,7 +25,7 @@ mntkey='/mnt/key'
 
 ## Config.
 if [ -f /config ]; then
-        . /config
+    . /config
 fi
 
 # Basic
@@ -49,51 +49,51 @@ run mount -t sysfs sysfs /sys
 
 einfo "Initiating /dev (devtmpfs)."
 if ! mount -t devtmpfs devtmpfs /dev; then
-	ewarn "Unable to mount devtmpfs, missing CONFIG_DEVTMPFS?"
-	ewarn "Fallback to busybox's mdev."
-	mdev_fallback="true"
+    ewarn "Unable to mount devtmpfs, missing CONFIG_DEVTMPFS?"
+    ewarn "Fallback to busybox's mdev."
+    mdev_fallback="true"
 fi
 
 # Process command line options
 for i in $(cat /proc/cmdline); do
-	case "${i}" in
-		root\=*)
-			root=$(get_opt $i)
-		;;
-		init\=*)
-			init=$(get_opt $i)
-		;;
-		enc_root\=*)
-			enc_root=$(get_opt $i)
-		;;
-		enc_root_keydev\=*)
-			enc_root_keydev=$(get_opt $i)
-		;;
-		enc_root_keyfile\=*)
-			enc_root_keyfile=$(get_opt $i)
-		;;
-		luks)
-			luks=true
-		;;
-		lvm)
-			lvm=true
-		;;
-		rescueshell)
-			rescueshell=true
-		;;
-		tuxonice)
-			tuxonice=true
-		;;
-		resume\=*)
-			resume=$(get_opt $i)
-		;;
-		rootfstype\=*)
-			rootfstype=$(get_opt $i)
-		;;
-		rootdelay\=*)
-			rootdelay=$(get_opt $i)
-		;;
-	esac
+    case "${i}" in
+        root\=*)
+            root=$(get_opt $i)
+            ;;
+        init\=*)
+            init=$(get_opt $i)
+            ;;
+        enc_root\=*)
+            enc_root=$(get_opt $i)
+            ;;
+        enc_root_keydev\=*)
+            enc_root_keydev=$(get_opt $i)
+            ;;
+        enc_root_keyfile\=*)
+            enc_root_keyfile=$(get_opt $i)
+            ;;
+        luks)
+            luks=true
+            ;;
+        lvm)
+            lvm=true
+            ;;
+        rescueshell)
+            rescueshell=true
+            ;;
+        tuxonice)
+            tuxonice=true
+            ;;
+        resume\=*)
+            resume=$(get_opt $i)
+            ;;
+        rootfstype\=*)
+            rootfstype=$(get_opt $i)
+            ;;
+        rootdelay\=*)
+            rootdelay=$(get_opt $i)
+            ;;
+    esac
 done
 ####
 
@@ -101,146 +101,146 @@ einfo "Create all the symlinks to /bin/busybox."
 run busybox --install -s
 
 if [ ! -z $rootdelay ]; then
-	ewarn "Waiting $(get_opt $rootdelay) sec before init /dev."
-        case $rootdelay in
-            *[![:digit:].]*)
-	        ewarn "rootdelay must numeric/rootdelay(=$rootdelay) collect 5sec."
-                rootdelay=5
-                ;;
-        esac
-	run sleep $(get_opt $rootdelay)
+    ewarn "Waiting $(get_opt $rootdelay) sec before init /dev."
+    case $rootdelay in
+        *[![:digit:].]*)
+            ewarn "rootdelay must numeric/rootdelay(=$rootdelay) collect 5sec."
+            rootdelay=5
+            ;;
+    esac
+    run sleep $(get_opt $rootdelay)
 fi
 
 if [ $mdev_fallback = "true" ]; then
-	einfo "Initiating /dev (mdev)."
-	touch /etc/mdev.conf # Do we really need this empty file?
-	run mknod /dev/null c 1 3
-	run mknod /dev/tty c 5 0
-	run echo /sbin/mdev > /proc/sys/kernel/hotplug
-	run mdev -s
+    einfo "Initiating /dev (mdev)."
+    touch /etc/mdev.conf # Do we really need this empty file?
+    run mknod /dev/null c 1 3
+    run mknod /dev/tty c 5 0
+    run echo /sbin/mdev > /proc/sys/kernel/hotplug
+    run mdev -s
 fi
 
 if [ -z $init ]; then
-	init="/sbin/init"
+    init="/sbin/init"
 fi
 
 if [ -z $root ]; then
-	eerror "\$root variable is empty. This is fatal."
+    eerror "\$root variable is empty. This is fatal."
 fi
 
 if [ $lvm = "true" ]; then
-	einfo "Getting LVM volumes up (if any)."
-	run lvm vgscan && run lvm vgchange -a y
+    einfo "Getting LVM volumes up (if any)."
+    run lvm vgscan && run lvm vgchange -a y
 fi
 
 if [ $luks = "true" ]; then
-	if [ -z $enc_root ]; then
-		eerror "You have enabled luks but your \$enc_root variable is empty."
-		droptoshell
-	fi
-	if [ ! -e /bin/cryptsetup ]; then
-		eerror "The ramdisk does not support LUKS"
-		droptoshell
-	fi
-	
-	einfo "Opening encrypted partition and mapping to /dev/mapper/enc_root."
-	# Resolve possible UUID or LABEL of enc_root now, after getting lvm up.
-	enc_root="$(get_device $enc_root)"
-	if [ -z $enc_root ]; then
-        	eerror "\$enc_root variable is empty. Wrong UUID/LABEL?"
-	        droptoshell
-	fi
+    if [ -z $enc_root ]; then
+        eerror "You have enabled luks but your \$enc_root variable is empty."
+        droptoshell
+    fi
+    if [ ! -e /bin/cryptsetup ]; then
+        eerror "The ramdisk does not support LUKS"
+        droptoshell
+    fi
 
-	# Hack for cryptsetup which trying to run /sbin/udevadm.
-	run echo -e "#!/bin/sh\nexit 0" > /sbin/udevadm
-	run chmod 755 /sbin/udevadm
+    einfo "Opening encrypted partition and mapping to /dev/mapper/enc_root."
+    # Resolve possible UUID or LABEL of enc_root now, after getting lvm up.
+    enc_root="$(get_device $enc_root)"
+    if [ -z $enc_root ]; then
+        eerror "\$enc_root variable is empty. Wrong UUID/LABEL?"
+        droptoshell
+    fi
 
-        # LUKS device check
-        if cryptsetup isLuks $enc_root > /dev/null 2>&1; then
-            if [ x"${enc_root_keydev}" != x"" ]; then
-                enc_root_keydev="$(get_device $enc_root_keydev)"
-                if [ x"${enc_root_keyfile}" != x"" ] && [ x"${enc_root_keydev}" != x"" ]; then
-                    if [ -b $enc_root_keydev ]; then
-                        einfo "Using key device=$enc_root_keydev and keyfile=${enc_root_keyfile}"
-                    else
-                        einfo "Please insert removable device $enc_root_keydev"
-                        count=10 # wait 10sec
-                        while [ ${count} -gt 0 ]; do
-                            count=$((count-1))
-                            sleep 1
-                            if [ -b $enc_root_keydev ]; then
-                                einfo "device $enc_root_keydev detected."
-                                break
-                            fi
-                        done
-                        test $count -eq 0 && ewarn "device $enc_root_keydev not found, skipping"
-                    fi
-                    [ -d $mntkey ] || mkdir -p $mntkey
-                    if mount -n -t auto -o ro $enc_root_keydev $mntkey >/dev/null 2>&1; then
-                        # # FIXME: delay need?
-                        # sync; sync; sync
-                        # sleep 3
-                        if [ -e "${mntkey}${enc_root_keyfile}" ]; then
-                            cryptsetup_options="-d ${mntkey}${enc_root_keyfile}"
-                        else
-                            ewarn "keyfile ($enc_root_keyfile) not found, umount $mntkey"
-                            umount -n $mntkey
-                        fi
-                    fi
+    # Hack for cryptsetup which trying to run /sbin/udevadm.
+    run echo -e "#!/bin/sh\nexit 0" > /sbin/udevadm
+    run chmod 755 /sbin/udevadm
+
+    # LUKS device check
+    if cryptsetup isLuks $enc_root > /dev/null 2>&1; then
+        if [ x"${enc_root_keydev}" != x"" ]; then
+            enc_root_keydev="$(get_device $enc_root_keydev)"
+            if [ x"${enc_root_keyfile}" != x"" ] && [ x"${enc_root_keydev}" != x"" ]; then
+                if [ -b $enc_root_keydev ]; then
+                    einfo "Using key device=$enc_root_keydev and keyfile=${enc_root_keyfile}"
                 else
-		    ewarn "enc_root_keyfile= variable is empty, skipping"
+                    einfo "Please insert removable device $enc_root_keydev"
+                    count=10 # wait 10sec
+                    while [ ${count} -gt 0 ]; do
+                        count=$((count-1))
+                        sleep 1
+                        if [ -b $enc_root_keydev ]; then
+                            einfo "device $enc_root_keydev detected."
+                            break
+                        fi
+                    done
+                    test $count -eq 0 && ewarn "device $enc_root_keydev not found, skipping"
                 fi
+                [ -d $mntkey ] || mkdir -p $mntkey
+                if mount -n -t auto -o ro $enc_root_keydev $mntkey >/dev/null 2>&1; then
+                    # FIXEME: need delay?
+                    # sync; sync; sync
+                    # sleep 3
+                    if [ -e "${mntkey}${enc_root_keyfile}" ]; then
+                        cryptsetup_options="-d ${mntkey}${enc_root_keyfile}"
+                    else
+                        ewarn "keyfile ($enc_root_keyfile) not found, umount $mntkey"
+                        umount -n $mntkey
+                    fi
+                fi
+            else
+                ewarn "enc_root_keyfile= variable is empty, skipping"
             fi
-
-	    run cryptsetup $cryptsetup_options luksOpen $enc_root enc_root
-
-            if [ x"$cryptsetup_options" != x"" ]; then
-		einfo "Umounting $mntkey"
-                umount -n $mntkey
-            fi
-
-	    if [ $lvm = "true" ]; then
-		einfo "Again, getting LVM volumes up (if any, after map dmcrypt)."
-		run lvm vgscan && run lvm vgchange -a y
-	    fi
-        else
-            eerror "device ($enc_root) is not LUKS."
-	    droptoshell
         fi
-        
+
+        run cryptsetup $cryptsetup_options luksOpen $enc_root enc_root
+
+        if [ x"$cryptsetup_options" != x"" ]; then
+            einfo "Umounting $mntkey"
+            umount -n $mntkey
+        fi
+
+        if [ $lvm = "true" ]; then
+            einfo "Again, getting LVM volumes up (if any, after map dmcrypt)."
+            run lvm vgscan && run lvm vgchange -a y
+        fi
+    else
+        eerror "device ($enc_root) is not LUKS."
+        droptoshell
+    fi
+
 
 fi
 
 if [ $rescueshell = "true" ]; then
-	droptoshell
+    droptoshell
 fi
 
 if [ $tuxonice = "true" ]; then
-	if [ ! -z $resume ]; then
-		if [ ! -f /sys/power/tuxonice/do_resume ]; then
-			ewarn "Your kernel do not support TuxOnIce.";
-		else
-			einfo "Sending do_resume signal to TuxOnIce."
-			run echo 1 > /sys/power/tuxonice/do_resume
-		fi
-	else
-		ewarn "resume= variable is empty, not cool, skipping tuxonice."
-	fi
+    if [ ! -z $resume ]; then
+        if [ ! -f /sys/power/tuxonice/do_resume ]; then
+            ewarn "Your kernel do not support TuxOnIce.";
+        else
+            einfo "Sending do_resume signal to TuxOnIce."
+            run echo 1 > /sys/power/tuxonice/do_resume
+        fi
+    else
+        ewarn "resume= variable is empty, not cool, skipping tuxonice."
+    fi
 fi
 
 #Mount the root device
 mountparams="-o ro"
 
 if [ ! -z $rootfstype ]; then
-	mountparams="$mountparams -t $rootfstype"
+    mountparams="$mountparams -t $rootfstype"
 fi
 
 einfo "Mounting rootfs to /newroot."
 # Resolve $root now, after getting up lvm and dmcrypt (and lvm ;p).
 root=$(get_device $root)
 if [ -z $root ]; then
-	eerror "\$root variable is empty. Wrong UUID/LABEL?"
-	droptoshell
+    eerror "\$root variable is empty. Wrong UUID/LABEL?"
+    droptoshell
 fi
 
 run mount $mountparams "${root}" /newroot
@@ -251,15 +251,14 @@ einfo "Umounting /sys and /proc."
 run umount /sys /proc
 
 if [ $mdev_fallback = "false" ]; then
-	einfo "Unmounting /dev."
-	run umount /dev
+    einfo "Unmounting /dev."
+    run umount /dev
 fi
-
 
 #Switch to the new root and execute init
 if [[ -x "/newroot/${init}" ]] ; then
-	einfo "Switching root to /newroot and executing /sbin/init."
-	exec switch_root /newroot "${init}"
+    einfo "Switching root to /newroot and executing /sbin/init."
+    exec switch_root /newroot "${init}"
 fi
 
 ewarn "Something goes wrong."
