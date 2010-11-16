@@ -9,6 +9,17 @@
 # Load functions.
 . /functions.sh
 
+# Prepare dirs
+run dodir /dev /newroot /sbin /proc /sys /etc
+
+# Basic /dev content, we need it as fast as possible.
+[ ! -e /dev/console ]	&& run mknod /dev/console c 5 1
+[ ! -e /dev/null ]	&& run mknod /dev/null c 1 3
+[ ! -e /dev/tty ]	&& run mknod /dev/tty c 5 0
+[ ! -e /dev/urandom ]	&& run mknod /dev/urandom c 1 9
+[ ! -e /dev/random ]	&& run mknod /dev/random c 1 8
+[ ! -e /dev/zero ]	&& run mknod /dev/zero c 1 5
+
 # Clear the screen
 clear
 
@@ -18,6 +29,7 @@ lvm=false
 rescueshell=false
 tuxonice=false
 mdev_fallback=false
+rootdelay=false
 
 ## Config.
 if [ -f /config ]; then
@@ -30,9 +42,6 @@ ver="$(cat /VERSION)"
 
 einfo "better-initramfs v${ver}"
 einfo "kernel ${kernelver}\n"
-
-# Prepare dirs.
-run dodir /dev /newroot /sbin /proc /sys /etc
 
 einfo "Mounting /proc"
 run mount -t proc proc /proc
@@ -83,7 +92,7 @@ done
 einfo "Create all the symlinks to /bin/busybox."
 run busybox --install -s
 
-if [ -n $rootdelay ]; then
+if [ $rootdelay != "false" ]; then
 	if [ $rootdelay -gt 0 2>/dev/null ]; then
 		einfo "Waiting $(get_opt $rootdelay)s (rootdelay)"
 		run sleep $(get_opt $rootdelay)
@@ -93,14 +102,12 @@ if [ -n $rootdelay ]; then
 fi
 
 einfo "Initiating /dev (devtmpfs)."
-if ! mount -t devtmpfs devtmpfs /dev; then
+if ! mount -t devtmpfs devtmpfs /dev 2>/dev/null; then
 	ewarn "Unable to mount devtmpfs, missing CONFIG_DEVTMPFS? Switching to busybox's mdev."
 	mdev_fallback="true"
 
 	einfo "Initiating /dev (mdev)."
 	touch /etc/mdev.conf # Do we really need this empty file?
-	run mknod /dev/null c 1 3
-	run mknod /dev/tty c 5 0
 	run echo /sbin/mdev > /proc/sys/kernel/hotplug
 	run mdev -s
 fi
