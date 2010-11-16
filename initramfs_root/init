@@ -10,7 +10,7 @@
 . /functions.sh
 
 # Prepare dirs
-run dodir /dev /newroot /sbin /proc /sys /etc
+run dodir /dev /newroot /sbin /proc /sys
 
 # Basic /dev content, we need it as fast as possible.
 [ ! -e /dev/console ]	&& run mknod /dev/console c 5 1
@@ -28,11 +28,12 @@ luks=false
 lvm=false
 rescueshell=false
 nic="eth0"
-ipaddr="192.168.0.123"
+ipaddr=false
 tuxonice=false
 mdev_fallback=false
-enc_root_keydev=""
-enc_root_keyfile=""
+rootdelay=false
+enc_root_keydev=false
+enc_root_keyfile=false
 cryptsetup_options=""
 mntkey='/mnt/key'
 
@@ -109,15 +110,13 @@ done
 einfo "Create all the symlinks to /bin/busybox."
 run busybox --install -s
 
-if [ ! -z $rootdelay ]; then
-	ewarn "Waiting $(get_opt $rootdelay) sec before init /dev."
-    	case $roodtdelay in
-   		*[![:digit:].]*)
-       			ewarn "rootdelay must numeric/rootdelay(=$rootdelay) collect 5sec."
-            		rootdelay=5
-    		;;
-    	esac
-	run sleep $(get_opt $rootdelay)
+if [ $rootdelay != "false" ]; then
+	if [ $rootdelay -gt 0 2>/dev/null ]; then
+		einfo "Waiting $(get_opt $rootdelay)s (rootdelay)"
+		run sleep $(get_opt $rootdelay)
+	else
+		ewarn "\$rootdelay variable must be numeric and greater than zero. Skipping rootdelay."
+	fi
 fi
 
 einfo "Initiating /dev (devtmpfs)."
@@ -150,7 +149,7 @@ if [ $luks = "true" ]; then
 		droptoshell
 	fi
 	
-	# cryptsetup exist?
+	# cryptsetup not found.
 	if [ ! -e /bin/cryptsetup ]; then
         	eerror "The ramdisk does not support LUKS."
         	dropshell
@@ -171,13 +170,14 @@ if [ $luks = "true" ]; then
 	# LUKS device check
 	if cryptsetup isLuks $enc_root > /dev/null 2>&1; then
 		key_error=0
-        	if [ x"${enc_root_keyfile}" != x"" ] && [ x"${enc_root_keydev}" != x"" ]; then
-			enc_root_keydev="$(get_device $enc_root_kedydev)"
+        	if [ ${enc_root_keyfile} != "false" ] && [ ${enc_root_keydev} != "false" ]; then
+			einfo "DEBUG:enc_root_keydev=$enc_root_keydev"
+			enc_root_keydev="$(get_device $enc_root_keydev)"
             		if [ -b $enc_root_keydev ]; then
-                		einfo "Using key device=$enc_root_keydev and keyfile=${enc_root_keyfile}."
+                		einfo "Using key device=$enc_root_keydev and keyfile=$enc_root_keyfile"
             		else
-                		einfo "Please insert removable device ${enc_root_kedev}."
-                		count=10 # wait 10sec
+                		einfo "Please insert removable device ${enc_root_keydev}."
+                		count=30 # wait 30sec
                 		while [ ${count} -gt 0 ]; do
                     			count=$((count-1))
                     			if [ -b $enc_root_keydev ]; then
@@ -190,7 +190,7 @@ if [ $luks = "true" ]; then
 				fi
             		fi
         	else
-            		ewarn "enc_root_keydev=/enc_root_keyfile= variable is empty, skipping"
+            		ewarn "enc_root_keydev= or enc_root_keyfile= variable is empty, skipping"
             		ewarn "(enc_root_keydev=${enc_root_keydev}, enc_root_keyfile=${enc_root_keyfile})"
 			key_error=1
         	fi
@@ -225,7 +225,7 @@ else
 fi
 
 if [ $rescueshell = "true" ]; then
-	if [ -n $ipaddr ]; then
+	if [ $ipaddr != "false" ]; then
        		einfo "try getting IPaddress (${ipaddr})."
         	if ifconfig $nic $ipaddr up >/dev/null 2>&1; then
             		if [ -x /bin/dropbear ]; then
@@ -257,10 +257,11 @@ if [ $rescueshell = "true" ]; then
 				[ -d /var/run ] || mkdir -p /var/run
                 		einfo "Starting dropbear"
                 		dropbear -b /etc/dropbear/banner -F 2>&1 | tee /var/run/dropbear.log > /dev/tty10 &
-            		fi
-        	else
-            		error "could not get IPaddr ${ipaddr}"
-        fi
+            		fi # -x /bin/dropbear
+        	fi # ifconfig 
+       	else
+        	error "could not get IPaddr ${ipaddr}"
+        fi # ipaddr setting check
 	droptoshell
     	[ -e /var/run/dropbear.pid ] && kill "$(cat /var/run/dropbear.pid)"
 fi
@@ -287,7 +288,7 @@ fi
 
 einfo "Mounting rootfs to /newroot."
 # Resolve $root now, after getting up lvm and dmcrypt (and lvm ;p).
-root=$(get_device $root)
+root="$(get_device $root)"
 if [ -z $root ]; then
 	eerror "\$root variable is empty. Wrong UUID/LABEL?"
 	droptoshell
@@ -314,3 +315,5 @@ fi
 
 ewarn "Something goes wrong."
 droptoshell
+
+#-- vim: tabstop=8
