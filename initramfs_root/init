@@ -83,9 +83,13 @@ done
 einfo "Create all the symlinks to /bin/busybox."
 run busybox --install -s
 
-if [ ! -z $rootdelay ]; then
-	ewarn "Waiting $(get_opt $rootdelay) sec before init /dev."
-	run sleep $(get_opt $rootdelay)
+if [ -n $rootdelay ]; then
+	if [ $rootdelay -gt 0 2>/dev/null ]; then
+		einfo "Waiting $(get_opt $rootdelay)s (rootdelay)"
+		run sleep $(get_opt $rootdelay)
+	else
+		ewarn "\$rootdelay variable must be numeric and greater than zero. Skipping rootdelay."
+	fi
 fi
 
 einfo "Initiating /dev (devtmpfs)."
