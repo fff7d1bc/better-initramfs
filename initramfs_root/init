@@ -43,13 +43,6 @@ echo 0 > /proc/sys/kernel/printk
 einfo "Mounting /sys"
 run mount -t sysfs sysfs /sys
 
-einfo "Initiating /dev (devtmpfs)."
-if ! mount -t devtmpfs devtmpfs /dev; then
-	ewarn "Unable to mount devtmpfs, missing CONFIG_DEVTMPFS?"
-	ewarn "Fallback to busybox's mdev."
-	mdev_fallback="true"
-fi
-
 # Process command line options
 for i in $(cat /proc/cmdline); do
 	case "${i}" in
@@ -95,7 +88,11 @@ if [ ! -z $rootdelay ]; then
 	run sleep $(get_opt $rootdelay)
 fi
 
-if [ $mdev_fallback = "true" ]; then
+einfo "Initiating /dev (devtmpfs)."
+if ! mount -t devtmpfs devtmpfs /dev; then
+	ewarn "Unable to mount devtmpfs, missing CONFIG_DEVTMPFS? Switching to busybox's mdev."
+	mdev_fallback="true"
+
 	einfo "Initiating /dev (mdev)."
 	touch /etc/mdev.conf # Do we really need this empty file?
 	run mknod /dev/null c 1 3
