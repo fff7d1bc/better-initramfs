@@ -172,7 +172,7 @@ if [ $luks = "true" ]; then
 	if cryptsetup isLuks $enc_root > /dev/null 2>&1; then
 		key_error=0
 		enc_root_keydev="$(get_device $enc_root_keydev)"
-        	if [ ${enc_root_keyfile} != "false" ] && [ ${enc_root_keydev} != "false" ]; then
+		if [ ${enc_root_keydev} != "false" ] && [ ${enc_root_keyfile} != "false" ]; then
             		if [ -b $enc_root_keydev ]; then
                 		einfo "Using key device=$enc_root_keydev and keyfile=$enc_root_keyfile"
             		else
@@ -200,9 +200,9 @@ if [ $luks = "true" ]; then
                         		umount -n $mntkey
                     		fi
                 	fi
-		elif [ ${enc_root_keydev} = "false" ]; then
-			ewarn "enc_root_keydev= variable is empty."
-        	else
+		elif [ ${enc_root_keydev} = "false" ] && [ ${enc_root_keyfile} != "false" ]; then
+			ewarn "enc_root_keydev= variable is empty, skipping (enc_root_keyfile=${enc_root_keyfile})"
+		elif [ ${enc_root_keydev} != "false" ] && [ ${enc_root_keyfile} = "false" ]; then
             		ewarn "enc_root_keyfile= variable is empty, skipping (enc_root_keydev=${enc_root_keydev})"
         	fi
 
