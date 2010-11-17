@@ -2,6 +2,5 @@ initramfs.cpio.gz
 initramfs_root/bin/*
 initramfs_root/etc/*
 initramfs_root/lib/*
-!initramfs_root/etc/nsswitch.conf
 !*.keep
 initramfs_root/config
