@@ -170,7 +170,6 @@ if [ $luks = "true" ]; then
 
 	# LUKS device check
 	if cryptsetup isLuks $enc_root > /dev/null 2>&1; then
-		key_error=0
 		enc_root_keydev="$(get_device $enc_root_keydev)"
 		if [ ${enc_root_keydev} != "false" ] && [ ${enc_root_keyfile} != "false" ]; then
             		if [ -b $enc_root_keydev ]; then
