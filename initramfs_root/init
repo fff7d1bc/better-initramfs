@@ -1,4 +1,5 @@
 #!/bin/sh
+# -*- mode: shell-script; coding: utf-8-emacs-unix; sh-basic-offset: 8; indent-tabs-mode: t -*-
 # This code is under Simplified BSD License, see LICENSE for more info
 # Copyright (c) 2010, Piotr Karbowski
 # All rights reserved.
@@ -170,9 +171,8 @@ if [ $luks = "true" ]; then
 	# LUKS device check
 	if cryptsetup isLuks $enc_root > /dev/null 2>&1; then
 		key_error=0
+		enc_root_keydev="$(get_device $enc_root_keydev)"
         	if [ ${enc_root_keyfile} != "false" ] && [ ${enc_root_keydev} != "false" ]; then
-			einfo "DEBUG:enc_root_keydev=$enc_root_keydev"
-			enc_root_keydev="$(get_device $enc_root_keydev)"
             		if [ -b $enc_root_keydev ]; then
                 		einfo "Using key device=$enc_root_keydev and keyfile=$enc_root_keyfile"
             		else
@@ -180,8 +180,10 @@ if [ $luks = "true" ]; then
                 		count=30 # wait 30sec
                 		while [ ${count} -gt 0 ]; do
                     			count=$((count-1))
+					sleep 1
                     			if [ -b $enc_root_keydev ]; then
                         			einfo "device (${enc_root_keydev}) detected."
+						break
                     			fi
                 		done
 				if [ $count -eq 0 ]; then
@@ -205,23 +207,21 @@ if [ $luks = "true" ]; then
                         		umount -n $mntkey
                     		fi
                 	fi
+			run cryptsetup $cryptsetup_options luksOpen $enc_root enc_root
+
+			if [ x"${cryptsetup_options}" != x"" ]; then
+        			einfo "Unmounting $mntkey"
+        			umount -n $mntkey
+    			fi
 		fi
-
-		run cryptsetup $cryptsetup_options luksOpen $enc_root enc_root
-
-		if [ x"${cryptsetup_options}" != x"" ]; then
-        		einfo "Unmounting $mntkey"
-        		umount -n $mntkey
-    		fi
+		if [ $lvm = "true" ]; then
+			einfo "Again, getting LVM volumes up (if any, after map dmcrypt)."
+			run lvm vgscan && run lvm vgchange -a y
+		fi
+	else
+		error "device (${enc_root}) is not LUKS."
+		droptoshell
 	fi # end of LUKS device check
-
-	if [ $lvm = "true" ]; then
-		einfo "Again, getting LVM volumes up (if any, after map dmcrypt)."
-		run lvm vgscan && run lvm vgchange -a y
-	fi
-else
-    error "device (${enc_root}) is not LUKS."
-    droptoshell
 fi
 
 if [ $rescueshell = "true" ]; then
