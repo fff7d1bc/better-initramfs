@@ -187,7 +187,7 @@ if [ $luks = "true" ]; then
                     			fi
                 		done
 				if [ $count -eq 0 ]; then
-                			eerror "device (${enc_root_keydev}) not found."
+					eerror "device (${enc_root_keydev}) not found."
 					droptoshell
 				fi
             		fi
@@ -201,8 +201,7 @@ if [ $luks = "true" ]; then
                     		fi
                 	fi
 		elif [ ${enc_root_keydev} = "false" ]; then
-			eerror "enc_root_keydev= variable is empty."
-			dropbearkey
+			ewarn "enc_root_keydev= variable is empty."
         	else
             		ewarn "enc_root_keyfile= variable is empty, skipping (enc_root_keydev=${enc_root_keydev})"
         	fi
