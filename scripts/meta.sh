@@ -21,7 +21,7 @@ bin() {
 	$sudo $workdir/dobin /usr/bin/strace
         $sudo $workdir/dobin /usr/sbin/dropbear
         $sudo $workdir/dobin /usr/bin/dropbearkey
-        $sudo $workdir/dobin /usr/bin/login
+        $sudo $workdir/dobin /bin/login
         $sudo $workdir/dobin /usr/bin/passwd
 }
 
