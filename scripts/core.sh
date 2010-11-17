@@ -1,5 +1,12 @@
 #!/bin/bash
 
+user=`id | cut -d'(' -f1 | cut -d'=' -f2`
+if [ $user -eq 0 ]; then # user = root
+	sudo=""
+else
+	sudo="/usr/bin/sudo"
+fi
+
 initramfs_root="$(readlink -f $(dirname $0)/../initramfs_root)"
 
 die() {
