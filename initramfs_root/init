@@ -223,25 +223,30 @@ if [ $luks = "true" ]; then
 fi
 
 if [ $rescueshell = "true" ]; then
+	# FIXME: dropbear-ssh
 	if [ $ipaddr != "false" ]; then
        		einfo "try getting IPaddress (${ipaddr})."
         	if ifconfig $nic $ipaddr up >/dev/null 2>&1; then
             		if [ -x /bin/dropbear ]; then
-                		# sanitalyze
-                		for f in /etc/passwd /etc/shadow /etc/group /etc/nsswitch.conf /etc/localtime /bin/dropbear
-				do
-                    			test -f $f && chown root:root $f
-                		done
                 		chmod 600 /etc/shadow
                 		run hostname mybox
+				einfo "Initiating /dev/pts (devtpts)."
+				[ -d /dev/pts ] || mkdir -p /dev/pts
+				if ! mount -t devpts -o mode=0622 /dev/pts /dev/pts 2>/dev/null; then
+					rm -fr /dev/pts
+				fi
 
 				# make banner
                 		[ ! -e /etc/dropbear/ ] && mkdir -p /etc/dropbear
-                		echo "" > /etc/dropbear/banner
-				echo "better-iinitramfs v${ver}" >> /etc/dropbear/banner
-				echo "kernel ${kernelver}" >> /etc/dropbear/banner
-				echo "" >> /etc/dropbear/banner
+				cat <<-EOF > /etc/dropbear/banner
 
+------------------------------------------------------------
+	better-iinitramfs v${ver}
+	kernel ${kernelver}
+
+------------------------------------------------------------
+
+EOF
 				# make hostkey
 				[ ! -e /etc/dropbear/dropbear_dss_host_key ] && (
 					einfo "Generating DSS-Hostkey..."
@@ -257,11 +262,18 @@ if [ $rescueshell = "true" ]; then
                 		dropbear -b /etc/dropbear/banner -F 2>&1 | tee /var/run/dropbear.log > /dev/tty10 &
             		fi # -x /bin/dropbear
         	fi # ifconfig 
-       	else
-        	error "could not get IPaddr ${ipaddr}"
         fi # ipaddr setting check
+
 	droptoshell
-    	[ -e /var/run/dropbear.pid ] && kill "$(cat /var/run/dropbear.pid)"
+
+	if [ -e /var/run/dropbear.pid ]; then
+    		kill "$(cat /var/run/dropbear.pid)"
+		if [ -d /dev/pts ]; then
+			einfo "Unmount /dev/pts"
+			umount /dev/pts
+			rm -fr /dev/pts
+		fi
+	fi
 fi
 
 if [ $tuxonice = "true" ]; then
