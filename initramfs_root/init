@@ -11,7 +11,7 @@
 . /functions.sh
 
 # Prepare dirs
-run dodir /dev /newroot /sbin /proc /sys
+run dodir /dev /newroot /sbin /proc /sys /etc
 
 # Basic /dev content, we need it as fast as possible.
 [ ! -e /dev/console ]	&& run mknod /dev/console c 5 1
@@ -36,7 +36,7 @@ rootdelay=false
 enc_root_keydev=false
 enc_root_keyfile=false
 cryptsetup_options=""
-mntkey='/mnt/key'
+mntkey="/mnt/key"
 
 ## Config.
 if [ -f /config ]; then
@@ -176,8 +176,8 @@ if [ $luks = "true" ]; then
             		if [ -b $enc_root_keydev ]; then
                 		einfo "Using key device=$enc_root_keydev and keyfile=$enc_root_keyfile"
             		else
-                		einfo "Please insert removable device ${enc_root_keydev}."
                 		count=30 # wait 30sec
+                		ewarn "Please insert removable device ${enc_root_keydev} during the ${count} seconds."
                 		while [ ${count} -gt 0 ]; do
                     			count=$((count-1))
 					sleep 1
@@ -187,17 +187,10 @@ if [ $luks = "true" ]; then
                     			fi
                 		done
 				if [ $count -eq 0 ]; then
-                			ewarn "device (${enc_root_keydev}) not found, skipping"
-					key_error=1
+                			eerror "device (${enc_root_keydev}) not found."
+					droptoshell
 				fi
             		fi
-        	else
-            		ewarn "enc_root_keydev= or enc_root_keyfile= variable is empty, skipping"
-            		ewarn "(enc_root_keydev=${enc_root_keydev}, enc_root_keyfile=${enc_root_keyfile})"
-			key_error=1
-        	fi
-
-		if [ $key_error -eq 0 ]; then
                 	[ -d $mntkey ] || mkdir -p $mntkey
                 	if mount -n -t auto -o ro $enc_root_keydev $mntkey >/dev/null 2>&1; then
                     		if [ -e "${mntkey}${enc_root_keyfile}" ]; then
@@ -207,12 +200,18 @@ if [ $luks = "true" ]; then
                         		umount -n $mntkey
                     		fi
                 	fi
-			run cryptsetup $cryptsetup_options luksOpen $enc_root enc_root
+		elif [ ${enc_root_keydev} = "false" ]; then
+			eerror "enc_root_keydev= variable is empty."
+			dropbearkey
+        	else
+            		ewarn "enc_root_keyfile= variable is empty, skipping (enc_root_keydev=${enc_root_keydev})"
+        	fi
 
-			if [ x"${cryptsetup_options}" != x"" ]; then
-        			einfo "Unmounting $mntkey"
-        			umount -n $mntkey
-    			fi
+		run cryptsetup $cryptsetup_options luksOpen $enc_root enc_root
+
+		if [ x"${cryptsetup_options}" != x"" ]; then
+        		einfo "Unmounting $mntkey"
+        		umount -n $mntkey
 		fi
 		if [ $lvm = "true" ]; then
 			einfo "Again, getting LVM volumes up (if any, after map dmcrypt)."
