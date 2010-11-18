@@ -1,4 +1,5 @@
 #!/bin/bash
+# -*- mode: shell-script; coding: utf-8-emacs-unix; sh-basic-offset: 8; indent-tabs-mode: t -*-
 
 workdir="$(readlink -f $(dirname $0))"
 . $workdir/core.sh || exit 1

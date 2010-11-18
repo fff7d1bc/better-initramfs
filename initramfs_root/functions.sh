@@ -1,4 +1,5 @@
 #!/bin/sh
+# -*- mode: shell-script; coding: utf-8-emacs-unix; sh-basic-offset: 8; indent-tabs-mode: t -*-
 # This code is under Simplified BSD License, see LICENSE for more info
 # Copyright (c) 2010, Piotr Karbowski
 # All rights reserved.

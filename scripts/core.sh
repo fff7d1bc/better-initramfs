@@ -1,4 +1,5 @@
 #!/bin/bash
+# -*- mode: shell-script; coding: utf-8-emacs-unix; sh-basic-offset: 8; indent-tabs-mode: t -*-
 
 initramfs_root="$(readlink -f $(dirname $0)/../initramfs_root)"
 
