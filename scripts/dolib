@@ -1,0 +1,36 @@
+#!/bin/bash
+# -*- mode: shell-script; coding: utf-8-emacs-unix; sh-basic-offset: 8; indent-tabs-mode: t -*-
+
+workdir="$(readlink -f $(dirname $0))"
+. $workdir/core.sh || exit 1
+
+if [[ -z $1 ]]; then
+	die "You shouldn't run this."
+fi
+
+source="$1"
+if [[ ! -z $2 ]]; then
+	target="$initramfs_root/lib/$(basename $2)"
+else
+	target="$initramfs_root/lib/$(basename $source)"
+fi
+
+addlib() {
+        test -d ${initramfs_root}/lib || mkdir -p ${initramfs_root}/lib
+	test -e ${initramfs_root}/lib/`basename ${source}` || (
+	     einfo "Adding dynamic library : $source..."
+	     $sudo cp -lp $source ${initramfs_root}/lib
+	)
+}
+
+if [[ -f $source ]]; then
+	if [[ -f $target ]] && [[ $(md5sum $source | cut -d " " -f 1) != $(md5sum $target | cut -d " " -f 1) ]]; then ewarn "Looks like we have old copy of '$source'. Upgrading..." && addlib; fi
+	if [[ ! -f $target ]]; then addlib; fi
+else 
+	ewarn "Missing library: $source, skipping."
+fi
+
+#-- vim: tabstop=8
+
+
+

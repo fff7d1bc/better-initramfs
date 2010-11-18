@@ -19,10 +19,11 @@ bin() {
 	$sudo $workdir/dobin /sbin/cryptsetup
 	$sudo $workdir/dobin /sbin/lvm.static lvm
 	$sudo $workdir/dobin /usr/bin/strace
+	$sudo $workdir/dobin /sbin/ldconfig
         $sudo $workdir/dobin /usr/sbin/dropbear
         $sudo $workdir/dobin /usr/bin/dropbearkey
-        $sudo $workdir/dobin /bin/login
-        $sudo $workdir/dobin /usr/bin/passwd
+        $sudo $workdir/dobin /usr/bin/dbclient
+        $sudo $workdir/dobin /usr/bin/dbscp
 }
 
 etc() {
@@ -34,16 +35,23 @@ etc() {
 	$sudo cp -p /etc/host.conf ${initramfs_root}/etc
 	$sudo cp -p /etc/localtime ${initramfs_root}/etc
 	$sudo cp -p /etc/nsswitch.conf ${initramfs_root}/etc
-	$sudo cp -p /etc/resolv.conf ${initramfs_root}/etc
+	$sudo cp -p /etc/gai.conf ${initramfs_root}/etc
 	$sudo cp -pr /etc/pam.d ${initramfs_root}/etc
 	$sudo grep -e "^root" /etc/group > ${initramfs_root}/etc/group
 	$sudo grep -e "^root" /etc/passwd | sed s/\\/bash/\\/sh/ > ${initramfs_root}/etc/passwd
 	$sudo grep -e "^root" /etc/shadow > ${initramfs_root}/etc/shadow
+	$sudo sed -i 's/compat/files/' ${initramfs_root}/etc/nsswitch.conf
 	$sudo chown root:root ${initramfs_root}/etc/group
 	$sudo chown root:root ${initramfs_root}/etc/passwd
 	$sudo chown root:root ${initramfs_root}/etc/shadow
 	$sudo chmod 0600 ${initramfs_root}/etc/shadow
+}
 
+lib() {
+	einfo 'Preparing library files...'
+        for l in `ls /lib/libnss_* /lib/libpam.* /lib/libpam_*`; do
+	    $sudo $workdir/dolib $l
+        done
 }
 
 image() {
@@ -67,7 +75,7 @@ case $1 in
 		image
 	;;
 	all)
-		bin && etc && image
+		bin && etc && lib && image
 	;;
 	clean)
 		clean

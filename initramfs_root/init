@@ -11,7 +11,7 @@
 . /functions.sh
 
 # Prepare dirs
-run dodir /dev /newroot /sbin /proc /sys /etc
+run dodir /dev /newroot /sbin /proc /sys /etc /usr/bin /var/log /var/run
 
 # Basic /dev content, we need it as fast as possible.
 [ ! -e /dev/console ]	&& run mknod /dev/console c 5 1
@@ -222,22 +222,32 @@ if [ $luks = "true" ]; then
 fi
 
 if [ $rescueshell = "true" ]; then
-	# FIXME: dropbear-ssh
+	# XXX: dropbear-ssh
+	cat > /etc/ld.so.conf <<EOF
+/lib
+EOF
+	ldconfig
 	if [ $ipaddr != "false" ]; then
        		einfo "try getting IPaddress (${ipaddr})."
         	if ifconfig $nic $ipaddr up >/dev/null 2>&1; then
             		if [ -x /bin/dropbear ]; then
+				touch /var/log/lastlog
                 		chmod 600 /etc/shadow
+                		touch /etc/resolv.conf
+				for f in /bin/dbclient /bin/dbscp; do
+					test -x $f && ln -sf $f /usr/bin
+				done
                 		run hostname mybox
+
 				einfo "Initiating /dev/pts (devtpts)."
 				[ -d /dev/pts ] || mkdir -p /dev/pts
-				if ! mount -t devpts -o mode=0622 /dev/pts /dev/pts 2>/dev/null; then
+				if ! mount -t devpts /dev/pts /dev/pts 2>/dev/null; then
 					rm -fr /dev/pts
 				fi
 
 				# make banner
                 		[ ! -e /etc/dropbear/ ] && mkdir -p /etc/dropbear
-				cat <<-EOF > /etc/dropbear/banner
+				cat > /etc/dropbear/banner <<EOF
 
 ------------------------------------------------------------
 	better-iinitramfs v${ver}
@@ -256,7 +266,6 @@ EOF
                     			dropbearkey -t rsa -f /etc/dropbear/dropbear_rsa_host_key
                 		)
 
-				[ -d /var/run ] || mkdir -p /var/run
                 		einfo "Starting dropbear"
                 		dropbear -b /etc/dropbear/banner -F 2>&1 | tee /var/run/dropbear.log > /dev/tty10 &
             		fi # -x /bin/dropbear
@@ -270,7 +279,6 @@ EOF
 		if [ -d /dev/pts ]; then
 			einfo "Unmount /dev/pts"
 			umount /dev/pts
-			rm -fr /dev/pts
 		fi
 	fi
 fi
