@@ -4,3 +4,4 @@
 * Support for key on external device (enc_keydev and enc_keyfile).
 * Check if needed binary is in place when enabled by option (while booting).
 * Print version number when building image.
+* When there is luks enabled, but not lvm and there is no root=, use /dev/mapper/enc_root
