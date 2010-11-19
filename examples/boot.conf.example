@@ -1,0 +1,20 @@
+# Example Funtoo's boot-update config file.
+
+boot {
+	generate grub
+	default "Funtoo Linux" 
+	timeout 3 
+}
+
+
+# Rootfs over lvm over luks
+# /dev/sda2 - encrypted lvm's pv
+# /dev/mapper/vg-rootfs - rootfs's lv
+"Funtoo Linux" {
+	kernel bzImage[-v]
+	initrd initramfs.cpio.gz
+	params  = quiet rootfstype=ext4
+	params += luks enc_root=/dev/sda2
+	params += lvm root=/dev/mapper/vg-rootfs
+}
+
