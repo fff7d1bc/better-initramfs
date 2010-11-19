@@ -19,6 +19,7 @@ addbin() {
 	if ! ldd $source >> /dev/null; then
 		einfo "Adding $source..."
 		cp $source $target
+		chmod 755 $target
 	else
 		die "$source isn't linked staticly."
 	fi
