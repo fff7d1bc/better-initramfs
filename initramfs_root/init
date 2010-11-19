@@ -11,7 +11,7 @@
 . /functions.sh
 
 # Prepare dirs
-dodir /dev /newroot /sbin /proc /sys /etc
+run dodir /dev /newroot /sbin /proc /sys /etc
 
 # Basic /dev content, we need it as fast as possible.
 [ ! -e /dev/console ]	&& run mknod /dev/console c 5 1
@@ -121,10 +121,7 @@ if [ -z $root ]; then
 	eerror "\$root variable is empty. This is fatal."
 fi
 
-if [ $lvm = "true" ]; then
-	einfo "Getting LVM volumes up (if any)."
-	run lvm vgscan && run lvm vgchange -a y
-fi
+if [ $lvm = "true" ]; then run dolvm; fi
 
 if [ $luks = "true" ]; then
 	if [ -z $enc_root ]; then
@@ -145,11 +142,7 @@ if [ $luks = "true" ]; then
 	run chmod 755 /sbin/udevadm
 
 	run cryptsetup luksOpen "${enc_root}" enc_root
-
-	if [ $lvm = "true" ]; then
-		einfo "Again, getting LVM volumes up (if any, after map dmcrypt)."
-		run lvm vgscan && run lvm vgchange -a y
-	fi
+	if [ $lvm = "true" ]; then dolvm; fi
 fi
 
 if [ $rescueshell = "true" ]; then

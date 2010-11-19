@@ -34,7 +34,12 @@ get_device() {
 
 dodir() {
 	for dir in $*; do
-		[ ! -d $dir ] && run mkdir $dir
+		mkdir -p $dir
 	done
+}
+
+dolvm() {
+	einfo "Scaning all disks for volume groups."
+	lvm vgscan && lvm vgchange -a y
 }
 
