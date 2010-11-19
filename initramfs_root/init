@@ -108,7 +108,7 @@ if ! mount -t devtmpfs devtmpfs /dev 2>/dev/null; then
 	mdev_fallback="true"
 
 	einfo "Initiating /dev (mdev)."
-	touch /etc/mdev.conf # Do we really need this empty file?
+	run touch /etc/mdev.conf # Do we really need this empty file?
 	run echo /sbin/mdev > /proc/sys/kernel/hotplug
 	run mdev -s
 fi
