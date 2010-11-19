@@ -21,7 +21,7 @@ image() {
 }
 
 clean() {
-	if [ "x$(ls $initramfs_root/bin/)" != x ]; then
+	if [ -n "$(ls $initramfs_root/bin/)" ]; then
 		for file in $initramfs_root/bin/*; do
 			einfo "Cleaning ${file##*/}..."
 			rm -f $file
