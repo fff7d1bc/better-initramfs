@@ -1,3 +1,5 @@
+# For more specified changelog, check git log.
+
 v0.3-git
 	* rootdelay from now on accept only numbers, feature from ac1965.
 	* Massive cleanup, all 'empty' files and dirs are created while booting.
