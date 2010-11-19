@@ -9,7 +9,7 @@ workdir="$(readlink -f $(dirname $0))"
 ver="$(cat $workdir/../VERSION)"
 
 einfo "better-initramfs v${ver}"
-ewarn "Remeber to check ChangeLog file after every update.\n"
+ewarn "Remember to check ChangeLog file after every update.\n"
 
 bin() {
 	einfo 'Preparing binary files...'
