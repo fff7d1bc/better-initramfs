@@ -11,7 +11,7 @@
 . /functions.sh
 
 # Prepare dirs
-run dodir /dev /newroot /sbin /proc /sys /etc
+dodir /dev /newroot /sbin /proc /sys /etc
 
 # Basic /dev content, we need it as fast as possible.
 [ ! -e /dev/console ]	&& run mknod /dev/console c 5 1

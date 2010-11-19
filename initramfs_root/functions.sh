@@ -34,7 +34,7 @@ get_device() {
 
 dodir() {
 	for dir in $*; do
-		[ ! -d $dir ] && mkdir $dir
+		[ ! -d $dir ] && run mkdir $dir
 	done
 }
 
