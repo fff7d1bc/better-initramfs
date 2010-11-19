@@ -20,12 +20,20 @@ image() {
 	$workdir/doimage.sh
 }
 
+clean() {
+	if [ "x$(ls $initramfs_root/bin/)" != x ]; then
+		for file in $initramfs_root/bin/*; do
+			einfo "Cleaning ${file##*/}..."
+			rm -f $file
+		done
+	else
+		ewarn "Nothing to clean."
+	fi
+}
+
 case $1 in
-	bin)
-		bin
-	;;
-	image)
-		image
+	bin|image|clean)
+		$1
 	;;
 	all)
 		bin && image
