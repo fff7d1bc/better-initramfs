@@ -8,7 +8,7 @@ better-initramfs
 
 What can it be useful for?
 ==========================
-- Debug your brand-new kernel. For example, you got kernel panic unable to mount rootfs and you really don't know where is problem, missing filesystems support in kernel or maybe missing support for your SCSI/SATA/whatever or your 2nd sata controller driver started before 1st and your 'sda' is 'sdb'. Really, initramfs sh is very useful. You can check dmesg, you can check /dev for devices and try manual mount rootfs to get error.
+- Debug your brand-new kernel. For example, you got kernel panic unable to mount rootfs and you really don't know where the problem is, missing filesystems support in kernel or maybe missing support for your SCSI/SATA/whatever or your 2nd sata controller driver started before 1st and your 'sda' is 'sdb'. Really, initramfs sh is very useful. You can check dmesg, you can check /dev for devices and try manual mount rootfs to get error.
 - Luks encrypted rootfs.
 - LVM-based rootfs,
 - System rescue tool.
@@ -111,11 +111,6 @@ Rootfs on LVM over dmcrypt (encrypted pv) with tuxonice and rootfstype env::
         title Funtoo bzImage-2.6.33
         kernel /bzImage-2.6.33 luks enc_root=/dev/sda2 lvm root=/dev/mapper/vg-rootfs rootfstype=ext4 resume=swap:/dev/mapper/vg-swap tuxonice
         initrd /initramfs.cpio.gz
-
-Known Issues
-============
-switch_root: no rootfs
-  If you dropped to busybox sh and manual mounted rootfs to /newroot, you did switch_root /newroot /sbin/init but you got "switch_root: no rootfs" first, umount /sys and /proc, this have nothing to do with this error but just do it. ;-) Your problem is missing ``exec`` before switch_root. Do ``exec switch_root /newroot /sbin/init``. Why? Boot your distro and check man exec.
 
 License
 =======
