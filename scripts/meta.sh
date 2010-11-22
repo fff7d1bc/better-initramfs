@@ -8,7 +8,7 @@ workdir="$(readlink -f $(dirname $0))"
 
 ver="$(cat $workdir/../VERSION)"
 
-einfo "better-initramfs v${ver}"
+einfo "better-initramfs v${ver} - home page: http://slashbeast.github.com/better-initramfs/"
 ewarn "Remember to check ChangeLog file after every update.\n"
 
 bin() {
