@@ -9,9 +9,13 @@ ewarn() { echo -ne "\033[1;30m>\033[0;33m>\033[1;33m> \033[0m${@}\n" ;}
 eerror() { echo -ne "\033[1;30m>\033[0;31m>\033[1;31m> ${@}\033[0m\n" ;}
 
 droptoshell() {
-	ewarn "Dropping to shell."
-	ewarn "\tIn order to reboot press control-alt-delete."
-	exec sh
+	if [ $rescueshell = 'false' ]; then
+		ewarn "Dropping to rescueshell because of above error."
+	fi
+	ewarn "Rescue Shell (busybox's /bin/sh)"
+	ewarn "To reboot, press 'control-alt-delete'."
+	ewarn "If you wish continue booting process, just exit from this shell."
+	/bin/sh
 	}
 
 run() { "$@" || ( eerror $@ 'failed.' ; droptoshell ) ;}
