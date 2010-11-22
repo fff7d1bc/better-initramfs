@@ -43,6 +43,10 @@ dodir() {
 }
 
 dolvm() {
+	if [ ! -f /bin/lvm ]; then
+		eerror "There is no lvm binary into initramfs image."
+		droptoshell
+	fi
 	einfo "Scaning all disks for volume groups."
 	lvm vgscan && lvm vgchange -a y
 }

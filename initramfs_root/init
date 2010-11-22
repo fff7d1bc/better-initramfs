@@ -124,6 +124,11 @@ fi
 if [ $lvm = "true" ]; then run dolvm; fi
 
 if [ $luks = "true" ]; then
+	if [ ! -f /bin/cryptsetup ]; then
+		eerror "There is no cryptsetup binary into initramfs image."
+		droptoshell
+	fi
+
 	if [ -z $enc_root ]; then
 		eerror "You have enabled luks but your \$enc_root variable is empty."
 		droptoshell
