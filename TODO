@@ -1,5 +1,8 @@
-* Support Remote Rescue Shell [dropbear ssh]
-* Support loadable kernel modules.
+* Support Remote Rescue Shell [dropbear ssh] - ON HOLD, minor.
+* Support loadable kernel modules. - ON HOLD, minor
 * Support software raid.
 * Support for key on external device (enc_keydev and enc_keyfile).
 * When there is luks enabled, but not lvm and there is no root=, use /dev/mapper/enc_root
+* Support for squashfs in root variable, example: root=SQUASHFS=livecd.img
+* Support for aufs2-based rootfs (livesystem). Useful for debuging and liveUSB/CD.
+
