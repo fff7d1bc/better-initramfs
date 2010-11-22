@@ -6,9 +6,9 @@ better-initramfs
 
 .. contents:: Table of Contents
 
-What can it be useful for?
+How can it be useful?
 ==========================
-- Debug your brand-new kernel. For example, you got kernel panic unable to mount rootfs and you really don't know where the problem is, missing filesystems support in kernel or maybe missing support for your SCSI/SATA/whatever or your 2nd sata controller driver started before 1st and your 'sda' is 'sdb'. Really, initramfs sh is very useful. You can check dmesg, you can check /dev for devices and try manual mount rootfs to get error.
+- Debug your brand-new kernel. For example, you got kernel panic unable to mount rootfs and you really don't know where the problem is, missing filesystems support in kernel or maybe missing support for your SCSI/SATA/whatever or your 2nd sata controller driver started before 1st and your 'sda' is 'sdb'. Really, initramfs sh is very useful. You can check dmesg, you can check /dev for devices and try to mount rootfs manually to get the error.
 - Luks encrypted rootfs.
 - LVM-based rootfs,
 - System rescue tool.
@@ -25,7 +25,7 @@ Features
 Download
 ====================
 
-.. important:: Be aware! Current code is under heavy development, make sure to read **ChangeLog** before start with better-initramfs.
+.. important:: Be aware! Current code is under heavy development, make sure to read **ChangeLog** before starting with better-initramfs.
 
 Clone git repository from github::
 
@@ -33,7 +33,7 @@ Clone git repository from github::
 
 Usage
 =====
-This docs is based on Funtoo/Gentoo GNU/Linux so package names etc. can be different than in your distro.
+This doc is based on Funtoo/Gentoo GNU/Linux so package names etc. can be different than in your distro.
 
 Prepare static linked binary files (emerge with USE=static):
 ::
@@ -47,7 +47,7 @@ Build initramfs:
 
         make
 
-If you does not have Funtoo/Gentoo-based system, you may need install binary files manualy, go to initramfs_root/bin dir and:
+If you don't have Funtoo/Gentoo-based system, you may need to install binary files manualy, go to initramfs_root/bin dir and:
 ::
 
         cp -v /bin/busybox busybox
@@ -66,21 +66,21 @@ Available kernel boot parameters:
 rescueshell
   drop to busybox's sh just before mount rootfs to /newroot.
 tuxonice
-  try resume using TuxOnIce. Remember to set resume= variable by **kernel** boot params.
+  try resuming with TuxOnIce. Remember to set resume= variable by **kernel** boot params.
 resume=<device/path>
   Use only with *tuxonice* switch, set resume device/file. This have nothing to do with initramfs..
 lvm
-  Scan all disks for volume groups and active them.
+  Scan all disks for volume groups and activate them.
 luks
   do ``cryptsetup luksOpen`` on enc_root variable.
 enc_root=<device>
   for example ``/dev/sda2`` if sda2 is your encrypted rootfs. This variable is ignored if luks isn't enabled.
 root=<device>
-  for example ``/dev/mapper/enc_root`` if you have LUKS-encrypted rootfs, ``/dev/mapper/vg-rootfs`` or similar if lvm or just ``/dev/sdXX`` if you does not have rootfs over lvm or encrypted.
+  for example ``/dev/mapper/enc_root`` if you have LUKS-encrypted rootfs, ``/dev/mapper/vg-rootfs`` or similar if lvm or just ``/dev/sdXX`` if you haven't rootfs over lvm or encrypted.
 rootfstype=<filesystem type>
   Set type of filesystem on your rootfs if you do not want to use 'auto',
 rootdelay=<integer>
-  Set how many secunds initramfs should wait [for devices]. Useful for rootfs on USB device.
+  Set how many seconds initramfs should wait [for devices]. Useful for rootfs on USB device.
 
 
 Example
@@ -114,7 +114,7 @@ Rootfs on LVM over dmcrypt (encrypted pv) with tuxonice and rootfstype env::
 
 License
 =======
-This code is under Simplified BSD License, see LICENSE for more information.
+This code is released under Simplified BSD License, see LICENSE for more information.
 
 Author
 ======
