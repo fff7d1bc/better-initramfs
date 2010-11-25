@@ -14,3 +14,53 @@ ewarn() {
 	echo -ne "\033[1;30m>\033[0;33m>\033[1;33m> \033[0m${@}\n"
 }
 
+dobin() {
+	source="$1"
+	if [[ ! -z $2 ]]; then
+		target="$initramfs_root/bin/$(basename $2)"
+	else
+		target="$initramfs_root/bin/$(basename $source)"
+	fi
+
+	addbin() {
+		if ! ldd $source >> /dev/null; then
+			einfo "Adding $source..."
+			cp $source $target
+			chmod 755 $target
+		else
+			die "$source isn't linked staticly."
+		fi
+	}
+
+	if [[ -f $source ]]; then
+		if [[ -f $target ]] && [[ $(md5sum $source | cut -d " " -f 1) != $(md5sum $target | cut -d " " -f 1) ]]; then ewarn "Looks like we have old copy of '$source'. Upgrading..." && addbin; fi
+		if [[ ! -f $target ]]; then addbin; fi
+	else 
+		ewarn "Missing binary: $source, skipping."
+	fi
+}
+
+doimage() {
+	einfo 'Building image...'
+
+	( cd $initramfs_root && find . | cpio --quiet -H newc -o | gzip -9 > ../initramfs.cpio.gz)
+
+	if [[ -f $initramfs_root/../initramfs.cpio.gz ]]; then
+		einfo "initramfs.cpio.gz is ready."
+	else
+		die "There is no initramfs.cpio.gz, something goes wrong."
+	fi
+}
+
+clean() {
+	if [ -n "$(ls $initramfs_root/bin/)" ]; then
+		for file in $initramfs_root/bin/*; do
+			einfo "Cleaning ${file##*/}..."
+			rm -f $file
+		done
+	fi
+	if [ -f $initramfs_root/../initramfs.cpio.gz ]; then
+		einfo "Cleaning initramfs.cpio.gz"
+		rm -f $initramfs_root/../initramfs.cpio.gz
+	fi
+}

@@ -6,6 +6,10 @@ set -e
 workdir="$(readlink -f $(dirname $0))"
 . $workdir/core.sh || exit 1
 
+if [[ -z $1 ]]; then
+	die "You shouldn't run this."
+fi
+
 ver="$(cat $workdir/../VERSION)"
 
 einfo "better-initramfs v${ver} - home page: http://slashbeast.github.com/better-initramfs/"
@@ -13,25 +17,13 @@ ewarn "Remember to check ChangeLog file after every update.\n"
 
 bin() {
 	einfo 'Preparing binary files...'
-	$workdir/dobin /bin/busybox && ( cd $initramfs_root/bin && if [ ! -h sh ]; then ln -s busybox sh; fi )
-	$workdir/dobin /sbin/cryptsetup
-	$workdir/dobin /sbin/lvm.static lvm
+	dobin /bin/busybox && ( cd $initramfs_root/bin && if [ ! -h sh ]; then ln -s busybox sh; fi )
+	dobin /sbin/cryptsetup
+	dobin /sbin/lvm.static lvm
 }
 
 image() {
-	einfo 'Building image...'
-	$workdir/doimage.sh
-}
-
-clean() {
-	if [ -n "$(ls $initramfs_root/bin/)" ]; then
-		for file in $initramfs_root/bin/*; do
-			einfo "Cleaning ${file##*/}..."
-			rm -f $file
-		done
-	else
-		ewarn "Nothing to clean."
-	fi
+	doimage
 }
 
 case $1 in
