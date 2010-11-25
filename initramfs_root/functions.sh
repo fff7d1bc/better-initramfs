@@ -50,6 +50,6 @@ dolvm() {
 
 dosoftraid() {
 	einfo "Scaning for software raid arrays."
-	run mdadm --assemble --scan
-	run mdadm --auto-detect
+	mdadm --assemble --scan
+	mdadm --auto-detect
 }
