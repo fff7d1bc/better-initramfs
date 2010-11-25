@@ -31,7 +31,7 @@ Clone git repository from github::
 
         git clone https://github.com/slashbeast/better-initramfs.git
 
-If you want fully working version, after clone switch to **v0.3** tag.::
+If you want fully working version, after clone switch to **v0.3** tag::
 
         git checkout v0.3
 
