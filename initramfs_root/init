@@ -34,10 +34,8 @@ tuxonice=false
 mdev_fallback=false
 rootdelay=false
 
-## Config.
-if [ -f /config ]; then
-        . /config
-fi
+# Config.
+if [ -f /config ]; then . /config; fi
 
 # Basic
 kernelver="$(uname -r)"
@@ -90,7 +88,6 @@ for i in $(cat /proc/cmdline); do
 		;;
 	esac
 done
-####
 
 einfo "Create all the symlinks to /bin/busybox."
 run busybox --install -s
@@ -115,14 +112,8 @@ if ! mount -t devtmpfs devtmpfs /dev 2>/dev/null; then
 	run mdev -s
 fi
 
-if [ -z $init ]; then
-	init="/sbin/init"
-fi
-
-if [ -z $root ]; then
-	eerror "\$root variable is empty. This is fatal."
-fi
-
+if [ -z $init ]; then init="/sbin/init"; fi
+if [ -z $root ]; then eerror "\$root variable is empty. This is fatal."; fi
 if [ $lvm = "true" ]; then run dolvm; fi
 
 if [ $luks = "true" ]; then
@@ -152,9 +143,7 @@ if [ $luks = "true" ]; then
 	if [ $lvm = "true" ]; then dolvm; fi
 fi
 
-if [ $rescueshell = "true" ]; then
-	droptoshell
-fi
+if [ $rescueshell = "true" ]; then droptoshell; fi
 
 if [ $tuxonice = "true" ]; then
 	if [ ! -z $resume ]; then
@@ -169,12 +158,10 @@ if [ $tuxonice = "true" ]; then
 	fi
 fi
 
-#Mount the root device
+# Mount the root device
 mountparams="-o ro"
 
-if [ ! -z $rootfstype ]; then
-	mountparams="$mountparams -t $rootfstype"
-fi
+if [ ! -z $rootfstype ]; then mountparams="$mountparams -t $rootfstype"; fi
 
 einfo "Mounting rootfs to /newroot."
 # Resolve $root now, after getting up lvm and dmcrypt (and lvm ;p).
@@ -186,9 +173,7 @@ fi
 
 run mount $mountparams "${root}" /newroot
 
-#Unmount all other mounts so that the ram used by
-#the initramfs can be cleared after switch_root
-einfo "Umounting /sys and /proc."
+einfo "Unmounting /sys and /proc."
 run umount /sys /proc
 
 if [ $mdev_fallback = "false" ]; then
