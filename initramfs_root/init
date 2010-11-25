@@ -29,6 +29,7 @@ clear
 # Default values.
 luks=false
 lvm=false
+softraid=false
 rescueshell=false
 tuxonice=false
 mdev_fallback=false
@@ -70,6 +71,9 @@ for i in $(cat /proc/cmdline); do
 		;;
 		lvm)
 			lvm=true
+		;;
+		softraid)
+			softraid=true
 		;;
 		rescueshell)
 			rescueshell=true
@@ -115,6 +119,8 @@ fi
 if [ -z $init ]; then init="/sbin/init"; fi
 if [ -z $root ]; then eerror "\$root variable is empty. This is fatal."; fi
 if [ $lvm = "true" ]; then run dolvm; fi
+
+if [ $softraid = "true" ]; then dosoftraid; fi
 
 if [ $luks = "true" ]; then
 	if [ ! -f /bin/cryptsetup ]; then

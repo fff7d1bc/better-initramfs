@@ -51,3 +51,8 @@ dolvm() {
 	lvm vgscan && lvm vgchange -a y
 }
 
+dosoftraid() {
+	einfo "Scaning for software raid arrays."
+	run mdadm --assemble --scan
+	run mdadm --auto-detect
+}

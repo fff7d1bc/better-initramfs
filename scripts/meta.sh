@@ -20,6 +20,7 @@ bin() {
 	dobin /bin/busybox && ( cd $initramfs_root/bin && if [ ! -h sh ]; then ln -s busybox sh; fi )
 	dobin /sbin/cryptsetup
 	dobin /sbin/lvm.static lvm
+	dobin /sbin/mdadm
 }
 
 image() {
