@@ -28,7 +28,7 @@ dobin() {
 			cp $source $target
 			chmod 755 $target
 		else
-			die "$source isn't linked staticly."
+			ewarn "File $source exist but is not linked staticly. Skipping..."
 		fi
 	}
 
@@ -41,6 +41,8 @@ dobin() {
 }
 
 doimage() {
+	if [ ! -f $initramfs_root/bin/busybox ]; then die "Initramfs will not work without busybox."; fi
+
 	einfo 'Building image...'
 
 	( cd $initramfs_root && find . | cpio --quiet -H newc -o | gzip -9 > ../initramfs.cpio.gz)
