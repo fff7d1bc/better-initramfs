@@ -119,7 +119,6 @@ fi
 if [ -z $init ]; then init="/sbin/init"; fi
 if [ -z $root ]; then eerror "\$root variable is empty. This is fatal."; fi
 if [ $lvm = "true" ]; then run dolvm; fi
-
 if [ $softraid = "true" ]; then dosoftraid; fi
 
 if [ $luks = "true" ]; then
