@@ -5,4 +5,4 @@
 * When there is luks enabled, but not lvm and there is no root=, use /dev/mapper/enc_root
 * Support for squashfs in root variable, example: root=SQUASHFS=livecd.img
 * Support for aufs2-based rootfs (livesystem). Useful for debuging and liveUSB/CD.
-
+* getdevice() function is lame, rewrite it.
