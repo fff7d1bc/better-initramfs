@@ -1,6 +1,12 @@
 # For more specified changelog, check git log.
 
-v0.3-git
+v4.0
+	* get_device replaced with resolve_device function.
+	* Experimental raid support.
+	* Code cleanup, most of code is now in functions file.
+
+
+v0.3
 	* rescueshell now is more like rescueshell...
 	* rootdelay from now on accept only numbers, feature from ac1965.
 	* Massive cleanup, all 'empty' files and dirs are created while booting.

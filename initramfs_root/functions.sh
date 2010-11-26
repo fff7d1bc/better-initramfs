@@ -24,16 +24,28 @@ get_opt() {
 	echo "$@" | cut -d "=" -f 2,3
 }
 
-get_device() {
-	device=$1
+resolve_device() {
+	device=$(eval echo \$$1)
+
 	case $device in
 		LABEL\=*|UUID\=*)
-			findfs $device
-		;;
-		*)
-			echo $device
+			eval $1=$(findfs $device)
 		;;
 	esac
+	
+	if [ -z "$(eval echo \$$1)" ]; then
+		eerror "Wrong UUID/LABEL."
+		droptoshell
+	fi
+}
+
+use() {
+	name="$(eval echo \$$1)"
+	if [ -n "$name" ] && [ "$name" = 'true' ]; then
+		return 0
+	else
+		return 1
+	fi
 }
 
 dodir() {
@@ -42,14 +54,72 @@ dodir() {
 	done
 }
 
-dolvm() {
+initluks() {
+	if [ ! -f /bin/cryptsetup ]; then
+		eerror "There is no cryptsetup binary into initramfs image."
+		droptoshell
+	fi
+
+	if [ -z $enc_root ]; then
+		eerror "You have enabled luks but your \$enc_root variable is empty."
+		droptoshell
+	fi
+	
+	einfo "Opening encrypted partition and mapping to /dev/mapper/enc_root."
+	resolve_device enc_root
+	if [ -z $enc_root ]; then
+        	eerror "\$enc_root variable is empty. Wrong UUID/LABEL?"
+	        droptoshell
+	fi
+
+	# Hack for cryptsetup which trying to run /sbin/udevadm.
+	run echo -e "#!/bin/sh\nexit 0" > /sbin/udevadm
+	run chmod 755 /sbin/udevadm
+
+	run cryptsetup luksOpen "${enc_root}" enc_root
+}
+
+initlvm() {
 	einfo "Scaning all disks for volume groups."
 	run lvm vgscan
 	run lvm vgchange -a y
 }
 
-dosoftraid() {
+initmdadm() {
 	einfo "Scaning for software raid arrays."
 	mdadm --assemble --scan
 	mdadm --auto-detect
+}
+
+dotuxonice() {
+	if [ ! -z $resume ]; then
+		if [ ! -f /sys/power/tuxonice/do_resume ]; then
+			ewarn "Your kernel do not support TuxOnIce.";
+		else
+			einfo "Sending do_resume signal to TuxOnIce."
+			run echo 1 > /sys/power/tuxonice/do_resume
+		fi
+	else
+		ewarn "resume= variable is empty, not cool, skipping tuxonice."
+	fi
+}
+
+mountdev() {
+	einfo "Initiating /dev (devtmpfs)."
+	if ! mount -t devtmpfs devtmpfs /dev 2>/dev/null; then
+	ewarn "Unable to mount devtmpfs, missing CONFIG_DEVTMPFS? Switching to busybox's mdev."
+	mdev_fallback="true"
+	einfo "Initiating /dev (mdev)."
+	run touch /etc/mdev.conf # Do we really need this empty file?
+	run echo /sbin/mdev > /proc/sys/kernel/hotplug
+	run mdev -s
+	fi
+}
+
+mountroot() {
+	mountparams="-o ro"
+	if [ -n "$rootfstype" ]; then mountparams="$mountparams -t $rootfstype"; fi
+	einfo "Mounting rootfs to /newroot."
+	resolve_device root
+	run mount $mountparams "${root}" /newroot
 }
