@@ -100,12 +100,19 @@ if [ -n "$rootdelay" ]; then
 	fi
 fi
 
+# prepare /dev
 mountdev
+# mdadm hook.
 use softraid && initmdadm
+# lvm hook.
 use lvm && initlvm
+# dmcrypt luks + lvm, if enabled.
 use luks && initluks && use lvm && initlvm
+# Drop to rescue shell.
 use rescueshell && droptoshell
+# Resume from TuxOnIce hibernation.
 use tuxonice && dotuxonice
+# Mount rootfs to /newroot.
 mountroot
 
 einfo "Unmounting /sys and /proc."
