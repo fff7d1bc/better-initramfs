@@ -42,7 +42,11 @@ resolve_device() {
 use() {
 	name="$(eval echo \$$1)"
 	if [ -n "$name" ] && [ "$name" = 'true' ]; then
-		return 0
+		if [ -n "$2" ]; then
+			$2
+		else
+			return 0
+		fi
 	else
 		return 1
 	fi

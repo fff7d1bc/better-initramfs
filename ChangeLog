@@ -1,6 +1,7 @@
 # For more specified changelog, check git log.
 
 v4.0
+	* use() now can execute command.
 	* get_device replaced with resolve_device function.
 	* Experimental raid support.
 	* Code cleanup, most of code is now in functions file.
