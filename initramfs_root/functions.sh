@@ -114,27 +114,33 @@ TuxOnIceResume() {
 	fi
 }
 
-MountDev() {
-	einfo "Initiating /dev (devtmpfs)."
-	if ! mount -t devtmpfs devtmpfs /dev 2>/dev/null; then
-	ewarn "Unable to mount devtmpfs, missing CONFIG_DEVTMPFS? Switching to busybox's mdev."
-	mdev_fallback="true"
-	einfo "Initiating /dev (mdev)."
-	run touch /etc/mdev.conf # Do we really need this empty file?
-	run echo /sbin/mdev > /proc/sys/kernel/hotplug
-	run mdev -s
-	fi
-}
 
-MountRootFS() {
-	rootfsmountmode="ro"
-	mountparams="-o ${rootfsmountmode}"
-	if [ -n "$rootfstype" ]; then mountparams="$mountparams -t $rootfstype"; fi
-	einfo "Initiating /newroot (${rootfsmountmode})."
-	resolve_device root
-	run mount $mountparams "${root}" /newroot
-}
+emount() {
+	case $1 in
+		'/newroot')
+			einfo "Mounting /newroot..."
+			if [ -n "${rootfstype}" ]; then local mountparams="${rootfsmountparams} -t ${rootfstype}"; fi:
+			resolve_device root
+			run mount -o ro ${mountparams} "${root}" '/newroot'
+		;;
 
+		'/dev')
+			if grep -q 'devtmpfs' '/proc/filesystems'; then
+				einfo "Mounting /dev (devtmpfs)..."
+				run mount -t devtmpfs devtmpfs /dev
+			else
+				einfo "Mounting /dev (mdev)..."
+				run touch /etc/mdev.conf
+				run echo /sbin/mdev > /proc/sys/kernel/hotplug
+				run mdev -s
+			fi
+		;;
+
+		*)
+			eerror "emount() does not understand \"$1\""
+		;;
+	esac
+}
 
 rootdelay() {
 	if [ "${rootdelay}" -gt 0 2>/dev/null ]; then

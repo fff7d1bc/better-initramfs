@@ -6,6 +6,7 @@ v4.0
 	* Experimental raid support.
 	* Removed deprecented /config file support.
 	* Code cleanup, most of code is now in functions file.
+	* emount() function.
 
 
 v0.3

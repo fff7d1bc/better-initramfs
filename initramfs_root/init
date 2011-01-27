@@ -83,13 +83,13 @@ if [ -z $root ]; then eerror "\$root variable is empty. This is fatal."; fi
 
 InitializeBusybox
 use rootdelay
-MountDev
+emount /dev
 use softraid InitializeSoftwareRaid
 use lvm InitializeLVM
 use luks InitializeLUKS && use lvm InitializeLVM
 use rescueshell
 use tuxonice TuxOnIceResume
-MountRootFS
+emount /newroot
 
 einfo "Unmounting /sys and /proc."
 run umount /sys /proc
