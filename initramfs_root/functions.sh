@@ -23,7 +23,7 @@ rescueshell() {
 	/bin/sh
 	}
 
-run() { "$@" || ( eerror $@ 'failed.' ; rescueshell ) ;}
+run() { "$@" || ( eerror "$@ failed." ; rescueshell ) ;}
 
 get_opt() {
 	echo "$@" | cut -d "=" -f 2,3
@@ -129,6 +129,7 @@ emount() {
 			if grep -q 'devtmpfs' '/proc/filesystems'; then
 				einfo "Mounting /dev (devtmpfs)..."
 				run mount -t devtmpfs devtmpfs /dev
+				dev_is='devtmpfs'
 			else
 				einfo "Mounting /dev (mdev)..."
 				run touch /etc/mdev.conf
@@ -152,6 +153,21 @@ emount() {
 		;;
 	esac
 }
+
+eumount() {
+	case $1 in
+		'/dev')
+			if [ "${dev_is}" = 'devtmpfs' ]; then
+				einfo "Unmounting /dev (devtmpfs)..."
+				run umount /dev
+			fi
+		;;
+		*)
+			info "Unmounting ${1}..."
+			run umount $1
+		;;
+	esac
+}	
 
 rootdelay() {
 	if [ "${rootdelay}" -gt 0 2>/dev/null ]; then

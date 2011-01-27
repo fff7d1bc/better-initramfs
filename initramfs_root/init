@@ -88,12 +88,8 @@ use rescueshell
 use tuxonice TuxOnIceResume
 emount /newroot
 
-einfo "Unmounting /sys and /proc."
-run umount /sys /proc
-if [ "$mdev_fallback" != "true" ]; then
-	einfo "Unmounting /dev."
-	run umount /dev
-fi
+
+eumount /sys /proc /dev
 
 #Switch to the new root and execute init
 if [[ -x "/newroot/${init:-/sbin/init}" ]] ; then
