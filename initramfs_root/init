@@ -29,14 +29,11 @@ ver="$(cat /VERSION)"
 
 einfo "better-initramfs v${ver}. Linux kernel ${kernelver}\n"
 
-einfo "Mounting /proc"
-run mount -t proc proc /proc
+emount /proc
+emount /sys
 
 # Disable kernel messages from popping onto the screen
 echo 0 > /proc/sys/kernel/printk
-
-einfo "Mounting /sys"
-run mount -t sysfs sysfs /sys
 
 # Process command line options
 for i in $(cat /proc/cmdline); do

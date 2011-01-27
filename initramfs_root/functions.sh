@@ -116,6 +116,7 @@ TuxOnIceResume() {
 
 
 emount() {
+	# All mounts into one place is good idea.
 	case $1 in
 		'/newroot')
 			einfo "Mounting /newroot..."
@@ -134,6 +135,16 @@ emount() {
 				run echo /sbin/mdev > /proc/sys/kernel/hotplug
 				run mdev -s
 			fi
+		;;
+
+		'/proc')
+			einfo "Mounting /proc..."
+			run mount -t proc proc /proc
+		;;
+
+		'/sys')
+			einfo "Mounting /sys..."
+			run mount -t sysfs sysfs /sys
 		;;
 
 		*)
