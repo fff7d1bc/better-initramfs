@@ -155,18 +155,21 @@ emount() {
 }
 
 eumount() {
-	case $1 in
-		'/dev')
-			if [ "${dev_is}" = 'devtmpfs' ]; then
-				einfo "Unmounting /dev (devtmpfs)..."
-				run umount /dev
-			fi
-		;;
-		*)
-			info "Unmounting ${1}..."
-			run umount $1
-		;;
-	esac
+	while [ $# -gt 0 ]; do
+		case $1 in
+			'/dev')
+				if [ "${dev_is}" = 'devtmpfs' ]; then
+					einfo "Unmounting /dev (devtmpfs)..."
+					run umount /dev
+				fi
+			;;
+			*)
+				info "Unmounting ${1}..."
+				run umount $1
+			;;
+		esac
+		shift
+	done
 }	
 
 rootdelay() {
