@@ -4,6 +4,7 @@ v4.0
 	* use() now can execute command.
 	* get_device replaced with resolve_device function.
 	* Experimental raid support.
+	* Removed deprecented /config file support.
 	* Code cleanup, most of code is now in functions file.
 
 
