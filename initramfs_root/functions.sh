@@ -120,7 +120,7 @@ emount() {
 	case $1 in
 		'/newroot')
 			einfo "Mounting /newroot..."
-			if [ -n "${rootfstype}" ]; then local mountparams="${rootfsmountparams} -t ${rootfstype}"; fi:
+			if [ -n "${rootfstype}" ]; then local mountparams="${rootfsmountparams} -t ${rootfstype}"; fi
 			resolve_device root
 			run mount -o ro ${mountparams} "${root}" '/newroot'
 		;;
@@ -164,7 +164,7 @@ eumount() {
 				fi
 			;;
 			*)
-				info "Unmounting ${1}..."
+				einfo "Unmounting ${1}..."
 				run umount $1
 			;;
 		esac
