@@ -91,7 +91,8 @@ InitializeLUKS() {
 
 InitializeLVM() {
 	einfo "Scaning all disks for volume groups."
-	run lvm vgscan
+	# We have to ensure that cache does not exist so vgchange will run 'vgscan' itself.
+	if [ -d '/etc/lvm/cache' ]; then run rm -rf '/etc/lvm/cache'; fi
 	run lvm vgchange -a y
 }
 
