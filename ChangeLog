@@ -7,6 +7,7 @@ v4.0
 	* Removed deprecented /config file support.
 	* Code cleanup, most of code is now in functions file.
 	* emount() and eumount() functions.
+	* We no longer executing vgscan, vgchange will do it for us.
 
 
 v0.3
