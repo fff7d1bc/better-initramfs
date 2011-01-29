@@ -17,7 +17,7 @@ ewarn "Remember to check ChangeLog file after every update.\n"
 
 bin() {
 	einfo 'Preparing binary files...'
-	dobin /bin/busybox && ( cd $initramfs_root/bin && if [ ! -h sh ]; then ln -s busybox sh; fi )
+	dobin /bin/busybox && ( cd $sourceroot/bin && if [ ! -h sh ]; then ln -s busybox sh; fi )
 	dobin /sbin/cryptsetup
 	dobin /sbin/lvm.static lvm
 	dobin /sbin/mdadm

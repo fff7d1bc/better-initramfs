@@ -1,7 +1,7 @@
 #!/bin/bash
 # -*- mode: shell-script; coding: utf-8-emacs-unix; sh-basic-offset: 8; indent-tabs-mode: t -*-
 
-initramfs_root="$(readlink -f $(dirname $0)/../initramfs_root)"
+sourceroot="$(readlink -f $(dirname $0)/../sourceroot)"
 
 die() {
 	echo -e "\033[1;30m>\033[0;31m>\033[1;31m> ERROR:\033[0m ${@}" && exit 1
@@ -17,9 +17,9 @@ ewarn() {
 dobin() {
 	source="$1"
 	if [[ ! -z $2 ]]; then
-		target="$initramfs_root/bin/$(basename $2)"
+		target="$sourceroot/bin/$(basename $2)"
 	else
-		target="$initramfs_root/bin/$(basename $source)"
+		target="$sourceroot/bin/$(basename $source)"
 	fi
 
 	addbin() {
@@ -41,13 +41,13 @@ dobin() {
 }
 
 doimage() {
-	if [ ! -f $initramfs_root/bin/busybox ]; then die "Initramfs will not work without busybox."; fi
+	if [ ! -f $sourceroot/bin/busybox ]; then die "Initramfs will not work without busybox."; fi
 
 	einfo 'Building image...'
 
-	( cd $initramfs_root && find . | cpio --quiet -H newc -o | gzip -9 > ../initramfs.cpio.gz)
+	( cd $sourceroot && find . | cpio --quiet -H newc -o | gzip -9 > ../initramfs.cpio.gz)
 
-	if [[ -f $initramfs_root/../initramfs.cpio.gz ]]; then
+	if [[ -f $sourceroot/../initramfs.cpio.gz ]]; then
 		einfo "initramfs.cpio.gz is ready."
 	else
 		die "There is no initramfs.cpio.gz, something goes wrong."
@@ -55,14 +55,14 @@ doimage() {
 }
 
 clean() {
-	if [ -n "$(ls $initramfs_root/bin/)" ]; then
-		for file in $initramfs_root/bin/*; do
+	if [ -n "$(ls $sourceroot/bin/)" ]; then
+		for file in $sourceroot/bin/*; do
 			einfo "Cleaning ${file##*/}..."
 			rm -f $file
 		done
 	fi
-	if [ -f $initramfs_root/../initramfs.cpio.gz ]; then
+	if [ -f $sourceroot/../initramfs.cpio.gz ]; then
 		einfo "Cleaning initramfs.cpio.gz"
-		rm -f $initramfs_root/../initramfs.cpio.gz
+		rm -f $sourceroot/../initramfs.cpio.gz
 	fi
 }

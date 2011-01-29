@@ -1,10 +1,10 @@
 #!/bin/sh
 
 work_dir_name="$(readlink -f $(dirname $0))"
-bindir="${work_dir_name}/initramfs_root/bin"
+bindir="${work_dir_name}/sourceroot/bin"
 
 test_files() { 
-	test -f ${bindir}/$1 && echo "[ OK ] $1 found." || echo "[ !! } Missing $1 binary in initramfs_root/bin dir."
+	test -f ${bindir}/$1 && echo "[ OK ] $1 found." || echo "[ !! } Missing $1 binary in sourceroot/bin dir."
 }
 
 test_symlinks() {
