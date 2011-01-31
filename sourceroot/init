@@ -29,8 +29,7 @@ ver="$(cat /VERSION)"
 
 einfo "better-initramfs v${ver}. Linux kernel ${kernelver}\n"
 
-emount /proc
-emount /sys
+emount /proc /sys
 
 # Disable kernel messages from popping onto the screen
 echo 0 > /proc/sys/kernel/printk

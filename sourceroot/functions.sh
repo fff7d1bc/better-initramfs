@@ -30,18 +30,17 @@ get_opt() {
 }
 
 resolve_device() {
+	# This function will check if variable at $1 contain LABEL or UUID and then, if LABEL/UUID is vaild.	
 	device=$(eval echo \$$1)
-
 	case $device in
 		LABEL\=*|UUID\=*)
 			eval $1=$(findfs $device)
+			if [ -z "$(eval echo \$$1)" ]; then
+				eerror "Wrong UUID or LABEL."
+				rescueshell
+			fi
 		;;
 	esac
-	
-	if [ -z "$(eval echo \$$1)" ]; then
-		eerror "Wrong UUID/LABEL."
-		rescueshell
-	fi
 }
 
 use() {
@@ -59,7 +58,7 @@ use() {
 }
 
 dodir() {
-	for dir in $*; do
+	for dir in "$@"; do
 		mkdir -p $dir
 	done
 }
@@ -118,41 +117,44 @@ TuxOnIceResume() {
 
 emount() {
 	# All mounts into one place is good idea.
-	case $1 in
-		'/newroot')
-			einfo "Mounting /newroot..."
-			if [ -n "${rootfstype}" ]; then local mountparams="${rootfsmountparams} -t ${rootfstype}"; fi
-			resolve_device root
-			run mount -o ro ${mountparams} "${root}" '/newroot'
-		;;
+	while [ $# -gt 0 ]; do
+		case $1 in
+			'/newroot')
+				einfo "Mounting /newroot..."
+				if [ -n "${rootfstype}" ]; then local mountparams="${rootfsmountparams} -t ${rootfstype}"; fi
+				resolve_device root
+				run mount -o ro ${mountparams} "${root}" '/newroot'
+			;;
+	
+			'/dev')
+				if grep -q 'devtmpfs' '/proc/filesystems'; then
+					einfo "Mounting /dev (devtmpfs)..."
+					run mount -t devtmpfs devtmpfs /dev
+					dev_is='devtmpfs'
+				else
+					einfo "Mounting /dev (mdev)..."
+					run touch /etc/mdev.conf
+					run echo /sbin/mdev > /proc/sys/kernel/hotplug
+					run mdev -s
+				fi
+			;;
 
-		'/dev')
-			if grep -q 'devtmpfs' '/proc/filesystems'; then
-				einfo "Mounting /dev (devtmpfs)..."
-				run mount -t devtmpfs devtmpfs /dev
-				dev_is='devtmpfs'
-			else
-				einfo "Mounting /dev (mdev)..."
-				run touch /etc/mdev.conf
-				run echo /sbin/mdev > /proc/sys/kernel/hotplug
-				run mdev -s
-			fi
-		;;
+			'/proc')
+				einfo "Mounting /proc..."
+				run mount -t proc proc /proc
+			;;
 
-		'/proc')
-			einfo "Mounting /proc..."
-			run mount -t proc proc /proc
-		;;
+			'/sys')
+				einfo "Mounting /sys..."
+				run mount -t sysfs sysfs /sys
+			;;
 
-		'/sys')
-			einfo "Mounting /sys..."
-			run mount -t sysfs sysfs /sys
-		;;
-
-		*)
-			eerror "emount() does not understand \"$1\""
-		;;
-	esac
+			*)
+				eerror "emount() does not understand \"$1\""
+			;;
+		esac
+		shift
+	done
 }
 
 eumount() {
