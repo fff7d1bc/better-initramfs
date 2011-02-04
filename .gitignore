@@ -1,5 +1,6 @@
 initramfs.cpio.gz
 sourceroot/bin/*
+!*.keep
 sourceroot/lib/*
 sourceroot/etc/*
 sourceroot/config
