@@ -51,7 +51,7 @@ Build initramfs:
 
         make
 
-If you don't have Funtoo/Gentoo-based system, you may need to install binary files manualy, go to initramfs_root/bin dir and:
+If you don't have Funtoo/Gentoo-based system, you may need to install binary files manualy, go to sourceroot/bin dir and:
 ::
 
         cp -v /bin/busybox busybox

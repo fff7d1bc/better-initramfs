@@ -4,9 +4,6 @@
 # Copyright (c) 2010, Piotr Karbowski
 # All rights reserved.
 
-#set -e # exit on >0.
-#set -x # debug
-
 # Load functions.
 . /functions.sh
 
@@ -26,24 +23,16 @@ run dodir /dev /newroot /sbin /proc /sys /etc /var/log /var/run
 # Clear the screen
 clear
 
-# Config.
-if [ -f /config ]; then . /config; fi
-
 # Basic
 kernelver="$(uname -r)"
 ver="$(cat /VERSION)"
 
-einfo "better-initramfs v${ver}"
-einfo "kernel ${kernelver}\n"
+einfo "better-initramfs v${ver}. Linux kernel ${kernelver}\n"
 
-einfo "Mounting /proc"
-run mount -t proc proc /proc
+emount /proc /sys
 
 # Disable kernel messages from popping onto the screen
 echo 0 > /proc/sys/kernel/printk
-
-einfo "Mounting /sys"
-run mount -t sysfs sysfs /sys
 
 # Process command line options
 for i in $(cat /proc/cmdline); do
@@ -85,48 +74,25 @@ for i in $(cat /proc/cmdline); do
 done
 
 
-if [ -z $init ]; then init="/sbin/init"; fi
 if [ -z $root ]; then eerror "\$root variable is empty. This is fatal."; fi
 
-einfo "Create all the symlinks to /bin/busybox."
-run busybox --install -s
 
-if [ -n "$rootdelay" ]; then
-	if [ $rootdelay -gt 0 2>/dev/null ]; then
-		einfo "Waiting $(get_opt $rootdelay)s (rootdelay)"
-		run sleep $(get_opt $rootdelay)
-	else
-		ewarn "\$rootdelay variable must be numeric and greater than zero. Skipping rootdelay."
-	fi
-fi
-
-# prepare /dev
-mountdev
-# mdadm hook.
-use softraid && initmdadm
-# lvm hook.
-use lvm && initlvm
-# dmcrypt luks + lvm, if enabled.
-use luks && initluks && use lvm && initlvm
-# Drop to rescue shell.
-use rescueshell && droptoshell
-# Resume from TuxOnIce hibernation.
-use tuxonice && dotuxonice
-# Mount rootfs to /newroot.
-mountroot
-
-einfo "Unmounting /sys and /proc."
-run umount /sys /proc
-if [ "$mdev_fallback" != "true" ]; then
-	einfo "Unmounting /dev."
-	run umount /dev
-fi
+InitializeBusybox
+use rootdelay
+emount /dev
+use softraid InitializeSoftwareRaid
+use lvm InitializeLVM
+use luks InitializeLUKS && use lvm InitializeLVM
+use rescueshell
+use tuxonice TuxOnIceResume
+emount /newroot
+eumount /sys /proc /dev
 
 #Switch to the new root and execute init
-if [[ -x "/newroot/${init}" ]] ; then
+if [[ -x "/newroot/${init:-/sbin/init}" ]] ; then
 	einfo "Switching root to /newroot and executing /sbin/init."
-	exec switch_root /newroot "${init}"
+	exec switch_root /newroot "${init-/sbin/init}"
 fi
 
 ewarn "Something goes wrong."
-droptoshell
+rescueshell
