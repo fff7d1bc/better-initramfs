@@ -2,6 +2,8 @@
 better-initramfs
 ================
 
+This readme does not fit current git code, be aware!
+
 .. FIXME: Make website better, add style for <h2>.
 
 .. contents:: Table of Contents
