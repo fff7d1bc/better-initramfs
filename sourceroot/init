@@ -86,7 +86,7 @@ use luks InitializeLUKS && use lvm InitializeLVM
 use rescueshell
 use tuxonice TuxOnIceResume
 emount /newroot
-run mount --move /dev /newroot/dev
+moveDev
 eumount /sys /proc
 
 #Switch to the new root and execute init
