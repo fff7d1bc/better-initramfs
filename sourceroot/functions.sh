@@ -127,16 +127,8 @@ emount() {
 			;;
 	
 			'/dev')
-				if grep -q 'devtmpfs' '/proc/filesystems'; then
-					einfo "Mounting /dev (devtmpfs)..."
-					run mount -t devtmpfs devtmpfs /dev
-					dev_is='devtmpfs'
-				else
-					einfo "Mounting /dev (mdev)..."
-					run touch /etc/mdev.conf
-					run echo /sbin/mdev > /proc/sys/kernel/hotplug
-					run mdev -s
-				fi
+				einfo "Mounting /dev (devtmpfs)..."
+				run mount -t devtmpfs devtmpfs /dev
 			;;
 
 			'/proc')
@@ -160,12 +152,6 @@ emount() {
 eumount() {
 	while [ $# -gt 0 ]; do
 		case $1 in
-			'/dev')
-				if [ "${dev_is}" = 'devtmpfs' ]; then
-					einfo "Unmounting /dev (devtmpfs)..."
-					run umount /dev
-				fi
-			;;
 			*)
 				einfo "Unmounting ${1}..."
 				run umount $1
