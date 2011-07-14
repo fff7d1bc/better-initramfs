@@ -6,3 +6,4 @@
 * Support for aufs2-based rootfs (livesystem). Useful for debuging and liveUSB/CD.
 * Write musthave() function to ensure that $1 variable is non-empty.
 * Support for keymaps.
+* Support BTRFS's subvolumes.
