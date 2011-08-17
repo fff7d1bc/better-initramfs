@@ -7,3 +7,7 @@
 * Write musthave() function to ensure that $1 variable is non-empty.
 * Support for keymaps.
 * Support BTRFS's subvolumes.
+* Restore mdev support.
+* Remove unnecessary bashism from code.
+* Write proper readme.
+* Prepare build scripts for busybox and friends for people who do not use gentoo.
