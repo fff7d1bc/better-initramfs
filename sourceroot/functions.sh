@@ -127,8 +127,26 @@ emount() {
 			;;
 	
 			'/dev')
-				einfo "Mounting /dev (devtmpfs)..."
-				run mount -t devtmpfs devtmpfs /dev
+				local devmountopts='nosuid,relatime,size=10240k,mode=755'
+
+				if grep -q 'devtmpfs' '/proc/filesystems' && ! use mdev; then
+					einfo "Mounting /dev (devtmpfs)..."
+					run mount -t devtmpfs -o ${devmountopts} devtmpfs /dev
+				else
+					einfo "Mounting /dev (mdev over tmpfs)..."
+					run mount -t tmpfs -o ${devmountopts} dev /dev
+					run touch /etc/mdev.conf
+					run echo /sbin/mdev > /proc/sys/kernel/hotplug
+					run mdev -s
+					# Looks like mdev create /dev/pktcdvd as a file when both udev and devtmpfs do it as a dir. 
+					# We will do it 'better' to avoid non-fatal-error while starting udev after switching to /newroot.
+					# TODO: Can mdev.conf handle it?
+					if [ -c '/dev/pktcdvd' ]; then
+						run rm '/dev/pktcdvd'
+						run mkdir '/dev/pktcdvd'
+						run mknod '/dev/pktcdvd/control' c 10 61
+					fi
+				fi
 			;;
 
 			'/proc')

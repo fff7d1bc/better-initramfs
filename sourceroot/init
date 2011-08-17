@@ -70,6 +70,9 @@ for i in $(cat /proc/cmdline); do
 		rootdelay\=*)
 			rootdelay=$(get_opt $i)
 		;;
+		mdev)
+			mdev=true
+		;;
 	esac
 done
 
