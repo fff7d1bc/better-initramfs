@@ -57,6 +57,21 @@ use() {
 	fi
 }
 
+musthave() {
+	while [ -n "$1" ]; do
+		# We can handle it by use() function, yay!
+		if ! use "$1"; then
+			eerror "The \"$1\" variable is empty, set to false or zero but shoudn't be."
+			local missing_variable='true'
+		fi
+		shift
+	done
+
+	if [ "${missing_variable}" = 'true' ]; then
+		rescueshell
+	fi
+}
+
 dodir() {
 	for dir in "$@"; do
 		mkdir -p "$dir"
@@ -69,17 +84,11 @@ InitializeLUKS() {
 		rescueshell
 	fi
 
-	if [ -z "$enc_root" ]; then
-		eerror "You have enabled luks but your \$enc_root variable is empty."
-		rescueshell
-	fi
+	musthave enc_root
 	
 	einfo "Opening encrypted partition and mapping to /dev/mapper/enc_root."
+
 	resolve_device enc_root
-	if [ -z "$enc_root" ]; then
-        	eerror "\$enc_root variable is empty. Wrong UUID/LABEL?"
-	        rescueshell
-	fi
 
 	# Hack for cryptsetup which trying to run /sbin/udevadm.
 	run echo -e "#!/bin/sh\nexit 0" > /sbin/udevadm
@@ -186,8 +195,8 @@ moveDev() {
 
 rootdelay() {
 	if [ "${rootdelay}" -gt 0 2>/dev/null ]; then
-		einfo "Waiting $(get_opt $rootdelay)s (rootdelay)"
-		run sleep $(get_opt $rootdelay)
+		einfo "Waiting ${rootdelay}s (rootdelay)"
+		run sleep ${rootdelay}
 	else
 		ewarn "\$rootdelay variable must be numeric and greater than zero. Skipping rootdelay."
 	fi

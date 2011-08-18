@@ -1,6 +1,9 @@
 # For more specified changelog, check git log.
 
 v4.0
+	* Some code cleanup, rootdelay now do not call get_opt at all.
+	* rescueshell and rootdelay boot options now works as expected.
+	* musthave() function wrap around use() to easly ensure that needed variables are set. 
 	* Re-implemented mdev support, new kernel boot option 'mdev' to force mdev+tmpfs instead of devtmpfs even if available.
 	* use() now can execute command.
 	* get_device replaced with resolve_device function.

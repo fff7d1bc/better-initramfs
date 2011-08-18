@@ -27,7 +27,7 @@ clear
 kernelver="$(uname -r)"
 ver="$(cat /VERSION)"
 
-einfo "better-initramfs v${ver}. Linux kernel ${kernelver}\n"
+einfo "better-initramfs v${ver}. Linux kernel ${kernelver}.\n"
 
 emount /proc /sys
 
@@ -76,24 +76,21 @@ for i in $(cat /proc/cmdline); do
 	esac
 done
 
-
-if [ -z $root ]; then eerror "\$root variable is empty. This is fatal."; fi
-
+musthave root
 
 InitializeBusybox
-use rootdelay
+use rootdelay rootdelay
 emount /dev
 use softraid InitializeSoftwareRaid
 use lvm InitializeLVM
 use luks InitializeLUKS && use lvm InitializeLVM
-use rescueshell
+use rescueshell rescueshell
 use tuxonice TuxOnIceResume
 emount /newroot
 moveDev
 eumount /sys /proc
 
-#Switch to the new root and execute init
-if [[ -x "/newroot/${init:-/sbin/init}" ]] ; then
+if [ -x "/newroot/${init:-/sbin/init}" ]; then
 	einfo "Switching root to /newroot and executing /sbin/init."
 	exec switch_root /newroot "${init-/sbin/init}"
 fi
