@@ -14,9 +14,12 @@ InitializeBusybox() {
 }
 
 rescueshell() {
-	if [ "$rescueshell" = 'false' ]; then
+
+	if [ "$rescueshell" != 'true' ]; then
+		# If we did not forced rescueshell by kernel opt, print additional message.
 		ewarn "Dropping to rescueshell because of above error."
 	fi
+
 	ewarn "Rescue Shell (busybox's /bin/sh)"
 	ewarn "To reboot, press 'control-alt-delete'."
 	ewarn "If you wish continue booting process, just exit from this shell."
@@ -111,22 +114,19 @@ InitializeSoftwareRaid() {
 }
 
 TuxOnIceResume() {
-	if [ -n "${resume}" ]; then
-		if [ ! -f /sys/power/tuxonice/do_resume ]; then
-			ewarn "Your kernel do not support TuxOnIce.";
-		else
-			einfo "Sending do_resume signal to TuxOnIce."
-			run echo 1 > /sys/power/tuxonice/do_resume
-		fi
+	musthave resume
+	if [ -f '/sys/power/tuxonice/do_resume' ]; then
+		einfo "Sending do_resume signal to TuxOnIce."
+		run echo 1 > /sys/power/tuxonice/do_resume
 	else
-		ewarn "resume= variable is empty, not cool, skipping tuxonice."
+		ewarn "Apparently this kernel does not support TuxOnIce."
 	fi
 }
 
 
 emount() {
 	# All mounts into one place is good idea.
-	while [ $# -gt 0 ]; do
+	while [ "$#" -gt 0 ]; do
 		case $1 in
 			'/newroot')
 				einfo "Mounting /newroot..."
@@ -177,8 +177,8 @@ emount() {
 }
 
 eumount() {
-	while [ $# -gt 0 ]; do
-		case $1 in
+	while [ "$#" -gt 0 ]; do
+		case "$1" in
 			*)
 				einfo "Unmounting ${1}..."
 				run umount "$1"

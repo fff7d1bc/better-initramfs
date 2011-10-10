@@ -95,5 +95,5 @@ if [ -x "/newroot/${init:-/sbin/init}" ]; then
 	exec switch_root /newroot "${init-/sbin/init}"
 fi
 
-ewarn "Something goes wrong."
+ewarn "Something went wrong."
 rescueshell
