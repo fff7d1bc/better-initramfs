@@ -109,8 +109,11 @@ InitializeLVM() {
 
 InitializeSoftwareRaid() {
 	einfo "Scaning for software raid arrays."
-	mdadm --assemble --scan
-	mdadm --auto-detect
+	if ! [ -f '/etc/mdadm.conf' ]; then
+		run mdadm --examine --scan > /etc/mdadm.conf
+	fi
+	run mdadm --assemble --scan
+	run mdadm --auto-detect
 }
 
 TuxOnIceResume() {
