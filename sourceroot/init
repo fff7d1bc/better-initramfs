@@ -68,6 +68,10 @@ for i in $(cat /proc/cmdline); do
 			rootfstype=$(get_opt $i)
 		;;
 
+		rootflags\=*)
+			rootfsmountparams="-o $(get_opt $i)"
+		;;
+
 		ro|rw)
 			root_rw_ro=$i
 		;;
