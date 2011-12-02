@@ -67,6 +67,11 @@ for i in $(cat /proc/cmdline); do
 		rootfstype\=*)
 			rootfstype=$(get_opt $i)
 		;;
+
+		ro|rw)
+			root_rw_ro=$i
+		;;
+
 		rootdelay\=*)
 			rootdelay=$(get_opt $i)
 		;;
