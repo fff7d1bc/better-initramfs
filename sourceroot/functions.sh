@@ -29,7 +29,7 @@ rescueshell() {
 run() { "$@" || ( eerror "$@ failed." ; rescueshell ) ;}
 
 get_opt() {
-	echo "$@" | cut -d "=" -f 2,3
+	echo "$@" | cut -d "=" -f 2-
 }
 
 resolve_device() {
