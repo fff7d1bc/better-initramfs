@@ -90,6 +90,7 @@ musthave root
 InitializeBusybox
 use rootdelay rootdelay
 emount /dev
+loadkeymap
 use softraid InitializeSoftwareRaid
 use lvm InitializeLVM
 use luks InitializeLUKS && use lvm InitializeLVM

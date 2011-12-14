@@ -81,6 +81,12 @@ dodir() {
 	done
 }
 
+loadkeymap() {
+	if [ -f /keymap ]; then
+		loadkmap < /keymap
+	fi
+}
+
 InitializeLUKS() {
 	if [ ! -f /bin/cryptsetup ]; then
 		eerror "There is no cryptsetup binary into initramfs image."
