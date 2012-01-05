@@ -1,4 +1,4 @@
-* Support Remote Rescue Shell [dropbear ssh] - ON HOLD, minor.
+* Support Remote Rescue Shell [dropbear ssh]
 * Support loadable kernel modules. - ON HOLD, minor
 * Support for key on external device (enc_keydev and enc_keyfile).
 * When there is luks enabled, but not lvm and there is no root=, use /dev/mapper/enc_root
