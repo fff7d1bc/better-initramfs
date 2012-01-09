@@ -3,4 +3,6 @@ sourceroot/bin/*
 !*.keep
 sourceroot/lib/*
 sourceroot/etc/*
+!sourceroot/etc/profile
+!sourceroot/etc/profile.d
 sourceroot/config

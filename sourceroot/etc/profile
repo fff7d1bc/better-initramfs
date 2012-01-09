@@ -1,0 +1,7 @@
+#!/bin/sh
+
+for f in /etc/profile.d/*.sh; do
+	if [ -x "$f" ]; then
+		$f
+	fi
+done; unset f
