@@ -6,8 +6,9 @@ if [ -n "$SSH_TTY" ] || [ -n "$SSH_CONNECTiON" ]; then
 	. /functions.sh
 	ewarn "The lockfile was created."
 	ewarn "In order to resume boot proces, run 'resume-boot'."
-	ewarn "Be aware that it will kill your connections"
-	ewarn "thus not allow you to work in this shell anymore."
+	ewarn "Be aware that it will kill your connection which means"
+	ewarn "you will no longer be able work in this shell."
+	echo
 
 else
 	export PS1='rescueshell \w \# '
