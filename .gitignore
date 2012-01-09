@@ -1,5 +1,6 @@
 initramfs.cpio.gz
 sourceroot/bin/*
+!sourceroot/bin/resume-boot
 !*.keep
 sourceroot/lib/*
 sourceroot/etc/*

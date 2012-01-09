@@ -21,7 +21,7 @@ rescueshell() {
 
 	ewarn "Rescue Shell (busybox's /bin/sh)"
 	ewarn "To reboot, press 'control-alt-delete'."
-	ewarn "If you wish continue booting process, just exit from this shell."
+	ewarn "If you wish resume booting process, run 'resume-boot'."
 	/bin/sh --login
 	echo
 	}
@@ -172,6 +172,16 @@ setup_sshd() {
 
 	einfo 'Starting dropbear sshd ...'
 	run dropbear -s -j -k
+
+	if use sshd_wait; then
+		# sshd_wait exist, now we should sleep for X sec.
+		if [ "${sshd_wait}" -gt 0 2>/dev/null ]; then
+			einfo "Waiting ${sshd_wait}s (sshd_wait)"
+				run sleep "${sshd_wait}"
+		else
+			ewarn "\$sshd_wait variable must be numeric and greater than zero. Skipping rootdelay."
+		fi
+	fi
 
 }
 

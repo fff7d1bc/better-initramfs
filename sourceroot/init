@@ -79,6 +79,9 @@ for i in $(cat /proc/cmdline); do
 		sshd)
 			sshd=true
 		;;
+		sshd_wait\=*)
+			sshd_wait=$(get_opt $i)
+		;;
 		rootdelay\=*)
 			rootdelay=$(get_opt $i)
 		;;
@@ -93,11 +96,11 @@ musthave root
 InitializeBusybox
 use rootdelay rootdelay
 emount /dev
+use sshd && setup_sshd
 loadkeymap
 use softraid InitializeSoftwareRaid
 use lvm InitializeLVM
 use luks InitializeLUKS && use lvm InitializeLVM
-use sshd && setup_sshd
 use rescueshell rescueshell
 use tuxonice TuxOnIceResume
 emount /newroot
