@@ -22,7 +22,8 @@ rescueshell() {
 	ewarn "Rescue Shell (busybox's /bin/sh)"
 	ewarn "To reboot, press 'control-alt-delete'."
 	ewarn "If you wish continue booting process, just exit from this shell."
-	/bin/sh
+	/bin/sh --login
+	echo
 	}
 
 run() {
