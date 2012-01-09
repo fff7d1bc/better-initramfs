@@ -1,4 +1,5 @@
-* Support Remote Rescue Shell [dropbear ssh]
+* Make luks support input password remotly (key-file + fifo?)
+* Allow user to localy input password even if sshd is enabled.
 * Support loadable kernel modules. - ON HOLD, minor
 * Support for key on external device (enc_keydev and enc_keyfile).
 * When there is luks enabled, but not lvm and there is no root=, use /dev/mapper/enc_root
