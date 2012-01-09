@@ -3,5 +3,5 @@
 # Kill regular rescueshell (which is exected on error OR forced via 'rescueshell' boot option'
 # And remove /remote-rescueshell.lock what is executed when you login over ssh in the sshd_wait period
 
-kill -9 "$(cat /rescueshell.pid)"
+if [ -f '/rescueshell.pid' ]; then kill -9 "$(cat /rescueshell.pid)"; fi
 if [ -f '/remote-rescueshell.lock' ]; then rm '/remote-rescueshell.lock'; fi
