@@ -140,9 +140,6 @@ TuxOnIceResume() {
 }
 
 setup_sshd() {
-	#ipv4='172.20.0.151/24'
-	#interface=eth0
-
 	musthave ipv4 interface
 
 	einfo "Setting ${ipv4} on ${interface} ..."
