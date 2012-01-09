@@ -187,6 +187,17 @@ setup_sshd() {
 
 cleanup() {
 	if use sshd; then
+		if [ -f '/remote-rescueshell.lock' ]; then
+			ewarn "The lockfile at '/remote-rescueshell.lock' exist."
+			ewarn "The boot process will be paused until the lock is removed."
+			while true; do
+				if [ -f '/remote-rescueshell.lock' ]; then
+					sleep 1
+				else
+					break
+				fi
+			done
+		fi
 		einfo "Cleaning up, killing dropbear and bringing down the network ..."
 		run pkill -9 dropbear > /dev/null 2>&1
 		run ip addr del "${ipv4}" dev "${interface}" > /dev/null 2>&1
