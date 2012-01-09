@@ -24,6 +24,7 @@ rescueshell() {
 	ewarn "If you wish resume booting process, run 'resume-boot'."
 	/bin/sh --login
 	echo
+	rm /rescueshell.pid
 	}
 
 run() {
