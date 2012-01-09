@@ -5,8 +5,8 @@
 # All rights reserved.
 
 einfo() { echo -ne "\033[1;30m>\033[0;36m>\033[1;36m> \033[0m${@}\n" ;}
-ewarn() { echo -ne "\033[1;30m>\033[0;33m>\033[1;33m> \033[0m${@}\n" ;}
-eerror() { echo -ne "\033[1;30m>\033[0;31m>\033[1;31m> ${@}\033[0m\n" ;}
+ewarn() { echo -ne "\033[1;30m>\033[0;33m>\033[1;33m> \033[0m${@}\n" >&2;}
+eerror() { echo -ne "\033[1;30m>\033[0;31m>\033[1;31m> ${@}\033[0m\n" >&2 ;}
 
 InitializeBusybox() {
 	einfo "Create all the symlinks to /bin/busybox."
@@ -14,7 +14,6 @@ InitializeBusybox() {
 }
 
 rescueshell() {
-
 	if [ "$rescueshell" != 'true' ]; then
 		# If we did not forced rescueshell by kernel opt, print additional message.
 		ewarn "Dropping to rescueshell because of above error."
@@ -26,7 +25,15 @@ rescueshell() {
 	/bin/sh
 	}
 
-run() { "$@" || ( eerror "$@ failed." ; rescueshell ) ;}
+run() {
+	if "$@"; then
+		echo "Executed: '$@'" >> /init.log
+	else
+		eerror "'$@' failed."
+		echo "Failed: '$@'" >> /init.log
+		rescueshell
+	fi
+}
 
 get_opt() {
 	echo "$@" | cut -d "=" -f 2-
@@ -77,7 +84,7 @@ musthave() {
 
 dodir() {
 	for dir in "$@"; do
-		mkdir -p "$dir"
+		run mkdir -p "$dir"
 	done
 }
 
@@ -132,6 +139,58 @@ TuxOnIceResume() {
 	fi
 }
 
+setup_sshd() {
+	#ipv4='172.20.0.151/24'
+	#interface=eth0
+
+	musthave ipv4 interface
+
+	einfo "Setting ${ipv4} on ${interface} ..."
+	run ip addr add "${ipv4}" dev "${interface}"
+	run ip link set up dev "${interface}"
+	
+	# Prepare /dev/pts.
+	einfo "Mounting /dev/pts ..."
+	if ! [ -d /dev/pts ]; then run mkdir /dev/pts; fi
+	run mount -t devpts none /dev/pts
+
+	# Prepare dirs.
+	dodir /etc/dropbear /var/log /var/run /root/.ssh
+
+	# Generate host keys.
+	einfo "Generating dropbear ssh host keys ..."
+	run dropbearkey -t rsa -f /etc/dropbear/dropbear_rsa_host_key > /dev/null
+	run dropbearkey -t dss -f /etc/dropbear/dropbear_dss_host_key > /dev/null
+
+	# Prepare root account.
+	run echo 'root:x:0:0:root:/root:/bin/sh' > /etc/passwd
+
+	if [ -f /authorized_keys ]; then
+		run cp /authorized_keys /root/.ssh/authorized_keys
+	else
+		eerror "Missing /autorized_keys file, you will be no able login via sshd."
+		rescueshell
+	fi
+
+	einfo 'Starting dropbear sshd ...'
+	run dropbear -s -j -k
+
+}
+
+cleanup() {
+	if use sshd; then
+		einfo "Cleaning up, killing dropbear and bringing down the network ..."
+		run pkill -9 dropbear > /dev/null 2>&1
+		run ip addr del "${ipv4}" dev "${interface}" > /dev/null 2>&1
+	fi
+}
+
+boot_newroot() {
+	if [ -x "/newroot/${init:-/sbin/init}" ]; then
+		einfo "Switching root to /newroot and executing /sbin/init."
+		exec switch_root /newroot "${init-/sbin/init}"
+	fi
+}
 
 emount() {
 	# All mounts into one place is good idea.
@@ -199,6 +258,7 @@ eumount() {
 
 moveDev() {
 	einfo "Moving /dev to /newroot/dev..."
+	if mountpoint -q /dev/pts; then umount /dev/pts; fi
 	run mount --move /dev /newroot/dev
 }
 

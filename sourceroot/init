@@ -28,6 +28,7 @@ kernelver="$(uname -r)"
 ver="$(cat /VERSION)"
 
 einfo "better-initramfs v${ver}. Linux kernel ${kernelver}.\n"
+echo -e "\nWelcome to better-initramfs v${ver}. Linux kernel ${kernelver}.\n" > /etc/motd
 
 emount /proc /sys
 
@@ -75,7 +76,9 @@ for i in $(cat /proc/cmdline); do
 		ro|rw)
 			root_rw_ro=$i
 		;;
-
+		sshd)
+			sshd=true
+		;;
 		rootdelay\=*)
 			rootdelay=$(get_opt $i)
 		;;
@@ -94,16 +97,14 @@ loadkeymap
 use softraid InitializeSoftwareRaid
 use lvm InitializeLVM
 use luks InitializeLUKS && use lvm InitializeLVM
+use sshd && setup_sshd
 use rescueshell rescueshell
 use tuxonice TuxOnIceResume
 emount /newroot
+cleanup
 moveDev
 eumount /sys /proc
-
-if [ -x "/newroot/${init:-/sbin/init}" ]; then
-	einfo "Switching root to /newroot and executing /sbin/init."
-	exec switch_root /newroot "${init-/sbin/init}"
-fi
+boot_newroot
 
 ewarn "Something went wrong."
 rescueshell
