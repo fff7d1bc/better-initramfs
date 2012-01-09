@@ -2,6 +2,6 @@
 
 for f in /etc/profile.d/*.sh; do
 	if [ -x "$f" ]; then
-		$f
+		. $f
 	fi
 done; unset f
