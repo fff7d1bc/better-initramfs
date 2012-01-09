@@ -2,6 +2,7 @@
 
 if [ -n "$SSH_TTY" ] || [ -n "$SSH_CONNECTiON" ]; then
 	export PS1='remote rescueshell \w \# '
+	touch /remote-rescueshell.lock
 else
 	export PS1='rescueshell \w \# '
 	# As the rescueshell 'pouse' boot proces we will write pid into file.
