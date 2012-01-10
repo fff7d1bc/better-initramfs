@@ -1,3 +1,4 @@
+* Make bootstrap scripts to build all needed tools (dropbear, mdadm, lvm2, cryptsetup, busybox) with uClibc, via Landley's Aboriginal Linux.
 * Make luks support input password remotly (key-file + fifo?)
 * Allow user to localy input password even if sshd is enabled.
 * Support loadable kernel modules. - ON HOLD, minor
