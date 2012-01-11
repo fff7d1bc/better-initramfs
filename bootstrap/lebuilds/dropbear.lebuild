@@ -1,0 +1,13 @@
+#!/bin/sh
+name='dropbear'
+version='2011.54'
+sources=( "http://matt.ucc.asn.au/${name}/releases/${name}-${version}.tar.bz2" )
+
+build_cmd="cd /source/${name}-${version} && ./configure --prefix=/usr && PROGRAMS='dropbear dropbearkey' STATIC='1' MULTI=1 make -j ${cores_num:-1}"
+
+wanted_binary_path="/source/${name}-${version}/dropbearmulti"
+
+fetch_source
+install_source
+build_source
+

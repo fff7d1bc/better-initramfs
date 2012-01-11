@@ -1,0 +1,107 @@
+#!/bin/bash
+
+workdir="$(readlink -f "$0")"
+workdir="${workdir%/*}"
+build_dir="${workdir}/build_dir"
+distfiles="${workdir}/distfiles"
+cores_num="$(grep -c '^processor' /proc/cpuinfo)"
+
+
+einfo() { echo -e "\033[1;32m>>> \033[0m$@"; }
+eerror() { echo -e "\033[1;31m>>> \033[0m$@" >&2; }
+die() { eerror "$@"; exit 1; }
+run() { "$@" || die "Command '$@' failed."; }
+
+fetch_source () {
+	for source in "${sources[@]}" "$@"; do
+		if ! [ -f "${distfiles}/${source##*/}" ]; then
+			case "${source}" in
+				http://*|https://*)
+					einfo "Fetching ${source##*/} ..."
+					run wget "${source}" -O "${distfiles}/${source##*/}"
+					if ! [ -s "${distfiles}/${source##*/}" ]; then
+						rm -f "${distfiles}/${source##*/}"
+						die "Unable to fetch ${source##*/}."
+					fi
+				;;
+				*)
+					die "You have to provide '${source##*/}'."
+				;;
+			esac
+		fi
+	done; unset source
+}
+
+install_source() {
+	if ! [ -d "${build_dir}/source" ]; then
+		mkdir "${build_dir}/source"
+	fi
+	for source in "${sources[@]}"; do
+		if ! [ -f "${distfiles}/${source##*/}" ]; then
+			die "Missing source."
+		else
+			case "${source##*/}" in
+				*.tar|*.tar.bz2|*.tar.xz|*.tar.gz|l*.tar.lzma)
+					einfo "Extracting '${source##*/}' ..."
+					run tar xf "${distfiles}/${source##*/}" -C "${build_dir}/source"
+					if [ -d "${workdir}/patches/${name}" ]; then
+						for patch in "${workdir}/patches/${name}"/*; do
+							einfo "Applying ${patch##*/} ..."
+							run patch -d "${build_dir}/source/${name}-${version}/" -p1 -i "${patch}" --silent
+						done
+					fi
+				;;
+				*)
+					die "Unsupported format."
+				;;
+			esac
+
+		fi
+	done; unset source
+}
+
+build_source() {
+	if env -i PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" HOME="/root" TERM="${TERM}" chroot "${build_dir}" /bin/sh -c "${build_cmd:-false}"; then
+		einfo "Build of the '$name-$version' finished."
+	else
+		die "Build of the '$name-$version' failed."
+	fi
+}
+
+case "$1" in 
+	init)
+		if [ -z "$2" ] || ! [[ "$2" =~ ^(x86_64|i486|i586|i686)$ ]]; then
+			die "init need an arch argument, i486, i586, i686 or x86_64!"
+		fi		
+		einfo "Preparing '${build_dir}' ..."
+		rootfs_tarball="${distfiles}/root-filesystem-${2}.tar.bz2"
+		fetch_source "http://landley.net/aboriginal/downloads/binaries/root-filesystem/root-filesystem-${2}.tar.bz2"
+		if [ -d "${build_dir}" ]; then
+			einfo "Build dir exist, cleaning ..."
+			rm -rf "${build_dir}"
+		fi
+		mkdir "${build_dir}"
+		einfo "Unpacking '${rootfs_tarball##*/}' ..."
+		tar xf "${rootfs_tarball}" -C "${build_dir}/" --strip-components 1
+		cat /etc/resolv.conf > "${build_dir}/etc/resolv.conf"
+	;;
+	build)
+		if ! [ -d "${build_dir}" ]; then die "No build_dir, forgot to ${0} init <arch>?"; fi
+		if [ -f "${workdir}/lebuilds/$2.lebuild" ]; then
+			unset name version sources build_cmd wanted_binary_path
+			. "${workdir}/lebuilds/$2.lebuild"
+			if [ -n "${wanted_binary_path}" ] && [ -f "${build_dir}/${wanted_binary_path}" ]; then
+				if ! [ -d "${workdir}/binaries" ]; then mkdir "${workdir}/binaries"; fi
+				einfo "Deploying '${wanted_binary_path##*/}' into binaries/ ..."
+				cp "${build_dir}/${wanted_binary_path}" "${workdir}/binaries/"
+			fi
+			# Cleanup variables before we use them and after.
+			unset name version sources build_cmd wanted_binary_path
+		else
+			die "Wrong lebuild name."
+		fi
+	;;
+	*)
+		die "Wrong argument!"
+	;;
+esac
