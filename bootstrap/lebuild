@@ -93,8 +93,7 @@ Usage:
 
 Example workflow, preparing dropbear.
 	$0 init i586
-	$0 build zlib
-	$0 build dropbear
+	$0 build zlib dropbear
 EOF
 }
 
@@ -117,19 +116,23 @@ case "$1" in
 	;;
 	build)
 		if ! [ -d "${build_dir}" ]; then die "No build_dir, forgot to ${0} init <arch>?"; fi
-		if [ -f "${workdir}/lebuilds/$2.lebuild" ]; then
-			unset name version sources build_cmd wanted_binary_path
-			. "${workdir}/lebuilds/$2.lebuild"
-			if [ -n "${wanted_binary_path}" ] && [ -f "${build_dir}/${wanted_binary_path}" ]; then
-				if ! [ -d "${workdir}/binaries" ]; then mkdir "${workdir}/binaries"; fi
-				einfo "Deploying '${wanted_binary_path##*/}' into binaries/ ..."
-				cp "${build_dir}/${wanted_binary_path}" "${workdir}/binaries/"
+		while [ -n "$2" ]; do
+			if [ -f "${workdir}/lebuilds/$2.lebuild" ]; then
+				(
+					einfo "Building $2 ..."
+					unset name version sources build_cmd wanted_binary_path
+					. "${workdir}/lebuilds/$2.lebuild"
+					if [ -n "${wanted_binary_path}" ] && [ -f "${build_dir}/${wanted_binary_path}" ]; then
+						if ! [ -d "${workdir}/binaries" ]; then mkdir "${workdir}/binaries"; fi
+						einfo "Deploying '${wanted_binary_path##*/}' into binaries/ ..."
+						cp "${build_dir}/${wanted_binary_path}" "${workdir}/binaries/"
+					fi
+				) || die "Failed to build '$2'."
+			else
+				die "Wrong lebuild name."
 			fi
-			# Cleanup variables before we use them and after.
-			unset name version sources build_cmd wanted_binary_path
-		else
-			die "Wrong lebuild name."
-		fi
+		shift
+		done
 	;;
 	*)
 		print_help; exit 1
