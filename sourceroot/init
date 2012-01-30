@@ -107,6 +107,7 @@ use luks InitializeLUKS && use lvm InitializeLVM
 use rescueshell rescueshell
 use tuxonice TuxOnIceResume
 emount /newroot
+emount /newroot/usr
 cleanup
 moveDev
 eumount /sys /proc

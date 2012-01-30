@@ -228,6 +228,25 @@ emount() {
 				resolve_device root
 				run mount -o ${root_rw_ro:-ro} ${mountparams} "${root}" '/newroot'
 			;;
+
+			'/newroot/usr')
+				if ! [ -f '/newroot/etc/fstab' ]; then
+					eerror "Missing /newroot/etc/fstab!"
+					rescueshell
+				fi
+
+				if ! [ -d '/newroot/usr' ]; then
+					eerror "Missing /newroot/usr mount point!"
+					rescueshell
+				fi
+
+				while read device mountpoint fstype fsflags _; do
+					if [ "${mountpoint}" = '/usr' ]; then
+						einfo "Mounting /newroot/usr..."
+						run mount -o "${fsflags},${root_rw_ro:-ro}" -t "${fstype}" "${device}" '/newroot/usr'
+					fi
+				done < '/newroot/etc/fstab'
+			;;
 	
 			'/dev')
 				local devmountopts='nosuid,relatime,size=10240k,mode=755'
