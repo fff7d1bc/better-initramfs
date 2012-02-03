@@ -1,0 +1,13 @@
+#!/bin/sh
+name='busybox'
+version='1.19.3'
+sources=( "http://www.busybox.net/downloads/${name}-${version}.tar.bz2" )
+
+build_cmd="cd /source/${name}-${version} && make -j ${cores_num:-1}"
+
+wanted_binary_path="/source/${name}-${version}/busybox"
+
+fetch_source
+install_source
+build_source
+
