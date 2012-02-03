@@ -1,0 +1,21 @@
+#!/bin/sh
+name='lvm2'
+version='2.02.88'
+sources=( "ftp://sources.redhat.com/pub/lvm2/releases/LVM2.${version}.tgz" )
+
+
+# Something is badly wrong with the lvm2 package, we will create symlinks to autoconf dir to workaround it.
+build_cmd="
+	cd /source/${name}-${version} && \
+	for i in \$(find . -type d -maxdepth 1); do (cd \$i && ln -s ../autoconf 2>/dev/null); done; \
+	sed 's#-Wl,--no-export-dynamic##g' tools/Makefile.in -i && \
+	./configure --prefix=/usr --enable-static_link && \
+	make -j ${cores_num:-1}
+"
+
+wanted_binary_path="/source/${name}-${version}/tools/lvm.static"
+
+fetch_source
+install_source
+build_source
+
