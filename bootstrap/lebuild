@@ -75,9 +75,9 @@ install_source() {
 
 build_source() {
 	if env -i PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" HOME="/root" TERM="${TERM}" chroot "${build_dir}" /bin/sh -c "${build_cmd:-false}"; then
-		einfo "Build of the '$name-$version' finished."
+		einfo "Finished: $name-$version"
 	else
-		die "Build of the '$name-$version' failed."
+		die "Failed: $name-$version"
 	fi
 }
 
@@ -115,24 +115,34 @@ case "$1" in
 		cat /etc/resolv.conf > "${build_dir}/etc/resolv.conf"
 	;;
 	build)
+		shift
+		if [ -z "${1}" ]; then
+			die "What do you want to build?"
+		fi
+		arguments="$#"
+		building_num='1'
 		if ! [ -d "${build_dir}" ]; then die "No build_dir, forgot to ${0} init <arch>?"; fi
-		while [ -n "$2" ]; do
-			if [ -f "${workdir}/lebuilds/$2.lebuild" ]; then
+		while [ -n "$1" ]; do
+			if [ -f "${workdir}/lebuilds/$1.lebuild" ]; then
+				einfo "Building $1 (${building_num} of $arguments) ..."
 				(
-					einfo "Building $2 ..."
 					unset name version sources build_cmd wanted_binary_path
-					. "${workdir}/lebuilds/$2.lebuild"
+					. "${workdir}/lebuilds/$1.lebuild"
 					if [ -n "${wanted_binary_path}" ] && [ -f "${build_dir}/${wanted_binary_path}" ]; then
-						if ! [ -d "${workdir}/binaries" ]; then mkdir "${workdir}/binaries"; fi
-						einfo "Deploying '${wanted_binary_path##*/}' into binaries/ ..."
-						cp "${build_dir}/${wanted_binary_path}" "${workdir}/binaries/"
+						if ! [ -d "${workdir}/output" ]; then mkdir "${workdir}/output"; fi
+						einfo "Deploying '${wanted_binary_path##*/}' into output/ ..."
+						cp "${build_dir}/${wanted_binary_path}" "${workdir}/output/"
 					fi
-				) || die "Failed to build '$2'."
+				) || die "Build failed: '$1'."
 			else
 				die "Wrong lebuild name."
 			fi
 		shift
+		building_num=$((building_num+1))
 		done
+		if [ "$#" = '0' ]; then
+			einfo "Everyting done."
+		fi
 	;;
 	*)
 		print_help; exit 1
