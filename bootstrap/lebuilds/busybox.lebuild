@@ -3,7 +3,11 @@ name='busybox'
 version='1.19.3'
 sources=( "http://www.busybox.net/downloads/${name}-${version}.tar.bz2" )
 
-build_cmd="cd /source/${name}-${version} && make -j ${cores_num:-1}"
+build_cmd="
+	cd /source/${name}-${version} && \
+	make -j ${cores_num:-1} && \
+	/source/${name}-${version}/busybox cp /source/${name}-${version}/busybox /bin/busybox
+"
 
 wanted_binary_path="/source/${name}-${version}/busybox"
 
