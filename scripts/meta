@@ -1,0 +1,89 @@
+#!/bin/bash
+
+set -e
+
+scriptpath="$(readlink -f $0)"
+workdir="${scriptpath%/*}"
+bootstrap="${workdir}/../bootstrap"
+sourceroot="${workdir}/../sourceroot"
+
+die() {
+	echo -e "\033[1;30m>\033[0;31m>\033[1;31m> ERROR:\033[0m ${@}" && exit 1
+}
+
+einfo() {
+	echo -ne "\033[1;30m>\033[0;36m>\033[1;36m> \033[0m${@}\n"
+}
+ewarn() {
+	echo -ne "\033[1;30m>\033[0;33m>\033[1;33m> \033[0m${@}\n"
+}
+
+ver="$(< "${workdir}/../VERSION")"
+
+einfo "better-initramfs v${ver}"
+
+prepare() {
+	einfo "Deploying bootstraped binaries into source root ..."
+	cd "${bootstrap}/output" || die "Failed to cd into bootstrap/output/"
+	if test -f busybox; then
+		cp busybox "${sourceroot}/bin/busybox"
+		( cd "${sourceroot}/bin/" && rm -f sh && ln -s busybox sh )
+	else
+		die "No busybox binary found."
+	fi
+
+	if test -f cryptsetup.static; then
+		cp cryptsetup.static "${sourceroot}/bin/cryptsetup"
+	else
+		ewarn "No cryptsetup binary found, DMCrypt LUKS support will be disabled."
+	fi
+
+	if test -f lvm.static; then
+		cp lvm.static "${sourceroot}/bin/lvm"
+	else
+		ewarn "No lvm binary found, LVM support will be disabled."
+	fi
+
+	if test -f mdadm.static; then
+		cp mdadm.static "${sourceroot}/bin/mdadm"
+	else
+		ewarn "No mdadm binary found, Software Raid support will be disabled."
+	fi
+
+	if test -f dropbearmulti; then
+		cp dropbearmulti "${sourceroot}/bin/dropbearmulti"
+		( cd "${sourceroot}/bin/" && rm -f dropbear dropbearkey && ln -s dropbearmulti dropbear && ln -s dropbearmulti dropbearkey )
+	else
+		ewarn "No dropbearmulti binary found, Remote rescue shell support will be disabled."
+	fi
+}
+
+image() {
+	if ! [ -f "${sourceroot}/bin/busybox" ]; then die "Initramfs will not work without busybox."; fi
+
+	einfo 'Building image...'
+
+	( cd $sourceroot && find . | cpio --quiet -H newc -o | gzip -9 > ../initramfs.cpio.gz)
+
+	if [ -f "${sourceroot}/../initramfs.cpio.gz" ]; then
+		einfo "initramfs.cpio.gz is ready."
+	else
+		die "There is no initramfs.cpio.gz, something goes wrong."
+	fi
+}
+
+
+case $1 in
+	prepare|image|clean)
+		$1
+	;;
+	all)
+		echo
+		einfo "Quickstart:"
+		echo
+		einfo "	bootstrap/bootstrap-all"
+		einfo "	make prepare"
+		einfo "	make image"
+		echo
+	;;
+esac

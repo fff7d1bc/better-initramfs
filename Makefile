@@ -1,8 +1,8 @@
 all:
-	@scripts/meta.sh all
-bin:
-	@scripts/meta.sh bin
+	@scripts/meta all
 image:
-	@scripts/meta.sh image
+	@scripts/meta image
 clean:
-	@scripts/meta.sh clean
+	@scripts/meta clean
+prepare:
+	@scripts/meta prepare
