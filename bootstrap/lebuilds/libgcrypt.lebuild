@@ -6,10 +6,12 @@ sources=( "ftp://ftp.gnupg.org/gcrypt/libgcrypt/$name-$version.tar.bz2" )
 build_cmd="
 	cd /source/${name}-${version} && \
 	./configure --prefix=/usr \
-	--disable-padlock-support  \
+	--disable-padlock-support \
+	--enable-shared=no \
 	--enable-static=yes && \
 	make -j ${cores_num:-1} && \
-	make install
+	make install && \
+	if ! [ -e /bin/fgrep ]; then ln -s /bin/busybox /bin/fgrep; fi
 "
 
 fetch_source

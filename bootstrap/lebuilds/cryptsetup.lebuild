@@ -9,6 +9,8 @@ build_cmd="
 	./configure --prefix=/usr \
 	--mandir=/usr/man \
 	--disable-nls \
+	--enable-static=yes \
+	--enable-shared=no \
 	--enable-static-cryptsetup && \
 	make -j ${cores_num:-1}
 "
