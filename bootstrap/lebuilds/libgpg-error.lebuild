@@ -1,0 +1,17 @@
+#!/bin/sh
+name='libgpg-error'
+version='1.10'
+sources=( "ftp://ftp.gnupg.org/gcrypt/libgpg-error/$name-$version.tar.bz2" )
+
+build_cmd="
+	cd /source/${name}-${version} && \
+	./configure --prefix=/usr \
+	--disable-nls  \
+	--enable-static && \
+	make -j ${cores_num:-1} && \
+	make install
+"
+
+fetch_source
+install_source
+build_source

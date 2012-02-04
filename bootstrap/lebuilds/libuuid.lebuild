@@ -1,0 +1,33 @@
+#!/bin/sh
+name='libuuid'
+version='2.20.1'
+sources=( "http://ftp.kernel.org/pub/linux/utils/util-linux/v2.20/util-linux-$version.tar.bz2" )
+
+build_cmd="cd /source/${name}-${version} && \
+	./configure --prefix=/usr \
+	 --without-ncurses \
+	 --disable-mount \
+	 --disable-fsck \
+	 --disable-partx \
+	 --disable-uuidd \
+	 --disable-libblkid \
+	 --disable-libmount \
+	 --disable-mountpoint \
+	 --disable-nls \
+	 --disable-rpath \
+	 --disable-agetty \
+	 --disable-cramfs \
+	 --disable-switch_root \
+	 --disable-pivot_root \
+	 --disable-fallocate \
+	 --disable-unshare \
+	 --disable-rename \
+	 --disable-schedutils \
+	 --disable-wall && \
+	 cd libuuid && \
+	 make && make install
+"
+
+fetch_source
+install_source
+build_source

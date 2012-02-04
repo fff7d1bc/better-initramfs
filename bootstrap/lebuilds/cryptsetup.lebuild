@@ -1,0 +1,21 @@
+#!/bin/sh
+name='cryptsetup'
+version='1.4.1'
+sources=( "http://$name.googlecode.com/files/$name-$version.tar.bz2" )
+
+
+build_cmd="
+	cd /source/${name}-${version} && \
+	./configure --prefix=/usr \
+	--mandir=/usr/man \
+	--disable-nls \
+	--enable-static-cryptsetup && \
+	make -j ${cores_num:-1}
+"
+
+wanted_binary_path="/source/${name}-${version}/src/cryptsetup.static"
+
+fetch_source
+install_source
+build_source
+

@@ -1,0 +1,17 @@
+#!/bin/sh
+name='libgcrypt'
+version='1.5.0'
+sources=( "ftp://ftp.gnupg.org/gcrypt/libgcrypt/$name-$version.tar.bz2" )
+
+build_cmd="
+	cd /source/${name}-${version} && \
+	./configure --prefix=/usr \
+	--disable-padlock-support  \
+	--enable-static=yes && \
+	make -j ${cores_num:-1} && \
+	make install
+"
+
+fetch_source
+install_source
+build_source

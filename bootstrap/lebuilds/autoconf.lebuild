@@ -1,0 +1,10 @@
+#!/bin/sh
+name='autoconf'
+version='2.68'
+sources=( "ftp://ftp.gnu.org/gnu/$name/${name}-${version}.tar.gz" )
+
+build_cmd="cd /source/${name}-${version} && ./configure --prefix=/usr && make -j ${cores_num:-1} && make install"
+
+fetch_source
+install_source
+build_source
