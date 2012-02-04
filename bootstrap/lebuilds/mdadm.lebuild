@@ -1,0 +1,15 @@
+#!/bin/sh
+name='mdadm'
+version='3.2.3'
+sources=( "http://www.kernel.org/pub/linux/utils/raid/$name/$name-$version.tar.xz" )
+
+build_cmd="
+	cd /source/${name}-${version} && \
+	make CXFLAGS='$CFLAGS' CWFLAGS='-Wall' mdadm.static
+"
+
+wanted_binary_path="/source/${name}-${version}/mdadm.static"
+
+fetch_source
+install_source
+build_source
