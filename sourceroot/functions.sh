@@ -10,7 +10,7 @@ eerror() { echo -ne "\033[1;30m>\033[0;31m>\033[1;31m> ${@}\033[0m\n" >&2 ;}
 
 InitializeBusybox() {
 	einfo "Create all the symlinks to /bin/busybox."
-	run busybox --install -s
+	run /bin/busybox --install -s
 }
 
 rescueshell() {
@@ -186,7 +186,7 @@ setup_sshd() {
 			einfo "Waiting ${sshd_wait}s (sshd_wait)"
 				run sleep "${sshd_wait}"
 		else
-			ewarn "\$sshd_wait variable must be numeric and greater than zero. Skipping rootdelay."
+			ewarn "\$sshd_wait variable must be numeric and greater than zero. Skipping sshd_wait."
 		fi
 	fi
 
