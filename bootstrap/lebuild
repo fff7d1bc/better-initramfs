@@ -31,11 +31,16 @@ fetch_source () {
 			case "${source}" in
 				http://*|https://*|ftp://*)
 					einfo "Fetching ${source##*/} ..."
-					run wget "${source}" -O "${distfiles}/${source##*/}"
+					if [ -f "${distfiles}/${source##*/}.tmp" ]; then
+						rm -f "${distfiles}/${source##*/}.tmp"
+					fi
+					run wget "${source}" -O "${distfiles}/${source##*/}.tmp" && \
+					mv "${distfiles}/${source##*/}.tmp" "${distfiles}/${source##*/}"
 					if ! [ -s "${distfiles}/${source##*/}" ]; then
 						rm -f "${distfiles}/${source##*/}"
 						die "Unable to fetch ${source##*/}."
 					fi
+					
 				;;
 				*)
 					die "You have to provide '${source##*/}'."
