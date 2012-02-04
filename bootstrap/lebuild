@@ -26,6 +26,7 @@ die() { eerror "$@"; exit 1; }
 run() { "$@" || die "Command '$@' failed."; }
 
 fetch_source () {
+	if ! [ -d "${distfiles}" ]; then mkdir "${distfiles}"; fi
 	for source in "${sources[@]}" "$@"; do
 		if ! [ -f "${distfiles}/${source##*/}" ]; then
 			case "${source}" in
