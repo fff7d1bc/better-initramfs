@@ -1,0 +1,33 @@
+#!/bin/sh
+
+scriptpath="$(readlink -f "$0")"
+workdir="${scriptpath%/*}"
+PATH="${workdir}:${PATH}"
+
+uname_m="$(uname -m)"
+
+if [ -z "$1" ]; then
+	echo ">>> No arch specified. using '${uname_m}'."
+	arch="${uname_m}"
+
+else
+	arch="$1"
+fi
+
+case "${arch}" in
+	i486|i586|i686|x86_64)
+	;;
+	*)
+		echo "Looks like '${arch}' is not supported. If the arch is valid consider reporting it upstream."
+	;;
+esac
+
+if [ "${arch}" != "${uname_m}" ]; then
+	crossarch="setarch ${arch}"
+else
+	crossarch=''
+fi
+
+lebuild init "${arch}"
+${crossarch} lebuild build busybox lvm2 zlib dropbear libuuid popt libgpg-error libgcrypt cryptsetup
+
