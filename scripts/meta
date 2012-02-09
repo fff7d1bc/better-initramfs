@@ -63,7 +63,7 @@ image() {
 
 	einfo 'Building image...'
 
-	( cd $sourceroot && find . | cpio --quiet -H newc -o | gzip -9 > ../initramfs.cpio.gz)
+	( cd "${sourceroot}" && find . | cpio --quiet -H newc -o | gzip -9 > ../initramfs.cpio.gz)
 
 	if [ -f "${sourceroot}/../initramfs.cpio.gz" ]; then
 		einfo "initramfs.cpio.gz is ready."
@@ -81,9 +81,10 @@ case $1 in
 		echo
 		einfo "Quickstart:"
 		echo
-		einfo "	bootstrap/bootstrap-all"
-		einfo "	make prepare"
-		einfo "	make image"
+		echo "	bootstrap/bootstrap-all"
+		echo "	make prepare"
+		echo "	make image"
 		echo
+		exit 1
 	;;
 esac
