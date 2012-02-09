@@ -18,6 +18,7 @@ Features
 - Support for software RAID
 - Rescue shell
 - Remote rescue shell, available over ssh.
+- UUID/LABEL support for root and enc_root
 - Support for TuxOnIce.
 
 Usage
@@ -84,6 +85,25 @@ rootdelay=<integer>
   Set how many seconds initramfs should wait [for devices]. Useful for rootfs on USB device.
 rootflags=X
   pass X flag(s) to mount while mounting rootfs, you can use it to specify which btrfs subvolume you want to mount.
+
+Examples
+========
+
+Rootfs over encrypted lvm's pv (extlinux config)::
+
+        LABEL kernel1_bzImage-3.2.2-frontier2
+                MENU LABEL Gentoo Linux bzImage-3.2.2-frontier2
+                LINUX /bzImage-3.2.2-frontier2
+                INITRD /initramfs.cpio.gz
+                APPEND rootfstype=ext4 luks enc_root=/dev/sda2 lvm root=/dev/mapper/vg-rootfs
+
+Rootfs over software raid1 with remote rescueshell and rootfs over LABEL::
+
+        LABEL kernel1_bzImage-3.2.2-frontier2
+                MENU LABEL Gentoo Linux bzImage-3.2.2-frontier2
+                LINUX /bzImage-3.2.2-frontier2
+                INITRD /initramfs.cpio.gz
+                APPEND softraid root=LABEL=rootfs sshd sshd_wait=10 sshd_port=2020 sshd_interface=eth0 sshd_ipv4=172.16.0.8/24
 
 About
 =====
