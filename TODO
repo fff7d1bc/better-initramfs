@@ -1,10 +1,8 @@
 * Make luks support input password remotly (key-file + fifo?)
 * Allow user to localy input password even if sshd is enabled.
-* Support loadable kernel modules. - ON HOLD, minor
+* Support loadable kernel modules.
 * Support for key on external device (enc_keydev and enc_keyfile).
 * Support for squashfs in root variable, example: root=SQUASHFS=livecd.img
 * Support for aufs2-based rootfs (livesystem). Useful for debuging and liveUSB/CD.
-* Support for keymaps.
+* Better support for keymaps.
 * Support BTRFS's subvolumes.
-* Remove unnecessary bashism from code.
-* Write proper readme.
