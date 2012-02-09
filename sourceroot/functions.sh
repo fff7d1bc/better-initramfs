@@ -142,11 +142,11 @@ TuxOnIceResume() {
 }
 
 setup_sshd() {
-	musthave ipv4 interface
+	musthave sshd_ipv4 sshd_interface
 
-	einfo "Setting ${ipv4} on ${interface} ..."
-	run ip addr add "${ipv4}" dev "${interface}"
-	run ip link set up dev "${interface}"
+	einfo "Setting ${sshd_ipv4} on ${sshd_interface} ..."
+	run ip addr add "${sshd_ipv4}" dev "${sshd_interface}"
+	run ip link set up dev "${sshd_interface}"
 	
 	# Prepare /dev/pts.
 	einfo "Mounting /dev/pts ..."
@@ -207,7 +207,7 @@ cleanup() {
 		fi
 		einfo "Cleaning up, killing dropbear and bringing down the network ..."
 		run pkill -9 dropbear > /dev/null 2>&1
-		run ip addr del "${ipv4}" dev "${interface}" > /dev/null 2>&1
+		run ip addr del "${sshd_ipv4}" dev "${sshd_interface}" > /dev/null 2>&1
 	fi
 }
 

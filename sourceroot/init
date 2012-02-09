@@ -85,6 +85,12 @@ for i in $(cat /proc/cmdline); do
 		sshd_port\=*)
 			sshd_port=$(get_opt $i)
 		;;
+		sshd_interface\=*)
+			sshd_interface=$(get_opt $i)
+		;;
+		sshd_ipv4\=*)
+			sshd_ipv4=$(get_opt $i)
+		;;
 		rootdelay\=*)
 			rootdelay=$(get_opt $i)
 		;;
