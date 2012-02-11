@@ -6,3 +6,4 @@
 * Support for aufs2-based rootfs (livesystem). Useful for debuging and liveUSB/CD.
 * Better support for keymaps.
 * Support BTRFS's subvolumes.
+* Support for µswsusp, along with lebuild for the userspace utils (needed for resume from the encrypted or compressed dumps).
