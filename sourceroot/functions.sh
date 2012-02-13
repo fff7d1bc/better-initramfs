@@ -178,7 +178,7 @@ setup_sshd() {
 	fi
 
 	einfo 'Starting dropbear sshd ...'
-	run dropbear -s -j -k -p "${ipv4%/*}${sshd_port}"
+	run dropbear -s -j -k -p "${sshd_ipv4%/*}${sshd_port}"
 
 	if use sshd_wait; then
 		# sshd_wait exist, now we should sleep for X sec.
