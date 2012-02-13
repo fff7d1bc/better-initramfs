@@ -171,14 +171,8 @@ setup_sshd() {
 		rescueshell
 	fi
 
-	if [ -n "${sshd_port}" ]; then
-		# append : to the begin of port.
-		# Todo: make check for numeric value of port.
-		sshd_port=":${sshd_port}"
-	fi
-
 	einfo 'Starting dropbear sshd ...'
-	run dropbear -s -j -k -p "${sshd_ipv4%/*}${sshd_port}"
+	run dropbear -s -j -k -p "${sshd_ipv4%/*}:${sshd_port-22}"
 
 	if use sshd_wait; then
 		# sshd_wait exist, now we should sleep for X sec.
