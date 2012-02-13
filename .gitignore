@@ -6,6 +6,7 @@ sourceroot/lib/*
 sourceroot/etc/*
 !sourceroot/etc/profile
 !sourceroot/etc/profile.d
+!sourceroot/etc/suspend.conf
 sourceroot/config
 bootstrap/binaries
 bootstrap/build_dir
