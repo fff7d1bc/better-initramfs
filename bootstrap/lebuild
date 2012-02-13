@@ -126,6 +126,7 @@ case "$1" in
 		tar xf "${rootfs_tarball}" -C "${build_dir}/" --strip-components 1
 		cat /etc/resolv.conf > "${build_dir}/etc/resolv.conf"
 		echo "${arch}" > "${build_dir}/arch"
+		rmdir "${build_dir}/proc"
 		#mknod "${build_dir}/dev/console" c 5 1
 		mknod -m 666 "${build_dir}/"dev/null c 1 3
 		mknod -m 666 "${build_dir}/"dev/urandom c 1 9

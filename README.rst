@@ -19,7 +19,7 @@ Features
 - Rescue shell
 - Remote rescue shell, available over ssh.
 - UUID/LABEL support for root and enc_root
-- Support for TuxOnIce.
+- Support for resume from TuxOnIce and in-kernel suspend-to-disk (swsusp).
 
 Usage
 =====
@@ -40,7 +40,7 @@ Build
         make prepare
         make image
 
-The first one will fetch `Rob Landley's Aboriginal Linux <http://landley.net/aboriginal/>`_ root-filesystem image (about 25-27M), unpack it and prepare basic devices nodes (null, zero, random, urandom), next it will build in order busybox, lvm2, zlib, dropbear, libuuid, popt, libgpg-error, libgcrypt, cryptsetup and mdadm. The build process takes about 2 minutes on first generation mobile Core i5. As the build process is done in chroot, you need to do it as root.
+The first one will fetch `Rob Landley's Aboriginal Linux <http://landley.net/aboriginal/>`_ root-filesystem image (about 25-27M), unpack it and prepare basic devices nodes (null, zero, random, urandom), next it will build in order busybox, lvm2, zlib, dropbear, libuuid, popt, libgpg-error, libgcrypt, cryptsetup, mdadm, libx86, pciutils, lzo and suspend. The build process takes about 2 minutes on first generation mobile Core i5. As the build process is done in chroot, you need to do it as root.
 ``make prepare`` will copy binaries from ``bootstrap/output`` into ``sourceroot/bin``.
 ``make image`` will pack sourceroot into cpio gzip archive. See about_ section for informations about why we build tools that way.
 
@@ -68,9 +68,11 @@ softraid
 init=X
   Run X after switching to newroot, Default: /sbin/init.
 tuxonice
-  try resuming with TuxOnIce. Remember to set resume= variable by **kernel** boot params.
+  try resuming with TuxOnIce. Depends on resume= variable which points to the device with image, usualy swap partition.
+swsusp
+  try resuming with in-kernel suspend. Depends on resume= variable which points to the device with image, usualy swap partition.
 resume=<device/path>
-  Use only with *tuxonice* switch, set resume device/file. This have nothing to do with initramfs..
+  Specify device from which you want to resume (with tuxonice or swsusp).
 lvm
   Scan all disks for volume groups and activate them.
 luks

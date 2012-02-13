@@ -131,6 +131,16 @@ InitializeSoftwareRaid() {
 	run mdadm --auto-detect
 }
 
+SwsuspResume() {
+	musthave resume
+	resolve_device resume
+	if [ -f '/sys/power/resume' ]; then
+		run resume --resume_device "${resume}"
+	else
+		ewarn "Apparently this kernel does not support suspend."
+	fi
+}
+
 TuxOnIceResume() {
 	musthave resume
 	if [ -f '/sys/power/tuxonice/do_resume' ]; then

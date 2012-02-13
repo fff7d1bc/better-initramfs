@@ -1,0 +1,20 @@
+#!/bin/sh
+name='suspend'
+version='1.0'
+sources=( "http://switch.dl.sourceforge.net/sourceforge/$name/$name-utils-$version.tar.bz2" )
+
+build_cmd="
+	cd /source/${name}-${version} && \
+	./configure \
+	--enable-compress \
+	--enable-threads \
+	--disable-shared \
+	--enable-static && \
+	make -j ${cores_num:-1}
+"
+
+wanted_binary_path="/source/${name}-${version}/resume"
+
+fetch_source
+install_source
+build_source

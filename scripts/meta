@@ -56,6 +56,12 @@ prepare() {
 	else
 		ewarn "No dropbearmulti binary found, Remote rescue shell support will be disabled."
 	fi
+
+	if test -f resume; then
+		cp resume "${sourceroot}/bin/resume"
+	else
+		ewarn "No resume binary found, Swsusp will be disabled."
+	fi
 }
 
 image() {

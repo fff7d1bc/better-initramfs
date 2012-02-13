@@ -59,6 +59,9 @@ for i in $(cat /proc/cmdline); do
 		rescueshell)
 			rescueshell=true
 		;;
+		swsusp)
+			swsusp=true
+		;;
 		tuxonice)
 			tuxonice=true
 		;;
@@ -111,6 +114,7 @@ use softraid InitializeSoftwareRaid
 use lvm InitializeLVM
 use luks InitializeLUKS && use lvm InitializeLVM
 use rescueshell rescueshell
+use swsusp && SwsuspResume
 use tuxonice TuxOnIceResume
 emount /newroot
 emount /newroot/usr

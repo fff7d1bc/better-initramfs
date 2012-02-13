@@ -34,5 +34,5 @@ else
 fi
 
 lebuild init "${arch}"
-${crossarch} lebuild build busybox lvm2 zlib dropbear libuuid popt libgpg-error libgcrypt cryptsetup mdadm
+${crossarch} lebuild build busybox lvm2 zlib dropbear libuuid popt libgpg-error libgcrypt cryptsetup mdadm libx86 pciutils lzo suspend
 

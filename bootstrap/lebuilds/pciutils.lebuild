@@ -1,0 +1,14 @@
+#!/bin/sh
+name='pciutils'
+version='3.1.9'
+sources=( "ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci/$name-$version.tar.gz" )
+
+build_cmd="
+	cd /source/${name}-${version} && \
+	make OPT='${CFLAGS}' PREFIX='/usr' ZLIB='no' -j ${cores_num:-1} && \
+	make PREFIX='/usr' install install-lib
+"
+
+fetch_source
+install_source
+build_source
