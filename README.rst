@@ -19,7 +19,7 @@ Features
 - Rescue shell
 - Remote rescue shell, available over ssh.
 - UUID/LABEL support for root and enc_root
-- Support for resume from TuxOnIce and in-kernel suspend-to-disk (swsusp).
+- Support for resume from TuxOnIce and in-kernel suspend-to-disk (uswsusp).
 
 Usage
 =====
@@ -69,10 +69,10 @@ init=X
   Run X after switching to newroot, Default: /sbin/init.
 tuxonice
   try resuming with TuxOnIce. Depends on resume= variable which points to the device with image, usualy swap partition.
-swsusp
+uswsusp
   try resuming with in-kernel suspend. Depends on resume= variable which points to the device with image, usualy swap partition.
 resume=<device/path>
-  Specify device from which you want to resume (with tuxonice or swsusp).
+  Specify device from which you want to resume (with tuxonice or uswsusp).
 lvm
   Scan all disks for volume groups and activate them.
 luks
