@@ -131,7 +131,7 @@ InitializeSoftwareRaid() {
 	run mdadm --auto-detect
 }
 
-SwsuspResume() {
+UswsuspResume() {
 	musthave resume
 	resolve_device resume
 	if [ -f '/sys/power/resume' ]; then
