@@ -3,7 +3,7 @@ name='libgpg-error'
 version='1.10'
 sources=( "ftp://ftp.gnupg.org/gcrypt/libgpg-error/$name-$version.tar.bz2" )
 homepage='http://www.gnupg.org/related_software/libgpg-error/'
-license='GPLv2 LGPLv2.1'
+license='GPLv2, LGPLv2.1'
 
 
 build_cmd="
