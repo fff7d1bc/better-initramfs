@@ -36,5 +36,5 @@ else
 fi
 
 lebuild init "${arch}"
-${crossarch} ${packages}
+${crossarch} lebuild build ${packages}
 
