@@ -27,8 +27,8 @@ clear
 kernelver="$(uname -r)"
 ver="$(cat /VERSION)"
 
-einfo "better-initramfs v${ver}. Linux kernel ${kernelver}.\n"
-echo -e "\nWelcome to better-initramfs v${ver}. Linux kernel ${kernelver}.\n" > /etc/motd
+einfo "better-initramfs ${ver}. Linux kernel ${kernelver}.\n"
+echo -e "\nWelcome to better-initramfs ${ver}. Linux kernel ${kernelver}.\n" > /etc/motd
 
 emount /proc /sys
 
