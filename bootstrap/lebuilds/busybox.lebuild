@@ -11,7 +11,7 @@ build_cmd="
 	/source/${name}-${version}/busybox cp /source/${name}-${version}/busybox /bin/busybox
 "
 
-wanted_binary_path="/source/${name}-${version}/busybox"
+deploy="/source/${name}-${version}/busybox"
 
 fetch_source
 install_source

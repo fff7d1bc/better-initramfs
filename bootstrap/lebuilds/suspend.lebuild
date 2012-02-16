@@ -15,7 +15,7 @@ build_cmd="
 	make -j ${cores_num:-1}
 "
 
-wanted_binary_path="/source/${name}-${version}/resume"
+deploy="/source/${name}-${version}/resume"
 
 fetch_source
 install_source

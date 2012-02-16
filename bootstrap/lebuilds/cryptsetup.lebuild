@@ -16,7 +16,7 @@ build_cmd="
 	make -j ${cores_num:-1}
 "
 
-wanted_binary_path="/source/${name}-${version}/src/cryptsetup.static"
+deploy="/source/${name}-${version}/src/cryptsetup.static"
 
 fetch_source
 install_source

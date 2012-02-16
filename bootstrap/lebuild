@@ -145,12 +145,12 @@ case "$1" in
 			if [ -f "${workdir}/lebuilds/$1.lebuild" ]; then
 				einfo "Building $1 (${building_num} of $arguments) ..."
 				(
-					unset name version sources build_cmd wanted_binary_path
+					unset name version sources build_cmd deploy
 					. "${workdir}/lebuilds/$1.lebuild"
-					if [ -n "${wanted_binary_path}" ] && [ -f "${build_dir}/${wanted_binary_path}" ]; then
+					if [ -n "${deploy}" ] && [ -f "${build_dir}/${deploy}" ]; then
 						if ! [ -d "${workdir}/output" ]; then mkdir "${workdir}/output"; fi
-						cp "${build_dir}/${wanted_binary_path}" "${workdir}/output/"
-						strip -s "${workdir}/output/${wanted_binary_path##*/}"
+						cp "${build_dir}/${deploy}" "${workdir}/output/"
+						strip -s "${workdir}/output/${deploy##*/}"
 					fi
 				) || die "Build failed: '$1'."
 			else

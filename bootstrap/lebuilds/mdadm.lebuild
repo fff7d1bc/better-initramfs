@@ -10,7 +10,7 @@ build_cmd="
 	make CXFLAGS='$CFLAGS' CWFLAGS='-Wall' mdadm.static
 "
 
-wanted_binary_path="/source/${name}-${version}/mdadm.static"
+deploy="/source/${name}-${version}/mdadm.static"
 
 fetch_source
 install_source

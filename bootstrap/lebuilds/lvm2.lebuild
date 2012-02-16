@@ -16,7 +16,7 @@ build_cmd="
 	make install device-mapper
 "
 
-wanted_binary_path="/source/${name}-${version}/tools/lvm.static"
+deploy="/source/${name}-${version}/tools/lvm.static"
 
 fetch_source
 install_source
