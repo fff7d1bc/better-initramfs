@@ -21,11 +21,19 @@ Features
 - UUID/LABEL support for root and enc_root
 - Support for resume from TuxOnIce and in-kernel suspend-to-disk (uswsusp).
 
-Usage
-=====
 
-Download
---------
+
+Use binary packages
+===================
+
+- Go to the https://github.com/slashbeast/better-initramfs/downloads and download tarball.
+- Unpack and read README.binary and README.rst
+
+Build from source
+=================
+
+Fetch
+-----
 
 Clone git repository from github::
 
