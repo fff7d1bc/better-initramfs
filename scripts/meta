@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 scriptpath="$(readlink -f $0)"
 workdir="${scriptpath%/*}"
 bootstrap="${workdir}/../bootstrap"
@@ -18,9 +16,22 @@ ewarn() {
 	echo -ne "\033[1;30m>\033[0;33m>\033[1;33m> \033[0m${@}\n"
 }
 
-ver="$(< "${workdir}/../VERSION")"
+# Get version.
+git_tag="$(git describe --tags --exact-match HEAD 2> /dev/null)"
+git_branch="$(git symbolic-ref HEAD 2>/dev/null)"
+if [ -z "${git_branch}" ]; then die "Not under git?"; fi
+git_branch="${git_branch##*/}"
 
-einfo "better-initramfs v${ver}"
+if [ "${git_branch}" = 'master' ] && [ -n "${git_tag}" ]; then
+	version="${git_tag}"
+else
+	git_latestcommit="$(git log -1 --date='short' --format='%h-%ad')"
+	version="${git_branch}-${git_latestcommit}"
+fi
+
+echo "${version}" > "${sourceroot}/VERSION"
+
+einfo "better-initramfs ${version}"
 
 prepare() {
 	einfo "Deploying bootstraped binaries into source root ..."

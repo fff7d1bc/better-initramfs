@@ -1,0 +1,99 @@
+#!/bin/bash
+
+scriptpath="$(readlink -f "${0}")"
+workdir="${scriptpath%/*}"
+workdir="$(readlink -f "${workdir}/../")"
+
+arches='i586'
+
+die() {
+	echo -e "\033[1;30m>\033[0;31m>\033[1;31m> ERROR:\033[0m ${@}" && exit 1
+}
+
+einfo() {
+	echo -ne "\033[1;30m>\033[0;36m>\033[1;36m> \033[0m${@}\n"
+}
+ewarn() {
+	echo -ne "\033[1;30m>\033[0;33m>\033[1;33m> \033[0m${@}\n"
+}
+
+# Get version.
+git_tag="$(git describe --tags --exact-match HEAD 2> /dev/null)"
+git_branch="$(git symbolic-ref HEAD 2>/dev/null)"
+if [ -z "${git_branch}" ]; then die "Not under git?"; fi
+git_branch="${git_branch##*/}"
+
+if [ "${git_branch}" = 'master' ] && [ -n "${git_tag}" ]; then
+	version="${git_tag}"
+else
+	git_latestcommit="$(git log -1 --date='short' --format='%h-%ad')"
+	version="${git_branch}-${git_latestcommit}"
+fi
+
+generate_README.binary() {
+	. "${workdir}/bootstrap/bootstrap-all.conf"
+
+	# Dummy functions
+	fetch_source() { : ; }
+	install_source() { : ; }
+	build_source() { : ; }
+
+	echo "Quickstart:"
+	echo "	1. gzip initramfs.cpio"
+	echo "	2. cp initramfs.cpio.gz /boot"
+	echo "	3. Configure bootloader to use initramfs.cpio.gz"
+	echo "If your kernel is not gzip compressed, you need to use specified compressor instead of gzip."
+	echo "Check your kernel config for CONFIG_KERNEL_GZIP=y, CONFIG_KERNEL_XZ=y, CONFIG_KERNEL_BZIP2=y etc."
+	echo
+	echo "This binary package contain software under licenses:"
+	echo "	better-initramfs-${version} - BSD - https://github.com/slashbeast/better-initramfs"
+	for package in ${packages}; do
+		( 
+			. "${workdir}/bootstrap/lebuilds/${package}.lebuild"
+			echo "	${name}-${version} - ${license} - ${homepage}"
+		)
+	done
+	echo
+	echo "All built via Aboriginal Linux - http://landley.net/aboriginal/"
+}
+
+if ! [ -d "${workdir}/tmp" ]; then
+	mkdir "${workdir}/tmp" || die
+fi
+
+for arch in ${arches}; do
+	build_tmp="$(mktemp -d "${workdir}/tmp/release-${arch}-${version}_XXXXX")"
+	if ! [ -d "${build_tmp}" ]; then
+		die "Missing build_tmp."
+	fi
+
+	# cleanup
+	rm -f "${workdir:-/LEFAIL}"/bootstrap/output/*
+	rm -f "${workdir:-/LEFAIL}"/output/initramfs.cpio.gz
+	rm -f "${workdir:-/LEFAIL}"/sourceroot/bin/{busybox,sh,cryptsetup,lvm,mdadm,dropbearmulti,dropbear,dropbearkey,resume}
+
+	( 
+		cd "${workdir}" || die
+		bootstrap/bootstrap-all "${arch}"
+		make prepare
+		make image
+
+		cd "${build_tmp:-/INVALID}" || die
+		cp "${workdir}"/README.rst .
+		cp "${workdir}"/output/initramfs.cpio.gz .
+		gunzip initramfs.cpio.gz || die
+		generate_README.binary > README.binary
+
+		tarname="${build_tmp##*/}"
+		if [ -f "${workdir:-/INVALID}"/output/"${tarname:-INVALID}" ]; then
+			rm -f "${workdir:-/INVALID}"/output/"${tarname:-INVALID}"
+		fi
+
+		tar -cvf - -C "${workdir:-/INVALID}"/tmp "${tarname:-INVALID}" | bzip2 -9 - > "${workdir}/output/${tarname%_?????}.tar.bz2"
+
+		rm -rf "${build_tmp:-/LEFAIL}"
+	)
+
+
+done
+
