@@ -80,6 +80,7 @@ for arch in ${arches}; do
 
 		cd "${build_tmp:-/INVALID}" || die
 		cp "${workdir}"/README.rst .
+		cp "${workdir}"/LICENSE .
 		cp "${workdir}"/output/initramfs.cpio.gz .
 		gunzip initramfs.cpio.gz || die
 		generate_README.binary > README.binary
