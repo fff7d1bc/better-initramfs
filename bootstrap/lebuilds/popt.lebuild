@@ -2,6 +2,8 @@
 name='popt'
 version='1.16'
 sources=( "http://rpm5.org/files/$name/$name-$version.tar.gz" )
+homepage='http://rpm5.org/'
+license='MIT'
 
 build_cmd="
 	cd /source/${name}-${version} && \

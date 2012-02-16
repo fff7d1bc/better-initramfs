@@ -2,6 +2,8 @@
 name='busybox'
 version='1.19.3'
 sources=( "http://www.busybox.net/downloads/${name}-${version}.tar.bz2" )
+homepage='http://busybox.net/'
+license='GPLv2'
 
 build_cmd="
 	cd /source/${name}-${version} && \

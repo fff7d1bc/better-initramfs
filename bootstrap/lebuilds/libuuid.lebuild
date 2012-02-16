@@ -2,6 +2,8 @@
 name='libuuid'
 version='2.20.1'
 sources=( "http://ftp.kernel.org/pub/linux/utils/util-linux/v2.20/util-linux-$version.tar.bz2" )
+homepage='http://www.gnupg.org/related_software/libgpg-error/'
+license='GPLv2, GPLv3, LGPLv2.1, BSDv4, MIT, public-domain'
 
 build_cmd="cd /source/${name}-${version} && \
 	./configure --prefix=/usr \

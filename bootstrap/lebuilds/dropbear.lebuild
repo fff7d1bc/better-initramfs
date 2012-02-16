@@ -2,6 +2,8 @@
 name='dropbear'
 version='2011.54'
 sources=( "http://matt.ucc.asn.au/${name}/releases/${name}-${version}.tar.bz2" )
+homepage='https://matt.ucc.asn.au/dropbear/dropbear.html'
+license='MIT'
 
 build_cmd="cd /source/${name}-${version} && ./configure --prefix=/usr && PROGRAMS='dropbear dropbearkey' STATIC='1' MULTI=1 make -j ${cores_num:-1}"
 

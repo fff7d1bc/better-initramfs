@@ -2,6 +2,8 @@
 name='autoconf'
 version='2.68'
 sources=( "ftp://ftp.gnu.org/gnu/$name/${name}-${version}.tar.gz" )
+homepage='http://www.gnu.org/software/autoconf/autoconf.html'
+license='GPLv3+'
 
 build_cmd="cd /source/${name}-${version} && ./configure --prefix=/usr && make -j ${cores_num:-1} && make install"
 

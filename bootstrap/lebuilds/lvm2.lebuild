@@ -2,7 +2,8 @@
 name='lvm2'
 version='2.02.88'
 sources=( "ftp://sources.redhat.com/pub/lvm2/releases/LVM2.${version}.tgz" )
-
+homepage='http://sources.redhat.com/lvm2/'
+license='GPLv2'
 
 # Something is badly wrong with the lvm2 package, we will create symlinks to autoconf dir to workaround it.
 build_cmd="

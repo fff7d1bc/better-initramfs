@@ -2,6 +2,8 @@
 name='perl'
 version='5.12.4'
 sources=( "http://www.cpan.org/src/5.0/$name-$version.tar.bz2" )
+homepage='http://www.perl.org/'
+license='Artistic || GPL-1 || GPL-2 || GPL-3'
 
 build_cmd="
 	cd /source/${name}-${version} && \

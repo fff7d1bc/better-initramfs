@@ -2,6 +2,8 @@
 name='suspend'
 version='1.0'
 sources=( "http://switch.dl.sourceforge.net/sourceforge/$name/$name-utils-$version.tar.bz2" )
+homepage="http://suspend.sourceforge.net/"
+license='GPLv2'
 
 build_cmd="
 	cd /source/${name}-${version} && \

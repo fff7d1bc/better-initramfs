@@ -2,7 +2,8 @@
 name='cryptsetup'
 version='1.4.1'
 sources=( "http://$name.googlecode.com/files/$name-$version.tar.bz2" )
-
+homepage='http://busybox.net/'
+license='GPLv2'
 
 build_cmd="
 	cd /source/${name}-${version} && \

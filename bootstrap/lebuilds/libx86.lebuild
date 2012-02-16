@@ -2,6 +2,8 @@
 name='libx86'
 version='1.1'
 sources=( "http://www.codon.org.uk/~mjg59/${name}/downloads/${name}-${version}.tar.gz" )
+homepage='http://www.codon.org.uk/~mjg59/libx86/'
+license='BSD'
 
 build_cmd="
 	cd /source/${name}-${version} && \

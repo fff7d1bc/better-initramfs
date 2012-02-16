@@ -2,6 +2,8 @@
 name='libgcrypt'
 version='1.5.0'
 sources=( "ftp://ftp.gnupg.org/gcrypt/libgcrypt/$name-$version.tar.bz2" )
+homepage='http://www.gnupg.org/'
+license='LGPLv2.1'
 
 build_cmd="
 	cd /source/${name}-${version} && \
