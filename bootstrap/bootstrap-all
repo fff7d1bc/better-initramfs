@@ -4,6 +4,8 @@ scriptpath="$(readlink -f "$0")"
 workdir="${scriptpath%/*}"
 PATH="${workdir}:${PATH}"
 
+. "${workdir}"/bootstrap-all.conf || exit 1
+
 uname_m="$(uname -m)"
 
 if [ "$(id -u)" != '0' ]; then
@@ -34,5 +36,5 @@ else
 fi
 
 lebuild init "${arch}"
-${crossarch} lebuild build busybox lvm2 zlib dropbear libuuid popt libgpg-error libgcrypt cryptsetup mdadm libx86 pciutils lzo suspend
+${crossarch} ${packages}
 
