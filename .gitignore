@@ -11,5 +11,6 @@ sourceroot/etc/*
 !sourceroot/etc/suspend.conf
 sourceroot/config
 bootstrap/binaries
+bootstrap/output
 bootstrap/build_dir
 bootstrap/distfiles
