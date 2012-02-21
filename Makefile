@@ -6,3 +6,5 @@ clean:
 	@scripts/meta clean
 prepare:
 	@scripts/meta prepare
+release:
+	@scripts/release
