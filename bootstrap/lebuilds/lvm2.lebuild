@@ -1,6 +1,6 @@
 #!/bin/sh
 name='lvm2'
-version='2.02.88'
+version='2.02.92'
 sources=( "ftp://sources.redhat.com/pub/lvm2/releases/LVM2.${version}.tgz" )
 homepage='http://sources.redhat.com/lvm2/'
 license='GPLv2'
