@@ -1,0 +1,19 @@
+#!/bin/sh
+name='modprobe_module-init-tools'
+version='3.15'
+sources=( "http://www.kernel.org/pub/linux/utils/kernel/module-init-tools/${name#modprobe_}-${version}.tar.gz" )
+homepage='http://modules.wiki.kernel.org/'
+license='GPLv2'
+
+build_cmd="
+	cd /source/${name}-${version} && \
+	sed 's#tail -1#tail -n 1#g' configure -i && \
+	./configure CFLAGS='${CFLAGS} -static' && \
+	make -j ${cores_num:-1} modprobe
+"
+deploy="/source/${name}-${version}/build/modprobe"
+
+fetch_source
+install_source
+
+build_source
