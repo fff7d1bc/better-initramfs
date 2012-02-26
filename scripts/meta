@@ -55,8 +55,8 @@ prepare() {
 		ewarn "No lvm binary found, LVM support will be disabled."
 	fi
 
-	if test -f mdadm.static; then
-		cp mdadm.static "${sourceroot}/bin/mdadm"
+	if test -f mdadm; then
+		cp mdadm "${sourceroot}/bin/mdadm"
 	else
 		ewarn "No mdadm binary found, Software Raid support will be disabled."
 	fi

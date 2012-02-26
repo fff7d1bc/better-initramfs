@@ -7,10 +7,11 @@ license='GPLv2'
 
 build_cmd="
 	cd /source/${name}-${version} && \
-	make CXFLAGS='$CFLAGS' CWFLAGS='-Wall' mdadm.static
+	export LDFLAGS='-static' && \
+	make CXFLAGS='$CFLAGS' CWFLAGS='-Wall' mdadm
 "
 
-deploy="/source/${name}-${version}/mdadm.static"
+deploy="/source/${name}-${version}/mdadm"
 
 fetch_source
 install_source
