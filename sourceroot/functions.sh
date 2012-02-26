@@ -69,6 +69,11 @@ use() {
 	fi
 }
 
+notempty() {
+	# A wrapper around function, to a bit better naming.
+	use "$@"
+}
+
 musthave() {
 	while [ -n "$1" ]; do
 		# We can handle it by use() function, yay!
@@ -157,7 +162,12 @@ setup_sshd() {
 	einfo "Setting ${sshd_ipv4} on ${sshd_interface} ..."
 	run ip addr add "${sshd_ipv4}" dev "${sshd_interface}"
 	run ip link set up dev "${sshd_interface}"
-	
+
+	if notempty "${sshd_ipv4_gateway}"; then
+		einfo "Setting default routing via '${sshd_ipv4_gateway}' ..."
+		run ip route add default via "${sshd_ipv4_gateway}" dev "${sshd_interface}"
+	fi
+
 	# Prepare /dev/pts.
 	einfo "Mounting /dev/pts ..."
 	if ! [ -d /dev/pts ]; then run mkdir /dev/pts; fi
@@ -212,6 +222,10 @@ cleanup() {
 		einfo "Cleaning up, killing dropbear and bringing down the network ..."
 		run pkill -9 dropbear > /dev/null 2>&1
 		run ip addr del "${sshd_ipv4}" dev "${sshd_interface}" > /dev/null 2>&1
+		if notempty "${sshd_ipv4_gateway}"; then
+			einfo "Setting default routing via '${sshd_ipv4_gateway}' ..."
+			run ip route del default via "${sshd_ipv4_gateway}" dev "${sshd_interface}"
+		fi
 	fi
 }
 
