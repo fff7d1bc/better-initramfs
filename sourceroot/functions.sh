@@ -22,7 +22,11 @@ rescueshell() {
 	ewarn "Rescue Shell (busybox's /bin/sh)"
 	ewarn "To reboot, press 'control-alt-delete'."
 	ewarn "If you wish resume booting process, run 'resume-boot'."
-	/bin/sh --login
+	if [ -c '/dev/tty1' ]; then
+		setsid sh -c 'exec sh --login </dev/tty1 >/dev/tty1 2>&1'
+	else
+		sh --login
+	fi
 	echo
 	rm /rescueshell.pid
 	}
