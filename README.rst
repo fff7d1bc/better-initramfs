@@ -66,7 +66,9 @@ sshd_port=X
 sshd_interface=<if>
   Set an interface to what ssh deamon should bind to. Example: eth0
 sshd_ipv4=<addr/cidr>
-  Configure <addr> with <cidr> netmask on sshd_interface. Usualy you want something like '1.2.3.4/24'. If you will not add /CIDR, the IP will be configured with /32 thus you will be not able to connect to it no matter what, as we don't specify any gateway.
+  Configure <addr> with <cidr> netmask on sshd_interface. Usualy you want something like '1.2.3.4/24'. If you will not add /CIDR, the IP will be configured with /32 thus you will be not able to connect to it unless you specify sshd_ipv4_gateway.
+sshd_ipv4_gateway=<addr>
+  Optional gateway config, if you want to connect via WAN.
 rw
   Mount rootfs in read-write. Default: read-only.
 mdev
@@ -95,6 +97,11 @@ rootdelay=<integer>
   Set how many seconds initramfs should wait [for devices]. Useful for rootfs on USB device.
 rootflags=X
   pass X flag(s) to mount while mounting rootfs, you can use it to specify which btrfs subvolume you want to mount.
+
+Remote rescue shell
+===================
+
+In order to use remote rescue shell you need to place your authorized_hosts file into sourceroot/ dir before you run ``make image``. The in-initramfs sshd server support only keypair-based authorization.
 
 Examples
 ========
