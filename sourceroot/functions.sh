@@ -90,7 +90,7 @@ musthave() {
 
 dodir() {
 	for dir in "$@"; do
-		run mkdir -p "$dir"
+		run mkdir -m 700 -p "${dir}"
 	done
 }
 
