@@ -186,7 +186,7 @@ setup_sshd() {
 	if [ -f /authorized_keys ]; then
 		run cp /authorized_keys /root/.ssh/authorized_keys
 	else
-		eerror "Missing /autorized_keys file, you will be no able login via sshd."
+		eerror "Missing /authorized_keys file, you will be no able login via sshd."
 		rescueshell
 	fi
 
