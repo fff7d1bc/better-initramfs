@@ -38,3 +38,8 @@ fi
 lebuild init "${arch}"
 ${crossarch} lebuild build ${packages}
 
+case " ${packages} " in
+	*" mdadm "*)
+		printf "\n\033[1;31m>>> WARNING:\033[0m Currently 'mdadm' is unable to auto-assemble raid, the exact reason \nis still unknown. If you use 'softraid' feature you may need to replace mdadm binary \nwith known-to-be-working one. We are working on the issue so the future releases \nshould have this issue resolved.\n\n"
+	;;
+esac
