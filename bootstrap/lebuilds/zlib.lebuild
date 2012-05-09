@@ -1,6 +1,6 @@
 #!/bin/sh
 name='zlib'
-version='1.2.6'
+version='1.2.7'
 sources=( "http://zlib.net/${name}-${version}.tar.bz2" )
 homepage="http://www.zlib.net/"
 license='ZLIB'
