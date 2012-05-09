@@ -8,7 +8,7 @@ license='GPLv2'
 build_cmd="
 	cd /source/${name}-${version} && \
 	export LDFLAGS='-static' && \
-	make CXFLAGS='$CFLAGS' CWFLAGS='-Wall' mdadm
+	make CFLAGS='-Os -DUCLIBC -DHAVE_STDINT_H -pipe' CXFLAGS='$CFLAGS' CWFLAGS='-Wall' mdadm
 "
 
 deploy="/source/${name}-${version}/mdadm"
