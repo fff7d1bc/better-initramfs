@@ -35,8 +35,8 @@ else
 	crossarch=''
 fi
 
-#lebuild init "${arch}"
-#${crossarch} lebuild build ${packages} || exit 1
+lebuild init "${arch}"
+${crossarch} lebuild build ${packages} || exit 1
 
 case " ${packages} " in
 	*" mdadm "*)
