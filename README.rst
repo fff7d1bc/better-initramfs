@@ -130,6 +130,17 @@ License
 =======
 This code is released under Simplified BSD License, see LICENSE for more information.
 
+Known issues
+============
+
+mdadm: failed to add X:Y to /dev/md/X: Invalid argument 
+-------------------------------------------------------
+Currently 'mdadm' is unable to auto-assemble raid, the exact reason is still unknown. If you use 'softraid' feature you may need to replace mdadm binary with known-to-be-working one. We are working on the issue so the future releases should have this issue resolved. Binary images already contain the working mdadm. Download one of the working binaries and put it into ``bootstrap/output/mdadm`` after bootstraping, before ``make prepare``, rememeber to chmod +x it later.
+
+64bit (x86_64): https://github.com/downloads/slashbeast/better-initramfs/mdadm-x86_64
+32bit (i586): https://github.com/downloads/slashbeast/better-initramfs/mdadm-i586
+
+
 Author
 ======
 better-initramfs maintained by:
