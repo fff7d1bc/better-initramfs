@@ -74,7 +74,7 @@ for arch in ${arches}; do
 
 	( 
 		cd "${workdir}" || die
-		bootstrap/bootstrap-all "${arch}"
+		bootstrap/bootstrap-all "${arch}" || die
 
 		# Ugly workaround for broken mdadm. Grab working version.
 		wget "https://github.com/downloads/slashbeast/better-initramfs/mdadm-${arch}" -O 'bootstrap/output/mdadm' || die
