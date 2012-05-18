@@ -50,6 +50,9 @@ for i in $(cat /proc/cmdline); do
 		enc_root\=*)
 			enc_root=$(get_opt $i)
 		;;
+		enc_opts\=*)
+			enc_ops=$(get_opt $i)
+		;;
 		luks)
 			luks=true
 		;;
