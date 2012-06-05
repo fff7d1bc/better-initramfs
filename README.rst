@@ -99,6 +99,8 @@ rootdelay=<integer>
   Set how many seconds initramfs should wait [for devices]. Useful for rootfs on USB device.
 rootflags=X
   pass X flag(s) to mount while mounting rootfs, you can use it to specify which btrfs subvolume you want to mount.
+luks_trim
+  Enable TRIM support on LUKS-encrypted device, (SSD)
 
 Remote rescue shell
 ===================
