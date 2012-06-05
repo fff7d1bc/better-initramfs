@@ -129,8 +129,13 @@ InitializeLUKS() {
 	# Hack for cryptsetup which trying to run /sbin/udevadm.
 	run echo -e "#!/bin/sh\nexit 0" > /sbin/udevadm
 	run chmod 755 /sbin/udevadm
+	
+	local crypsetup_args=""
+	if use luks_trim; then
+		cryptsetup_args="${cryptsetup_args} --allow-discards"
+	fi
 
-	run cryptsetup luksOpen "${enc_root}" enc_root
+	run cryptsetup ${cryptsetup_args} luksOpen "${enc_root}" enc_root
 }
 
 InitializeLVM() {
