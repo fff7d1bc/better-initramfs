@@ -109,6 +109,9 @@ for i in $(cat /proc/cmdline); do
 		mdev)
 			mdev=true
 		;;
+		luks_trim)
+			luks_trim=true
+		;;
 	esac
 done
 
