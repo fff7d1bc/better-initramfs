@@ -121,10 +121,8 @@ InitializeLUKS() {
 	fi
 
 	musthave enc_root
-	
-	einfo "Opening encrypted partition and mapping to /dev/mapper/enc_root."
 
-	resolve_device enc_root
+	einfo "Opening encrypted partitions and mapping /dev/mapper/."
 
 	# Hack for cryptsetup which trying to run /sbin/udevadm.
 	run echo -e "#!/bin/sh\nexit 0" > /sbin/udevadm
@@ -135,7 +133,13 @@ InitializeLUKS() {
 		cryptsetup_args="${cryptsetup_args} --allow-discards"
 	fi
 
-	run cryptsetup ${cryptsetup_args} luksOpen "${enc_root}" enc_root
+	IFS=":"
+	set ${enc_root}
+	for disk
+	do
+	    resolve_device $disk
+	    run cryptsetup luksOpen $disk crypt_$(basename $disk) 
+	done
 }
 
 InitializeLVM() {
