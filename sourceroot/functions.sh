@@ -133,6 +133,7 @@ InitializeLUKS() {
 		cryptsetup_args="${cryptsetup_args} --allow-discards"
 	fi
 
+	tmpIFS=$IFS
 	IFS=":"
 	set ${enc_root}
 	for disk
@@ -140,6 +141,7 @@ InitializeLUKS() {
 	    resolve_device $disk
 	    run cryptsetup luksOpen $disk crypt_$(basename $disk) 
 	done
+	IFS=$tmpIFS
 }
 
 InitializeLVM() {
