@@ -90,7 +90,7 @@ lvm
 luks
   do ``cryptsetup luksOpen`` on enc_root variable.
 enc_root=<device>
-  for example ``/dev/sda2`` if sda2 is your encrypted rootfs. This variable is ignored if luks isn't enabled.
+  for example ``/dev/sda2`` if sda2 is your encrypted rootfs. Can be a colon seperated list of devices, such as ``dev/sda2:/dev/sdb4:/dev/vda12`` to make a logical volume. This variable is ignored if luks isn't enabled.
 root=<device>
   for example ``/dev/mapper/enc_root`` if you have LUKS-encrypted rootfs, ``/dev/mapper/vg-rootfs`` or similar if lvm or just ``/dev/sdXX`` if you haven't rootfs over lvm or encrypted.
 rootfstype=<filesystem type>
@@ -125,6 +125,14 @@ Rootfs over software raid1 with remote rescueshell and rootfs over LABEL::
                 LINUX /bzImage-3.2.2-frontier2
                 INITRD /initramfs.cpio.gz
                 APPEND softraid root=LABEL=rootfs sshd sshd_wait=10 sshd_port=2020 sshd_interface=eth0 sshd_ipv4=172.16.0.8/24
+
+Rootfs over lvm made of encrypted volumes::
+        
+        LABEL kernel1_bzImage-3.2.2-frontier2
+                MENU LABEL Gentoo Linux bzImage-3.2.2-frontier2
+                LINUX /bzImage-3.2.2-frontier2
+                INITRD /initramfs.cpio.gz
+                APPEND rootfstype=ext4 luks enc_root=/dev/sda2:/dev/sda3:/dev/sda4:/dev/sda5 lvm root=/dev/mapper/vg-rootfs
 
 About
 =====
