@@ -62,7 +62,7 @@ resolve_device() {
 use() {
 	name="$(eval echo \$$1)"
 	# Check if $name isn't empty and if $name isn't set to false or zero.
-	if [ -n "${name}" ] && [ "${name}" != 'false' ] && [ "${name}" != '0' ]; then
+	if [ -n "${name}" ] && [ "${name}" != 'false' ]; then
 		if [ -n "$2" ]; then
 			$2
 		else
@@ -100,6 +100,20 @@ loadkeymap() {
 	fi
 }
 
+get_majorminor() {
+	local device="$1"
+	musthave device
+
+	local major_hex="$(stat -L -c '%t' "${device}")"
+	local minor_hex="$(stat -L -c '%T' "${device}")"
+
+	musthave major_hex minor_hex
+
+	if [ -n "${major_hex}" ] && [ -n "${minor_hex}" ]; then
+		printf '%u:%u\n' "0x${major_hex}" "0x${minor_hex}"
+	fi
+}
+
 InitializeLUKS() {
 	if [ ! -f /bin/cryptsetup ]; then
 		eerror "There is no cryptsetup binary into initramfs image."
@@ -115,8 +129,13 @@ InitializeLUKS() {
 	# Hack for cryptsetup which trying to run /sbin/udevadm.
 	run echo -e "#!/bin/sh\nexit 0" > /sbin/udevadm
 	run chmod 755 /sbin/udevadm
+	
+	local crypsetup_args=""
+	if use luks_trim; then
+		cryptsetup_args="${cryptsetup_args} --allow-discards"
+	fi
 
-	run cryptsetup luksOpen "${enc_root}" enc_root
+	run cryptsetup ${cryptsetup_args} luksOpen "${enc_root}" enc_root
 }
 
 InitializeLVM() {
@@ -133,6 +152,18 @@ InitializeSoftwareRaid() {
 	fi
 	run mdadm --assemble --scan
 	run mdadm --auto-detect
+}
+
+SwsuspResume() {
+	musthave resume
+	resolve_device resume
+	if [ -f '/sys/power/resume' ]; then
+		local resume_majorminor="$(get_majorminor "${resume}")"
+		musthave resume_majorminor
+		echo "${resume_majorminor}" > /sys/power/resume
+	else
+		ewarn "Apparently this kernel does not support suspend."
+	fi
 }
 
 UswsuspResume() {

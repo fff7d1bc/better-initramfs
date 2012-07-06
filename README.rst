@@ -19,7 +19,7 @@ Features
 - Rescue shell
 - Remote rescue shell, available over ssh.
 - UUID/LABEL support for root and enc_root
-- Support for resume from TuxOnIce and Userspace Software Suspend (uswsusp).
+- Support for resume from TuxOnIce, in-kernel suspend (swsusp) and Userspace Software Suspend (uswsusp).
 
 
 
@@ -80,7 +80,9 @@ init=X
 tuxonice
   try resuming with TuxOnIce. Depends on resume= variable which points to the device with image, usualy swap partition.
 uswsusp
-  try resuming with userspace software suspend. Depends on resume= variable which points to the device with the system snapshot, usualy swap partition.
+  try resuming with userspace software suspend. Depends on resume= variable which points to the device with the system snapshot, usually swap partition.
+swsusp
+  try resuming with swusps (in-kernel suspend). Depends on resume= variable which points to the device with system snapshot, usually swap partition.
 resume=<device/path>
   Specify device from which you want to resume (with tuxonice or uswsusp).
 lvm
@@ -97,6 +99,8 @@ rootdelay=<integer>
   Set how many seconds initramfs should wait [for devices]. Useful for rootfs on USB device.
 rootflags=X
   pass X flag(s) to mount while mounting rootfs, you can use it to specify which btrfs subvolume you want to mount.
+luks_trim
+  Enable TRIM support on LUKS-encrypted device, (SSD)
 
 Remote rescue shell
 ===================
