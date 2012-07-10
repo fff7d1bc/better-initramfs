@@ -23,6 +23,9 @@ run dodir /dev /newroot /sbin /proc /sys /etc /var/log /var/run
 # Clear the screen
 clear
 
+# Save IFS so we can easly restore it if we ever change it.
+readonly default_ifs="${IFS}"
+
 # Basic
 kernelver="$(uname -r)"
 ver="$(cat /VERSION)"
