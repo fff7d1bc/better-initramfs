@@ -122,20 +122,30 @@ InitializeLUKS() {
 
 	musthave enc_root
 	
-	einfo "Opening encrypted partition and mapping to /dev/mapper/enc_root."
+	local IFS=":"
+	local enc_num='1'
+	local dev_name="enc_root"
+	for enc_dev in ${enc_root}; do
+		if ! [ "${enc_num}" = '1' ]; then
+			dev_name="enc_root${enc_num}"
+		fi
 
-	resolve_device enc_root
+		resolve_device "${enc_dev}"
 
-	# Hack for cryptsetup which trying to run /sbin/udevadm.
-	run echo -e "#!/bin/sh\nexit 0" > /sbin/udevadm
-	run chmod 755 /sbin/udevadm
-	
-	local crypsetup_args=""
-	if use luks_trim; then
-		cryptsetup_args="${cryptsetup_args} --allow-discards"
-	fi
+		einfo "Opening encrypted partition '${enc_dev##*/}' and mapping to '/dev/mapper/${dev_name}'."
 
-	run cryptsetup ${cryptsetup_args} luksOpen "${enc_root}" enc_root
+		# Hack for cryptsetup which trying to run /sbin/udevadm.
+		run echo -e "#!/bin/sh\nexit 0" > /sbin/udevadm
+		run chmod 755 /sbin/udevadm
+
+		local crypsetup_args=""
+		if use luks_trim; then
+			cryptsetup_args="${cryptsetup_args} --allow-discards"
+		fi
+
+		run cryptsetup ${cryptsetup_args} luksOpen "${enc_dev}" "${dev_name}"
+		enc_num="$((enc_num+1))"
+	done
 }
 
 InitializeLVM() {
