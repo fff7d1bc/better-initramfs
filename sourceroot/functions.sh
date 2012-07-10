@@ -42,7 +42,7 @@ run() {
 }
 
 get_opt() {
-	echo "$@" | cut -d "=" -f 2-
+	echo "${*#*=}"
 }
 
 resolve_device() {
