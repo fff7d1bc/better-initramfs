@@ -1,6 +1,6 @@
 #!/bin/sh
 name='libuuid'
-version='2.20.1'
+version='2.21.2'
 sources=( "http://ftp.kernel.org/pub/linux/utils/util-linux/v2.20/util-linux-$version.tar.bz2" )
 homepage='http://www.kernel.org/pub/linux/utils/util-linux/'
 license='BSD'

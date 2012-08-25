@@ -1,6 +1,6 @@
 #!/bin/sh
 name='pciutils'
-version='3.1.9'
+version='3.1.10'
 sources=( "ftp://atrey.karlin.mff.cuni.cz/pub/linux/pci/$name-$version.tar.gz" )
 homepage='http://mj.ucw.cz/sw/pciutils/'
 license='GPLv2'

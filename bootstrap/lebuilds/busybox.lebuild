@@ -1,12 +1,13 @@
 #!/bin/sh
 name='busybox'
-version='1.19.3'
+version='1.20.0'
 sources=( "http://www.busybox.net/downloads/${name}-${version}.tar.bz2" )
 homepage='http://busybox.net/'
 license='GPLv2'
 
 build_cmd="
 	cd /source/${name}-${version} && \
+	make silentoldconfig && \
 	make -j ${cores_num:-1} && \
 	/source/${name}-${version}/busybox cp /source/${name}-${version}/busybox /bin/busybox
 "
