@@ -110,13 +110,21 @@ EOF
 
 case "$1" in 
 	init)
-		arch="$2"
-		if [ -z "${arch}" ] || ! [[ "${arch}" =~ ^(x86_64|i486|i586|i686)$ ]]; then
-			die "init need an arch argument, i486, i586, i686 or x86_64!"
-		fi		
+		case "$2" in
+			i586|i686|x86)
+				arch='i586'
+			;;
+			x86_64)
+				arch='x86_64'
+			;;
+			*)
+				die "init need arch argument, x86 or x86_64!"
+			;;
+		esac
 		einfo "Preparing '${build_dir}' ..."
-		rootfs_tarball="${distfiles}/root-filesystem-${arch}.tar.bz2"
-		fetch_source "http://landley.net/aboriginal/downloads/binaries/root-filesystem/root-filesystem-${arch}.tar.bz2"
+		aboriginal_version='1.2.0'
+		rootfs_tarball="${distfiles}/aboriginal-${aboriginal_version}-${arch}.tar.bz2"
+		fetch_source "https://github.com/downloads/slashbeast/better-initramfs/aboriginal-${aboriginal_version}-${arch}.tar.bz2"
 		if [ -d "${build_dir}" ]; then
 			einfo "Build dir exist, cleaning ..."
 			rm -rf "${build_dir}"
