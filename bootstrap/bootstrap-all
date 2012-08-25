@@ -22,7 +22,11 @@ else
 fi
 
 case "${arch}" in
-	i486|i586|i686|x86_64)
+	i586|i686|x86)
+		arch='x86'
+	;;
+	x86_64)
+		arch='x86_64'
 	;;
 	*)
 		echo "Looks like '${arch}' is not supported. If the arch is valid consider reporting it upstream."
