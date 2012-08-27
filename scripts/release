@@ -74,7 +74,7 @@ for arch in ${arches}; do
 
 	( 
 		cd "${workdir}" || die
-		bootstrap/bootstrap-all "${arch}" || die
+		bootstrap/bootstrap-all "${arch}" || die "Failed to bootstrap '${arch}' target."
 
 		# Ugly workaround for broken mdadm. Grab working version.
 		wget "https://github.com/downloads/slashbeast/better-initramfs/mdadm-${arch}" -O 'bootstrap/output/mdadm' || die
@@ -98,7 +98,7 @@ for arch in ${arches}; do
 		tar -cvf - -C "${workdir:-/INVALID}"/tmp "${tarname:-INVALID}" | bzip2 -9 - > "${workdir}/output/${tarname%_?????}.tar.bz2"
 
 		rm -rf "${build_tmp:-/LEFAIL}"
-	)
+	) || die "Release failed."
 
 
 done
