@@ -41,12 +41,3 @@ fi
 
 lebuild init "${arch}"
 ${crossarch} lebuild build ${packages} || exit 1
-
-case " ${packages} " in
-	*" mdadm "*)
-		printf "\n\033[1;31m>>> WARNING:\033[0m Currently 'mdadm' is unable to auto-assemble raid, the exact reason \nis still unknown. If you use 'softraid' feature you may need to replace mdadm binary \nwith known-to-be-working one. We are working on the issue so the future releases \nshould have this issue resolved.\n\n"
-		printf "Download one of the working binaries and put it into ``bootstrap/output/mdadm`` after bootstraping, before ``make prepare``, rememeber to chmod +x it later.\n\n64bit (x86_64): https://github.com/downloads/slashbeast/better-initramfs/mdadm-x86_64
-32bit (i586): https://github.com/downloads/slashbeast/better-initramfs/mdadm-i586
-\n"
-	;;
-esac
