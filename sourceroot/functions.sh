@@ -1,7 +1,7 @@
 #!/bin/sh
 # -*- mode: shell-script; coding: utf-8-emacs-unix; sh-basic-offset: 8; indent-tabs-mode: t -*-
 # This code is under Simplified BSD License, see LICENSE for more info
-# Copyright (c) 2010, Piotr Karbowski
+# Copyright (c) 2010-2012, Piotr Karbowski
 # All rights reserved.
 
 einfo() { echo -ne "\033[1;30m>\033[0;36m>\033[1;36m> \033[0m${@}\n" ;}
