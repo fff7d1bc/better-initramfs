@@ -7,8 +7,7 @@ license='GPLv2'
 
 build_cmd="
 	cd /source/${name}-${version} && \
-	sed -i 's#MAP_DIR=/run/mdadm#MAP_DIR=/dev/.mdadm#g' Makefile && \
-	make CFLAGS='-Os -DUCLIBC -DHAVE_STDINT_H -pipe' CXFLAGS='$CFLAGS' CWFLAGS='-Wall' mdadm.static
+	make MAP_DIR='/dev/.mdadm' CXFLAGS='-Os -DUCLIBC -DHAVE_STDINT_H -pipe ${CFLAGS}' CWFLAGS='-Wall' mdadm.static
 "
 
 deploy="/source/${name}-${version}/mdadm.static"
