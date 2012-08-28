@@ -1,17 +1,17 @@
 #!/bin/sh
 name='mdadm'
-version='3.2.3'
+version='3.2.5'
 sources=( "http://www.kernel.org/pub/linux/utils/raid/$name/$name-$version.tar.xz" )
 homepage='http://neil.brown.name/blog/mdadm'
 license='GPLv2'
 
 build_cmd="
 	cd /source/${name}-${version} && \
-	export LDFLAGS='-static' && \
-	make CFLAGS='-Os -DUCLIBC -DHAVE_STDINT_H -pipe' CXFLAGS='$CFLAGS' CWFLAGS='-Wall' mdadm
+	sed -i 's#MAP_DIR=/run/mdadm#MAP_DIR=/dev/.mdadm#g' Makefile && \
+	make CFLAGS='-Os -DUCLIBC -DHAVE_STDINT_H -pipe' CXFLAGS='$CFLAGS' CWFLAGS='-Wall' mdadm.static
 "
 
-deploy="/source/${name}-${version}/mdadm"
+deploy="/source/${name}-${version}/mdadm.static"
 
 fetch_source
 install_source
