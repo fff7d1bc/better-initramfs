@@ -123,8 +123,9 @@ case "$1" in
 		esac
 		einfo "Preparing '${build_dir}' ..."
 		aboriginal_version='1.2.0'
-		rootfs_tarball="${distfiles}/aboriginal-${aboriginal_version}-${arch}.tar.bz2"
-		fetch_source "https://github.com/downloads/slashbeast/better-initramfs/aboriginal-${aboriginal_version}-${arch}.tar.bz2"
+		aboriginal_url="https://github.com/downloads/slashbeast/better-initramfs/aboriginal-${aboriginal_version}-${arch}_with_ftw+nftw.tar.bz2"
+		rootfs_tarball="${distfiles}/${aboriginal_url##*/}"
+		fetch_source "${aboriginal_url}"
 		if [ -d "${build_dir}" ]; then
 			einfo "Build dir exist, cleaning ..."
 			rm -rf "${build_dir}"
