@@ -361,6 +361,7 @@ eumount() {
 moveDev() {
 	einfo "Moving /dev to /newroot/dev..."
 	if mountpoint -q /dev/pts; then umount /dev/pts; fi
+	if use mdev; then run echo '' > /proc/sys/kernel/hotplug; fi
 	run mount --move /dev /newroot/dev
 }
 
