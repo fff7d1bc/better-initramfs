@@ -105,7 +105,7 @@ luks_trim
 Remote rescue shell
 ===================
 
-In order to use remote rescue shell you need to place your authorized_hosts file into sourceroot/ dir before you run ``make image``. The in-initramfs sshd server support only keypair-based authorization.
+In order to use remote rescue shell you need to place your authorized_keys file into sourceroot/ dir before you run ``make image``. The in-initramfs sshd server support only keypair-based authorization.
 
 Examples
 ========
