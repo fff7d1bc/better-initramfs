@@ -59,6 +59,87 @@ resolve_device() {
 	esac
 }
 
+process_commandline_options() {
+	for i in $(cat /proc/cmdline); do
+		case "${i}" in
+			initramfsdebug)
+				set -x
+			;;
+			root\=*)
+				root=$(get_opt $i)
+			;;
+			init\=*)
+				init=$(get_opt $i)
+			;;
+			enc_root\=*)
+				enc_root=$(get_opt $i)
+			;;
+			luks)
+				luks=true
+			;;
+			lvm)
+				lvm=true
+			;;
+			softraid)
+				softraid=true
+			;;
+			rescueshell)
+				rescueshell=true
+			;;
+			swsusp)
+				swsusp=true
+			;;
+			uswsusp)
+				uswsusp=true
+			;;
+			tuxonice)
+				tuxonice=true
+			;;
+			resume\=*)
+				resume=$(get_opt $i)
+			;;
+			rootfstype\=*)
+				rootfstype=$(get_opt $i)
+			;;
+	
+			rootflags\=*)
+				rootfsmountparams="-o $(get_opt $i)"
+			;;
+	
+			ro|rw)
+				root_rw_ro=$i
+			;;
+			sshd)
+				sshd=true
+			;;
+			sshd_wait\=*)
+				sshd_wait=$(get_opt $i)
+			;;
+			sshd_port\=*)
+				sshd_port=$(get_opt $i)
+			;;
+			sshd_interface\=*)
+				sshd_interface=$(get_opt $i)
+			;;
+			sshd_ipv4\=*)
+				sshd_ipv4=$(get_opt $i)
+			;;
+			sshd_ipv4_gateway\=*)
+				sshd_ipv4_gateway=$(get_opt $i)
+			;;
+			rootdelay\=*)
+				rootdelay=$(get_opt $i)
+			;;
+			mdev)
+				mdev=true
+			;;
+			luks_trim)
+				luks_trim=true
+			;;
+		esac
+	done
+}
+
 use() {
 	name="$(eval echo \$$1)"
 	# Check if $name isn't empty and if $name isn't set to false or zero.
