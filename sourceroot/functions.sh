@@ -143,7 +143,11 @@ InitializeLUKS() {
 			cryptsetup_args="${cryptsetup_args} --allow-discards"
 		fi
 
-		run cryptsetup ${cryptsetup_args} luksOpen "${enc_dev}" "${dev_name}"
+		if use sshd; then
+			askpass "Enter passphrase for ${enc_dev}: " | run cryptsetup ${cryptsetup_args} --tries 1 --key-file=- luksOpen "${enc_dev}" "${dev_name}"
+		else
+			run cryptsetup ${cryptsetup_args} luksOpen "${enc_dev}" "${dev_name}"
+		fi
 		enc_num="$((enc_num+1))"
 	done
 }
