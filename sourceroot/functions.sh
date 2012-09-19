@@ -211,7 +211,7 @@ InitializeLUKS() {
 			dev_name="enc_root${enc_num}"
 		fi
 
-		resolve_device "${enc_dev}"
+		resolve_device enc_dev
 
 		einfo "Opening encrypted partition '${enc_dev##*/}' and mapping to '/dev/mapper/${dev_name}'."
 
