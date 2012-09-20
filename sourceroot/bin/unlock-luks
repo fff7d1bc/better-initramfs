@@ -1,0 +1,15 @@
+#!/bin/sh
+# Read password with hidden input and pass it to fifo.
+
+. /functions.sh
+
+if ! [ -e '/luks_passfifo' ]; then
+	eerror "There is no '/luks_passfifo'."
+	exit 1
+fi
+
+printf 'Enter password: '
+stty -echo
+read luks_password
+stty echo
+printf "${luks_password}" >/luks_passfifo
