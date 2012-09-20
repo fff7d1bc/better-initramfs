@@ -68,18 +68,18 @@ install_source() {
 					fi
 					mkdir -p "${build_dir}/source/${name}-${version}"
 					run tar xf "${distfiles}/${source##*/}" --strip-components 1 -C "${build_dir}/source/${name}-${version}"
-					if [ -d "${workdir}/patches/${name}" ]; then
-						for patch in "${workdir}/patches/${name}"/*; do
-							einfo "Applying ${patch##*/} ..."
-							run patch -d "${build_dir}/source/${name}-${version}/" -p1 -i "${patch}" --silent
-						done
-					fi
 				;;
 				*)
-					die "Unsupported format."
+					mkdir -p "${build_dir}/source/${name}-${version}"
+					cp "${distfiles}/${source##*/}" "${build_dir}/source/${name}-${version}"
 				;;
 			esac
-
+			if [ -d "${workdir}/patches/${name}" ]; then
+				for patch in "${workdir}/patches/${name}"/*; do
+					einfo "Applying ${patch##*/} ..."
+					run patch -d "${build_dir}/source/${name}-${version}/" -p1 -i "${patch}" --silent
+				done
+			fi
 		fi
 	done; unset source
 }
