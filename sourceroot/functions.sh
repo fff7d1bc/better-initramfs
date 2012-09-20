@@ -351,7 +351,8 @@ cleanup() {
 		if [ -n "${sshd_ipv4_gateway}" ]; then
 			run ip route del default via "${sshd_ipv4_gateway}" dev "${sshd_interface}"
 		fi
-		run ip addr del "${sshd_ipv4}" dev "${sshd_interface}" > /dev/null 2>&1
+		run ip addr del "${sshd_ipv4}" dev "${sshd_interface}"
+		run ip link set down dev "${sshd_interface}"
 	fi
 }
 
