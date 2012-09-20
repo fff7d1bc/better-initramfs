@@ -226,6 +226,8 @@ InitializeLUKS() {
 
 		if use sshd; then
 			askpass "Enter passphrase for ${enc_dev}: " | run cryptsetup ${cryptsetup_args} --tries 1 --key-file=- luksOpen "${enc_dev}" "${dev_name}"
+			# Remove the fifo, askpass will create new if needed (ex multiple devices).
+			rm '/luks_passfifo'
 		else
 			run cryptsetup ${cryptsetup_args} luksOpen "${enc_dev}" "${dev_name}"
 		fi
