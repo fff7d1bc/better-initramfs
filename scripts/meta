@@ -49,6 +49,12 @@ prepare() {
 		ewarn "No cryptsetup binary found, DMCrypt LUKS support will be disabled."
 	fi
 
+	if test -f askpass; then
+		cp askpass "${sourceroot}/bin/askpass"
+	else
+		ewarn "No askpass found, LUKS support will not work if sshd is enabled."
+	fi
+
 	if test -f lvm.static; then
 		cp lvm.static "${sourceroot}/bin/lvm"
 	else
