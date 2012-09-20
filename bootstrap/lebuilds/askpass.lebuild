@@ -1,0 +1,16 @@
+#!/bin/sh
+name='askpass'
+version='0'
+sources=( "https://github.com/downloads/slashbeast/better-initramfs/${name}.c" )
+homepage=''
+license='GPLv2'
+
+build_cmd="
+	cd /source/${name}-${version} && \
+	gcc -Os -static askpass.c -o askpass
+"
+deploy="/source/${name}-${version}/askpass"
+
+fetch_source
+install_source
+build_source
