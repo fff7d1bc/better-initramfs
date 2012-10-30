@@ -203,10 +203,12 @@ InitializeLUKS() {
 
 	musthave enc_root
 	
-	local IFS=":"
 	local enc_num='1'
 	local dev_name="enc_root"
+	# We will use : to separate devices but we need normal IFS inside the for loop anyway.
+	local IFS=":"
 	for enc_dev in ${enc_root}; do
+		IFS="${default_ifs}"
 		if ! [ "${enc_num}" = '1' ]; then
 			dev_name="enc_root${enc_num}"
 		fi
