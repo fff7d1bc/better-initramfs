@@ -221,7 +221,7 @@ InitializeLUKS() {
 		run echo -e "#!/bin/sh\nexit 0" > /sbin/udevadm
 		run chmod 755 /sbin/udevadm
 
-		local crypsetup_args=""
+		local cryptsetup_args=""
 		if use luks_trim; then
 			cryptsetup_args="${cryptsetup_args} --allow-discards"
 		fi
