@@ -37,6 +37,7 @@ run() {
 	else
 		eerror "'$@' failed."
 		echo "Failed: '$@'" >> /init.log
+		echo "$@" >> /.ash_history
 		rescueshell
 	fi
 }
