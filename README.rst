@@ -52,6 +52,11 @@ The first one will fetch `Rob Landley's Aboriginal Linux <http://landley.net/abo
 ``make prepare`` will copy binaries from ``bootstrap/output`` into ``sourceroot/bin``.
 ``make image`` will pack sourceroot into cpio gzip archive. See about_ section for informations about why we build tools that way.
 
+Testing, new features, bug fixes.
+=================================
+
+If you want to try new features or hit any bug, check branch ``devel`` if there is no already a fix for your issue, if not then please file bug report via Github's issue tracker or mail.
+
 Parameters
 ==========
 
