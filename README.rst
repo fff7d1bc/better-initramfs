@@ -140,10 +140,10 @@ My USB keyboard does not work under better-initramfs
 
 Initramfs does not 'support' any kind of hardware, if your USB keyboard does not work its propably because you did not compiled USB HID drivers into your kernel or have it as modules, which aren't loaded at initramfs boot time.
 
-Boot fails at 'Wrong UUID or LABEL'
------------------------------------
+Unable to mount '/newroot'
+--------------------------
 
-No, it has nothing to do with your system's fstab, it means that your root variable, like root=LABEL=rootfs is not correct and there is no filesystem with such label or uuid.
+If you use UUID/LABEL then no, it has nothing to do with your system's fstab, it means that your root variable, like root=LABEL=rootfs is not correct and there is no filesystem with such label or your kernel does not support your storage backend which makes the partitions not accessable to the kernel. Check whatever you can see /dev/sd* nodes, if no, then propably its about missing PATA/SATA/SCSI driver from your kernel.
 
 About
 =====
