@@ -21,8 +21,6 @@ Features
 - UUID/LABEL support for root and enc_root
 - Support for resume from TuxOnIce, in-kernel suspend (swsusp) and Userspace Software Suspend (uswsusp).
 
-
-
 Use binary packages
 ===================
 
@@ -130,6 +128,22 @@ Rootfs over software raid1 with remote rescueshell and rootfs over LABEL::
                 LINUX /bzImage-3.2.2-frontier2
                 INITRD /initramfs.cpio.gz
                 APPEND softraid root=LABEL=rootfs sshd sshd_wait=10 sshd_port=2020 sshd_interface=eth0 sshd_ipv4=172.16.0.8/24
+
+
+Troubleshooting
+===============
+
+A few issues incorrectly reported as better-initramfs bugs commonly enough to write them here.
+
+My USB keyboard does not work under better-initramfs
+----------------------------------------------------
+
+Initramfs does not 'support' any kind of hardware, if your USB keyboard does not work its propably because you did not compiled USB HID drivers into your kernel or have it as modules, which aren't loaded at initramfs boot time.
+
+Boot fails at 'Wrong UUID or LABEL'
+-----------------------------------
+
+No, it has nothing to do with your system's fstab, it means that your root variable, like root=LABEL=rootfs is not correct and there is no filesystem with such label or uuid.
 
 About
 =====
