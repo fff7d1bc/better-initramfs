@@ -24,7 +24,7 @@ Features
 Use binary packages
 ===================
 
-- Go to the https://github.com/slashbeast/better-initramfs/downloads and download tarball.
+- Go to the https://bitbucket.org/piotrkarbowski/better-initramfs/downloads and download tarball.
 - Unpack and read README.binary and README.rst
 
 Build from source
@@ -33,9 +33,9 @@ Build from source
 Fetch
 -----
 
-Clone git repository from github::
+Clone git repository from bitbucket::
 
-        git clone https://github.com/slashbeast/better-initramfs.git
+        git clone https://bitbucket.org/piotrkarbowski/better-initramfs.git
 
 
 Build
@@ -53,7 +53,7 @@ The first one will fetch `Rob Landley's Aboriginal Linux <http://landley.net/abo
 Testing, new features, bug fixes.
 =================================
 
-If you want to try new features or hit any bug, check branch ``devel`` if there is no already a fix for your issue, if not then please file bug report via Github's issue tracker or mail.
+If you want to try new features or hit any bug, check branch ``devel`` if there is no already a fix for your issue, if not then please file bug report via bitbucket's issue tracker or mail.
 
 Parameters
 ==========
