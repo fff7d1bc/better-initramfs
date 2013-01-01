@@ -371,10 +371,10 @@ cleanup() {
 }
 
 boot_newroot() {
-	if [ -x "/newroot/${init:-/sbin/init}" ]; then
-		einfo "Switching root to /newroot and executing /sbin/init."
-		exec switch_root /newroot "${init-/sbin/init}"
-	fi
+	init="${init:-/sbin/init}"
+	einfo "Switching root to /newroot and executing ${init}."
+	if ! [ -x "/newroot/${init}" ]; then die "There is no executable '/newroot/${init}'."; fi
+	exec switch_root /newroot "${init}"
 }
 
 emount() {
