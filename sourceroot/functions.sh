@@ -371,10 +371,14 @@ emount() {
 	while [ "$#" -gt 0 ]; do
 		case $1 in
 			'/newroot')
-				einfo "Mounting /newroot..."
-				if [ -n "${rootfstype}" ]; then local mountparams="${rootfsmountparams} -t ${rootfstype}"; fi
-				resolve_device root
-				run mount -o ${root_rw_ro:-ro} ${mountparams} "${root}" '/newroot'
+				if mountpoint -q '/newroot'; then
+					einfo "/newroot already mounted, skipping..."
+				else
+					einfo "Mounting /newroot..."
+					if [ -n "${rootfstype}" ]; then local mountparams="${rootfsmountparams} -t ${rootfstype}"; fi
+					resolve_device root
+					run mount -o ${root_rw_ro:-ro} ${mountparams} "${root}" '/newroot'
+				fi
 			;;
 
 			'/newroot/usr')
