@@ -39,10 +39,9 @@ emount /proc /sys
 echo 0 > /proc/sys/kernel/printk
 
 process_commandline_options
-
 musthave root
-
 InitializeBusybox
+run_hooks early
 use rootdelay rootdelay
 emount /dev
 use sshd && setup_sshd
@@ -54,11 +53,13 @@ use rescueshell rescueshell
 use swsusp && SwsuspResume
 use uswsusp && UswsuspResume
 use tuxonice TuxOnIceResume
+run_hooks pre_newroot_mount
 emount /newroot
 emount /newroot/usr
 cleanup
 moveDev
 eumount /sys /proc
+run_hooks pre_switch_root
 boot_newroot
 
 ewarn "Something went wrong."

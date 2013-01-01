@@ -46,6 +46,17 @@ get_opt() {
 	echo "${*#*=}"
 }
 
+run_hooks() {
+	# Support for optional code injection via hooks placed into
+	# multiple initramfs images.
+	if [ -d "/hooks/$1" ]; then
+		for i in /hooks/$1/*; do
+			[ "$i" = "/hooks/$1/*" ] && break
+			[ -x "$i" ] && . "$i"
+		done
+	fi
+}
+
 resolve_device() {
 	# This function will check if variable at $1 contain LABEL or UUID and then, if LABEL/UUID is vaild.	
 	device="$(eval echo \$$1)"
