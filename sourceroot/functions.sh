@@ -4,9 +4,11 @@
 # Copyright (c) 2010-2012, Piotr Karbowski
 # All rights reserved.
 
-einfo() { echo -ne "\033[1;30m>\033[0;36m>\033[1;36m> \033[0m${@}\n" ;}
-ewarn() { echo -ne "\033[1;30m>\033[0;33m>\033[1;33m> \033[0m${@}\n" >&2;}
-eerror() { echo -ne "\033[1;30m>\033[0;31m>\033[1;31m> ${@}\033[0m\n" >&2 ;}
+einfo() { echo -ne "\033[1;30m>\033[0;36m>\033[1;36m> \033[0m${*}\n" ;}
+ewarn() { echo -ne "\033[1;30m>\033[0;33m>\033[1;33m> \033[0m${*}\n" >&2;}
+eerror() { echo -ne "\033[1;30m>\033[0;31m>\033[1;31m> ${*}\033[0m\n" >&2 ;}
+die() { eerror "$*"; rescueshell; }
+
 
 InitializeBusybox() {
 	einfo "Create all the symlinks to /bin/busybox."
@@ -29,7 +31,7 @@ rescueshell() {
 	fi
 	echo
 	rm /rescueshell.pid
-	}
+}
 
 run() {
 	if "$@"; then
@@ -393,22 +395,22 @@ emount() {
 			;;
 
 			'/newroot/usr')
-				if ! [ -f '/newroot/etc/fstab' ]; then
-					eerror "Missing /newroot/etc/fstab!"
-					rescueshell
+				if [ -f '/newroot/etc/fstab' ]; then
+						while read device mountpoint fstype fsflags _; do
+						if [ "${mountpoint}" = '/usr' ]; then
+							if [ -d '/newroot/usr' ]; then
+								einfo "Mounting /newroot/usr..."
+								run mount -o "${fsflags},${root_rw_ro:-ro}" -t "${fstype}" "${device}" '/newroot/usr'
+							else
+								die "/usr in fstab present but no mountpoint /newroot/usr found."
+							fi
+							break
+						fi
+					done < '/newroot/etc/fstab'
+				else
+					ewarn "No /newroot/etc/fstab present."
+					ewarn "Early mouting of /usr will not be done."
 				fi
-
-				if ! [ -d '/newroot/usr' ]; then
-					eerror "Missing /newroot/usr mount point!"
-					rescueshell
-				fi
-
-				while read device mountpoint fstype fsflags _; do
-					if [ "${mountpoint}" = '/usr' ]; then
-						einfo "Mounting /newroot/usr..."
-						run mount -o "${fsflags},${root_rw_ro:-ro}" -t "${fstype}" "${device}" '/newroot/usr'
-					fi
-				done < '/newroot/etc/fstab'
 			;;
 	
 			'/dev')
