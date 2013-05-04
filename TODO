@@ -5,3 +5,5 @@
 * Better support for keymaps.
 * Support BTRFS's subvolumes.
 * Support for remote unlock of multiple luks device (Note to self: check whatever fifo is open)
+* earlymount option to mount everything possible from /newroot/etc/fstab - that should be good idea if we want to have mountpoints in /var/log for example.
+
