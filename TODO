@@ -1,9 +1,10 @@
 * Support loadable kernel modules.
 * Support for key on external device (enc_keydev and enc_keyfile).
 * Support for squashfs in root variable, example: root=SQUASHFS=livecd.img
-* Support for aufs3-based rootfs (livesystem). Useful for debuging and liveUSB/CD.
+* Support for aufs3/overlayfs-based rootfs (livesystem). Useful for debuging and liveUSB/CD.
 * Better support for keymaps.
 * Support BTRFS's subvolumes.
 * Support for remote unlock of multiple luks device (Note to self: check whatever fifo is open)
 * earlymount option to mount everything possible from /newroot/etc/fstab - that should be good idea if we want to have mountpoints in /var/log for example.
+* use debian's idea to rename suspend binary into uswsusp to make it less confusing.
 
