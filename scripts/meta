@@ -27,10 +27,11 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE
 
-scriptpath="$(readlink -f $0)"
+scriptpath="$(readlink -f "$0")"
 workdir="${scriptpath%/*}"
 bootstrap="${workdir}/../bootstrap"
 sourceroot="${workdir}/../sourceroot"
+sourceroot="$(readlink -f "${sourceroot}")"
 
 die() {
 	echo -e "\033[1;30m>\033[0;31m>\033[1;31m> ERROR:\033[0m ${@}" && exit 1
@@ -122,18 +123,28 @@ image() {
 	fi
 }
 
+gen_sshd_keys() {
+	umask 077
+	if ! [ -f "${sourceroot}/bin/dropbearkey" ]; then die "You need dropbear ssh to generate keys."; fi
+	einfo "Generating sshd keys ..."
+	mkdir -p "${sourceroot}/etc/dropbear"
+	"${sourceroot}/bin/dropbearkey" -t rsa -f "${sourceroot}/etc/dropbear/dropbear_rsa_host_key" > /dev/null
+	"${sourceroot}/bin/dropbearkey" -t dss -f "${sourceroot}/etc/dropbear/dropbear_dss_host_key" > /dev/null
+}
+
 
 case $1 in
-	prepare|image|clean)
+	prepare|image|clean|gen_sshd_keys)
 		$1
 	;;
 	all)
 		echo
 		einfo "Quickstart:"
 		echo
-		echo "	bootstrap/bootstrap-all"
-		echo "	make prepare"
-		echo "	make image"
+		echo "            make bootstrap-all"
+		echo "            make prepare"
+		echo " (OPTIONAL) make gen_sshd_keys"
+		echo "            make image"
 		echo
 		exit 1
 	;;
