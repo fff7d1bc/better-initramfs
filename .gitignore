@@ -1,4 +1,6 @@
 initramfs.cpio.gz
+dev/*
+*.swp
 sourceroot/bin/*
 !sourceroot/bin/resume-boot
 sourceroot/VERSION
