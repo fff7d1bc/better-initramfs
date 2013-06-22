@@ -47,7 +47,7 @@ Build
         make image
 
 The first one will fetch `Rob Landley's Aboriginal Linux <http://landley.net/aboriginal/>`_ root-filesystem image (about 25-27M), unpack it and prepare basic devices nodes (null, zero, random, urandom), next it will build in order busybox, lvm2, zlib, dropbear, libuuid, popt, libgpg-error, libgcrypt, cryptsetup, mdadm, libx86, pciutils, lzo and suspend. The build process takes about 2 minutes on first generation mobile Core i5. As the build process is done in chroot, you need to do it as root.
-``make prepare`` will copy binaries from ``bootstrap/output`` into ``sourceroot/bin``.
+``make prepare`` will copy binaries from ``bootstrap/output`` into ``sourceroot/bin`` and do some basic device nodes.
 ``make image`` will pack sourceroot into cpio gzip archive. See about_ section for informations about why we build tools that way.
 
 Testing, new features, bug fixes.

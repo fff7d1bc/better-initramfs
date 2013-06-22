@@ -33,6 +33,12 @@ bootstrap="${workdir}/../bootstrap"
 sourceroot="${workdir}/../sourceroot"
 sourceroot="$(readlink -f "${sourceroot}")"
 
+relaxed_mknod() {
+	if ! [ -e "${sourceroot}/dev/$1" ]; then
+		mknod "${sourceroot}/dev/$1" "$2" "$3" "$4" || ewarn "Failed to create '$1' device node. It's not critical unless you embedded this sourceroot/ into kernel."
+	fi
+}
+
 die() {
 	echo -e "\033[1;30m>\033[0;31m>\033[1;31m> ERROR:\033[0m ${@}" && exit 1
 }
@@ -107,6 +113,15 @@ prepare() {
 	else
 		ewarn "No resume binary found, Swsusp will be disabled."
 	fi
+
+	einfo "Attempting to create basic device nodes ..."
+	relaxed_mknod console c 5 1
+	relaxed_mknod null c 1 3
+	relaxed_mknod tty c 5 0
+	relaxed_mknod urandom c 1 9
+	relaxed_mknod random c 1 8
+	relaxed_mknod zero c 1 5
+
 }
 
 image() {
