@@ -64,8 +64,9 @@ emount /proc /sys
 echo 0 > /proc/sys/kernel/printk
 
 process_commandline_options
-musthave root
 InitializeBusybox
+SetupNetwork
+musthave root
 run_hooks early
 use rootdelay rootdelay
 emount /dev
