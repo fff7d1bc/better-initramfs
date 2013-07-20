@@ -103,7 +103,7 @@ prepare() {
 
 	if test -f dropbearmulti; then
 		cp dropbearmulti "${sourceroot}/bin/dropbearmulti"
-		( cd "${sourceroot}/bin/" && rm -f dropbear dropbearkey && ln -s dropbearmulti dropbear && ln -s dropbearmulti dropbearkey )
+		( cd "${sourceroot}/bin/" && rm -f dropbear dropbearkey dbclient && ln -s dropbearmulti dropbear && ln -s dropbearmulti dropbearkey && ln -s dropbearmulti dbclient )
 	else
 		ewarn "No dropbearmulti binary found, Remote rescue shell support will be disabled."
 	fi
