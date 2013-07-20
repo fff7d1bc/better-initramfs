@@ -156,13 +156,25 @@ process_commandline_options() {
 				sshd_port=$(get_opt $i)
 			;;
 			sshd_interface\=*)
+				# deprecated
 				sshd_interface=$(get_opt $i)
 			;;
 			sshd_ipv4\=*)
+				# deprecated
 				sshd_ipv4=$(get_opt $i)
 			;;
 			sshd_ipv4_gateway\=*)
+				# deprecated
 				sshd_ipv4_gateway=$(get_opt $i)
+			;;
+			initramfs_network_interface\=*)
+				initramfs_network_interface=$(get_opt $i)
+			;;
+			initramfs_network_ipv4\=*)
+				initramfs_network_ipv4=$(get_opt $i)
+			;;
+			initramfs_network_gateway\=*)
+				initramfs_network_gateway=$(get_opt $i)
 			;;
 			rootdelay\=*)
 				rootdelay=$(get_opt $i)
@@ -320,6 +332,34 @@ TuxOnIceResume() {
 	else
 		ewarn "Apparently this kernel does not support TuxOnIce."
 	fi
+}
+
+SetupNetwork() {
+	# backward compatibility
+	if [ "${sshd_interface}" ]; then
+		ewarn "sshd_interface is deprecated, check README"
+		ewarn "and switch to initramfs_network_interface!"
+		initramfs_network_interface="${sshd_interface}"
+		initramfs_network_ipv4="${sshd_ipv4}"
+		initramfs_network_ipv4_gateway="${sshd_ipv4_gateway}"
+	fi
+
+	# setting _interface is the trigger.
+	# after dropping backward compatibility there should be
+	# a 'use FOO && SetupNetwork' in init script.
+	[ "${initramfs_network_interface}" ] || return
+
+	musthave initramfs_network_ipv4
+
+	einfo "Setting ${initramfs_network_ipv4} on ${initramfs_network_interface} ..."
+	run ip addr add "${initramfs_network_ipv4}" dev "${initramfs_network_interface}"
+	run ip link set up dev "${initramfs_network_interface}"
+
+	if [ -n "${initramfs_network_ipv4_gateway}" ]; then
+		einfo "Setting default routing via '${initramfs_network_ipv4_gateway}' ..."
+		run ip route add default via "${initramfs_network_ipv4_gateway}" dev "${initramfs_network_interface}"
+	fi
+
 }
 
 setup_sshd() {
