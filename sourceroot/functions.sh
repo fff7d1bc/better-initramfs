@@ -167,14 +167,14 @@ process_commandline_options() {
 				# deprecated
 				sshd_ipv4_gateway=$(get_opt $i)
 			;;
-			initramfs_network_interface\=*)
-				initramfs_network_interface=$(get_opt $i)
+			binit_net_if\=*)
+				binit_net_if=$(get_opt $i)
 			;;
-			initramfs_network_ipv4\=*)
-				initramfs_network_ipv4=$(get_opt $i)
+			binit_net_addr\=*)
+				binit_net_addr=$(get_opt $i)
 			;;
-			initramfs_network_gateway\=*)
-				initramfs_network_gateway=$(get_opt $i)
+			binit_net_gw\=*)
+				binit_net_gw=$(get_opt $i)
 			;;
 			rootdelay\=*)
 				rootdelay=$(get_opt $i)
@@ -338,26 +338,26 @@ SetupNetwork() {
 	# backward compatibility
 	if [ "${sshd_interface}" ]; then
 		ewarn "sshd_interface is deprecated, check README"
-		ewarn "and switch to initramfs_network_interface!"
-		initramfs_network_interface="${sshd_interface}"
-		initramfs_network_ipv4="${sshd_ipv4}"
-		initramfs_network_ipv4_gateway="${sshd_ipv4_gateway}"
+		ewarn "and switch to binit_net_if!"
+		binit_net_if="${sshd_interface}"
+		binit_net_addr="${sshd_ipv4}"
+		binit_net_gw="${sshd_ipv4_gateway}"
 	fi
 
 	# setting _interface is the trigger.
 	# after dropping backward compatibility there should be
 	# a 'use FOO && SetupNetwork' in init script.
-	use initramfs_network_interface || return
+	use binit_net_if || return
 
-	musthave initramfs_network_ipv4
+	musthave binit_net_addr
 
-	einfo "Setting ${initramfs_network_ipv4} on ${initramfs_network_interface} ..."
-	run ip addr add "${initramfs_network_ipv4}" dev "${initramfs_network_interface}"
-	run ip link set up dev "${initramfs_network_interface}"
+	einfo "Setting ${binit_net_addr} on ${binit_net_if} ..."
+	run ip addr add "${binit_net_addr}" dev "${binit_net_if}"
+	run ip link set up dev "${binit_net_if}"
 
-	if [ -n "${initramfs_network_ipv4_gateway}" ]; then
-		einfo "Setting default routing via '${initramfs_network_ipv4_gateway}' ..."
-		run ip route add default via "${initramfs_network_ipv4_gateway}" dev "${initramfs_network_interface}"
+	if [ -n "${binit_net_gw}" ]; then
+		einfo "Setting default routing via '${binit_net_gw}' ..."
+		run ip route add default via "${binit_net_gw}" dev "${binit_net_if}"
 	fi
 
 }
@@ -402,7 +402,7 @@ setup_sshd() {
 }
 
 cleanup() {
-	if use initramfs_network_interface; then
+	if use binit_net_if; then
 		if [ -f '/remote-rescueshell.lock' ]; then
 			ewarn "The lockfile at '/remote-rescueshell.lock' exist."
 			ewarn "The boot process will be paused until the lock is removed."
@@ -417,9 +417,9 @@ cleanup() {
 		einfo "Cleaning up and bringing down the network ..."
 		run pkill -9 dropbear > /dev/null 2>&1
 
-		run ip addr flush dev "${initramfs_network_interface}"
-		run ip route flush dev "${initramfs_network_interface}"
-		run ip link set down dev "${initramfs_network_interface}"
+		run ip addr flush dev "${binit_net_if}"
+		run ip route flush dev "${binit_net_if}"
+		run ip link set down dev "${binit_net_if}"
 	fi
 }
 
