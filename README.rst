@@ -66,11 +66,11 @@ sshd_wait=X
   Wait X seconds after setting up sshd, useful when you want to login (and thus pause boot process) before booting real system.
 sshd_port=X
   Setup sshd to listen on X port. Default: 22.
-sshd_interface=<if>
-  Set an interface to what ssh deamon should bind to. Example: eth0
-sshd_ipv4=<addr/cidr>
-  Configure <addr> with <cidr> netmask on sshd_interface. Usualy you want something like '1.2.3.4/24'. If you will not add /CIDR, the IP will be configured with /32 thus you will be not able to connect to it unless you specify sshd_ipv4_gateway.
-sshd_ipv4_gateway=<addr>
+initramfs_network_interface=<if>
+  Specify on which interface the network should be configured. Example: eth0
+initramfs_network_ipv4=<addr/cidr>
+  Configure <addr> with <cidr> netmask on initramfs_network_interface. Usualy you want something like '1.2.3.4/24'. If you will not add /CIDR, the IP will be configured with /32 thus you will be not able to connect to it unless you specify initramfs_network_ipv4_gateway.
+initramfs_network_ipv4_gateway=<addr>
   Optional gateway config, if you want to connect via WAN.
 rw
   Mount rootfs in read-write. Default: read-only.
