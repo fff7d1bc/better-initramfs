@@ -1,6 +1,6 @@
 #!/bin/sh
 name='dropbear'
-version='2013.58'
+version='2012.55'
 sources=( "http://matt.ucc.asn.au/${name}/releases/${name}-${version}.tar.bz2" )
 homepage='https://matt.ucc.asn.au/dropbear/dropbear.html'
 license='MIT'
