@@ -347,7 +347,7 @@ SetupNetwork() {
 	# setting _interface is the trigger.
 	# after dropping backward compatibility there should be
 	# a 'use FOO && SetupNetwork' in init script.
-	[ "${initramfs_network_interface}" ] || return
+	use initramfs_network_interface || return
 
 	musthave initramfs_network_ipv4
 
@@ -363,17 +363,6 @@ SetupNetwork() {
 }
 
 setup_sshd() {
-	musthave sshd_ipv4 sshd_interface
-
-	einfo "Setting ${sshd_ipv4} on ${sshd_interface} ..."
-	run ip addr add "${sshd_ipv4}" dev "${sshd_interface}"
-	run ip link set up dev "${sshd_interface}"
-
-	if [ -n "${sshd_ipv4_gateway}" ]; then
-		einfo "Setting default routing via '${sshd_ipv4_gateway}' ..."
-		run ip route add default via "${sshd_ipv4_gateway}" dev "${sshd_interface}"
-	fi
-
 	# Prepare /dev/pts.
 	einfo "Mounting /dev/pts ..."
 	if ! [ -d /dev/pts ]; then run mkdir /dev/pts; fi
@@ -413,7 +402,7 @@ setup_sshd() {
 }
 
 cleanup() {
-	if use sshd; then
+	if use initramfs_network_interface; then
 		if [ -f '/remote-rescueshell.lock' ]; then
 			ewarn "The lockfile at '/remote-rescueshell.lock' exist."
 			ewarn "The boot process will be paused until the lock is removed."
@@ -425,12 +414,12 @@ cleanup() {
 				fi
 			done
 		fi
-		einfo "Cleaning up, killing dropbear and bringing down the network ..."
+		einfo "Cleaning up and bringing down the network ..."
 		run pkill -9 dropbear > /dev/null 2>&1
 
-		run ip addr flush dev "${sshd_interface}"
-		run ip route flush dev "${sshd_interface}"
-		run ip link set down dev "${sshd_interface}"
+		run ip addr flush dev "${initramfs_network_interface}"
+		run ip route flush dev "${initramfs_network_interface}"
+		run ip link set down dev "${initramfs_network_interface}"
 	fi
 }
 
