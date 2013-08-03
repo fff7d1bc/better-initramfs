@@ -13,3 +13,4 @@ v0.8, 03-08-2013:
 	device nodes, its needed when you include initramfs into kernel image,
 	otherwise boot process may fail with missing /dev/console message. (kernel
 	bug or feature?)
+	- A lot of small changes, fixes, adjustments.
