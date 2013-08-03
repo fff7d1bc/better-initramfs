@@ -402,6 +402,11 @@ setup_sshd() {
 }
 
 cleanup() {
+	if use sshd; then
+		einfo "Cleaning up and bringing down the network ..."
+		run pkill -9 dropbear > /dev/null 2>&1
+	fi
+
 	if use binit_net_if; then
 		if [ -f '/remote-rescueshell.lock' ]; then
 			ewarn "The lockfile at '/remote-rescueshell.lock' exist."
@@ -414,9 +419,6 @@ cleanup() {
 				fi
 			done
 		fi
-		einfo "Cleaning up and bringing down the network ..."
-		run pkill -9 dropbear > /dev/null 2>&1
-
 		run ip addr flush dev "${binit_net_if}"
 		run ip route flush dev "${binit_net_if}"
 		run ip link set down dev "${binit_net_if}"
