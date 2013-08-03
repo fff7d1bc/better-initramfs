@@ -105,6 +105,13 @@ rootflags=X
 luks_trim
   Enable TRIM support on LUKS-encrypted device, (SSD)
 
+
+Hooks
+=====
+
+Hooks let users include own code in initramfs's init process, replacing functions, variables and including additional support (like ZFS in pre_newroot_mount for example).
+In order to use hooks one have to create sourceroot/hooks/<LEVEL>/ dir and put there files with exec bit. Supported levels are init, early, pre_newroot_mount, pre_switch_root.
+
 Remote rescue shell
 ===================
 

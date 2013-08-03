@@ -1,1 +1,15 @@
-See git history.
+For details check git history.
+
+v0.8, 03-08-2013:
+	- get_sshd_keys target added to Makefile.
+	- bootstrap-all target added to Makefile.
+	- sshd_interface, sshd_ipv4 and sshd_ipv4_gateway variables were changed
+	into binit_net_if, binit_net_addr and binit_net_gw.
+	- SetupNetwork() function now take care of setting network up.
+	- Hooks support, now you can include own code in init, early,
+	pre_newroot_mount and pre_switch_root phases.
+	- ssh client included (dbclinet).
+	- relaxed_mknod() function, 'prepare' make target will try to create basic
+	device nodes, its needed when you include initramfs into kernel image,
+	otherwise boot process may fail with missing /dev/console message. (kernel
+	bug or feature?)
