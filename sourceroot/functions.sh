@@ -403,7 +403,6 @@ setup_sshd() {
 
 cleanup() {
 	if use sshd; then
-		einfo "Cleaning up and bringing down the network ..."
 		run pkill -9 dropbear > /dev/null 2>&1
 	fi
 
