@@ -1,5 +1,9 @@
 For details check git history.
 
+v0.8.0.1, 04-08-2013:
+	- Pass $PATH env variable to $init.
+	- Don't kill sshd until remote-rescueshell.lock is released.
+
 v0.8, 03-08-2013:
 	- get_sshd_keys target added to Makefile.
 	- bootstrap-all target added to Makefile.
