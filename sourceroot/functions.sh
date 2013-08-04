@@ -428,7 +428,7 @@ boot_newroot() {
 	init="${init:-/sbin/init}"
 	einfo "Switching root to /newroot and executing ${init}."
 	if ! [ -x "/newroot/${init}" ]; then die "There is no executable '/newroot/${init}'."; fi
-	exec env -i TERM="${TERM:-linux}" switch_root /newroot "${init}"
+	exec env -i TERM="${TERM:-linux}" PATH="${PATH:-/bin:/sbin:/usr/bin:/usr/sbin}" switch_root /newroot "${init}"
 }
 
 emount() {
