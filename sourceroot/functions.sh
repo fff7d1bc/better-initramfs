@@ -413,15 +413,18 @@ cleanup() {
 				fi
 			done
 		fi
-		run ip addr flush dev "${binit_net_if}"
-		run ip route flush dev "${binit_net_if}"
-		run ip link set down dev "${binit_net_if}"
+
 	fi
+
 	if use sshd; then
 		run pkill -9 dropbear > /dev/null 2>&1
 	fi
 
-
+	if use binit_net_if; then
+		run ip addr flush dev "${binit_net_if}"
+		run ip route flush dev "${binit_net_if}"
+		run ip link set down dev "${binit_net_if}"
+	fi
 }
 
 boot_newroot() {
