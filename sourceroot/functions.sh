@@ -398,14 +398,9 @@ setup_sshd() {
 			ewarn "\$sshd_wait variable must be numeric and greater than zero. Skipping sshd_wait."
 		fi
 	fi
-
 }
 
 cleanup() {
-	if use sshd; then
-		run pkill -9 dropbear > /dev/null 2>&1
-	fi
-
 	if use binit_net_if; then
 		if [ -f '/remote-rescueshell.lock' ]; then
 			ewarn "The lockfile at '/remote-rescueshell.lock' exist."
@@ -422,6 +417,11 @@ cleanup() {
 		run ip route flush dev "${binit_net_if}"
 		run ip link set down dev "${binit_net_if}"
 	fi
+	if use sshd; then
+		run pkill -9 dropbear > /dev/null 2>&1
+	fi
+
+
 }
 
 boot_newroot() {
