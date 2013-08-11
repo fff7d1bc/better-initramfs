@@ -387,7 +387,7 @@ setup_sshd() {
 	fi
 
 	einfo 'Starting dropbear sshd ...'
-	run dropbear -s -p "${sshd_ipv4%/*}:${sshd_port-22}"
+	run dropbear -s -p "${binit_net_addr%/*}:${sshd_port:-22}"
 
 	if use sshd_wait; then
 		# sshd_wait exist, now we should sleep for X sec.
