@@ -351,6 +351,8 @@ SetupNetwork() {
 
 	musthave binit_net_addr
 
+	run ip link set up dev lo
+
 	einfo "Setting ${binit_net_addr} on ${binit_net_if} ..."
 	run ip addr add "${binit_net_addr}" dev "${binit_net_if}"
 	run ip link set up dev "${binit_net_if}"
