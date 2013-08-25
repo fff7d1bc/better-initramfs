@@ -360,8 +360,8 @@ SetupNetwork() {
 	if [ -n "${binit_net_gw}" ]; then
 		einfo "Setting default routing via '${binit_net_gw}' ..."
 		run ip route add default via "${binit_net_gw}" dev "${binit_net_if}"
+		ping -c 3 -W 1 -w 3 "${binit_net_gw}"
 	fi
-
 }
 
 setup_sshd() {
