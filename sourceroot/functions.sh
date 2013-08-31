@@ -360,11 +360,6 @@ SetupNetwork() {
 	if [ -n "${binit_net_gw}" ]; then
 		einfo "Setting default routing via '${binit_net_gw}' ..."
 		run ip route add default via "${binit_net_gw}" dev "${binit_net_if}"
-		# Pinging gateway seems to fix issue when you can't access remote server in some odd networks.
-		# Tested on two totally different OVH servers, without it with 'monitoring' 
-		# enabled it need 1-2 minutes after booting to the moment when you can access server.
-		# without 'monitoring' feature its about 4h after booting when server is accessable.
-		ping -c 3 -W 1 -w 3 "${binit_net_gw}"
 	fi
 }
 
