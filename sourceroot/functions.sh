@@ -264,12 +264,12 @@ InitializeLUKS() {
 
 	if use require_keyfile; then
 		musthave enc_keyfile
-		einfo "Mounting keyfile device ${enc_keydev}."
 		dodir /keydev
 		if use encdelay; then
-			einfo "Waiting for enc_keydev to settle."
+			einfo "Waiting for ${enc_keydev} to settle."
 			run sleep ${encdelay}
 		fi
+		einfo "Mounting keydev ${enc_keydev}."
 		resolve_device enc_keydev
 		run mount "$enc_keydev" /keydev
 	fi
