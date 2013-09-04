@@ -102,6 +102,12 @@ rootdelay=<integer>
   Set how many seconds initramfs should wait [for devices]. Useful for rootfs on USB device.
 rootflags=X
   pass X flag(s) to mount while mounting rootfs, you can use it to specify which btrfs subvolume you want to mount.
+enc_keydev=<device>
+  The device your encryption keyfile is stored.
+enc_keyfile=<file>
+  Name of the keyfile that will be used to unlock any devices specified in enc_root
+encdelay=<integer>
+  Set how many seconds initramfs should wait before trying to mount enc_keydev.
 luks_trim
   Enable TRIM support on LUKS-encrypted device, (SSD)
 

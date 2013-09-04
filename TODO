@@ -1,5 +1,4 @@
 * Support loadable kernel modules.
-* Support for key on external device (enc_keydev and enc_keyfile).
 * Support for squashfs in root variable, example: root=SQUASHFS=livecd.img
 * Support for aufs3/overlayfs-based rootfs (livesystem). Useful for debuging and liveUSB/CD.
 * Better support for keymaps.
