@@ -11,8 +11,10 @@ sourceroot/etc/*
 !sourceroot/etc/profile
 !sourceroot/etc/profile.d
 !sourceroot/etc/suspend.conf
+!sourceroot/etc/lvm/lvm.conf
 sourceroot/config
 bootstrap/binaries
 bootstrap/output
 bootstrap/build_dir
 bootstrap/distfiles
+authorized_keys
