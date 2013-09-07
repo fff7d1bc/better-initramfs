@@ -182,8 +182,8 @@ process_commandline_options() {
 			mdev)
 				mdev=true
 			;;
-			luks_trim)
-				luks_trim=true
+			luks_no_discards)
+				luks_no_discards=true
 			;;
 		esac
 	done
@@ -271,7 +271,7 @@ InitializeLUKS() {
 		run chmod 755 /sbin/udevadm
 
 		local cryptsetup_args=""
-		if use luks_trim; then
+		if ! use luks_no_discards; then
 			cryptsetup_args="${cryptsetup_args} --allow-discards"
 		fi
 
