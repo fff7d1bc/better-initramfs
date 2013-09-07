@@ -1,5 +1,12 @@
 For details check git history.
 
+devel branch:
+	- Enable discards support for LVM and DM Crypt LUKS by default.
+	- Drop luks_trim option.
+	- Add luks_no_discards option.
+	- Reorder network setup iproute2 calls.
+
+
 v0.8.0.1, 04-08-2013:
 	- Pass $PATH env variable to $init.
 	- Don't kill sshd until remote-rescueshell.lock is released.
