@@ -8,4 +8,3 @@
 * earlymount option to mount everything possible from /newroot/etc/fstab - that should be good idea if we want to have mountpoints in /var/log for example.
 * use debian's idea to rename suspend binary into uswsusp to make it less confusing.
 * rework process_commandline_options function, auto-add all cmdline options with equal sign.
-* add support for discards (ssd) for lvm layer.
