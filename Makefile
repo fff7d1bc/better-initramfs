@@ -1,5 +1,7 @@
 all:
-	@scripts/meta all
+	@echo '>>> Try make help'
+help:
+	@scripts/meta help
 image:
 	@scripts/meta image
 clean:

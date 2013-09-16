@@ -160,7 +160,7 @@ case $1 in
 	prepare|image|clean|gen_sshd_keys)
 		$1
 	;;
-	all)
+	help)
 		echo
 		einfo "Quickstart:"
 		echo
@@ -169,6 +169,5 @@ case $1 in
 		echo " (OPTIONAL) make gen_sshd_keys"
 		echo "            make image"
 		echo
-		exit 1
 	;;
 esac
