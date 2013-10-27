@@ -67,7 +67,6 @@ process_commandline_options
 InitializeBusybox
 use rootdelay rootdelay
 SetupNetwork
-musthave root
 run_hooks early
 emount /dev
 use sshd && setup_sshd

@@ -442,8 +442,9 @@ emount() {
 			'/newroot')
 				if mountpoint -q '/newroot'; then
 					einfo "/newroot already mounted, skipping..."
-				else
+				else	
 					einfo "Mounting /newroot..."
+					musthave root
 					if [ -n "${rootfstype}" ]; then local mountparams="${rootfsmountparams} -t ${rootfstype}"; fi
 					resolve_device root
 					run mount -o ${root_rw_ro:-ro} ${mountparams} "${root}" '/newroot'

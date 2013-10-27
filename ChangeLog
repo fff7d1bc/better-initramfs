@@ -1,6 +1,7 @@
 For details check git history.
 
 devel branch:
+	- Check whatever root variable is empty on mounting /newroot phase.
 	- Enable discards support for LVM and DM Crypt LUKS by default.
 	- Drop luks_trim option.
 	- Add luks_no_discards option.
