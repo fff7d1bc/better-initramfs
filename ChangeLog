@@ -1,6 +1,15 @@
 For details check git history.
 
 devel branch:
+	- Version bumps:
+		busybox 1.20.0 -> 1.21.1
+		cryptsetup 1.4.3 -> 1.6.3
+		dropbear 2012.55 -> 2013.62
+		libgcrypt 1.5.0 -> 1.6.0
+		libgpg-error 1.10 -> 1.12
+		lvm2 2.02.97 -> 2.02.103
+		mdadm 3.2.5 -> 3.2.6
+		zlib 1.2.7 -> 1.2.8
 	- Check whatever root variable is empty on mounting /newroot phase.
 	- Enable discards support for LVM and DM Crypt LUKS by default.
 	- Drop luks_trim option.

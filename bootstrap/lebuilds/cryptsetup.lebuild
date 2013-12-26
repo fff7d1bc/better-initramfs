@@ -1,6 +1,6 @@
 #!/bin/sh
 name='cryptsetup'
-version='1.4.3'
+version='1.6.3'
 sources=( "http://$name.googlecode.com/files/$name-$version.tar.bz2" )
 homepage='http://busybox.net/'
 license='GPLv2'
