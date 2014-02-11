@@ -299,7 +299,6 @@ InitializeSoftwareRaid() {
 		run mdadm --examine --scan > /etc/mdadm.conf
 	fi
 	run mdadm --assemble --scan
-	run mdadm --auto-detect
 }
 
 SwsuspResume() {

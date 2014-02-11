@@ -1,6 +1,7 @@
 For details check git history.
 
 devel branch:
+	- softraid: don't poke kernel to auto detect v0.9 arrays.
 	- Version bumps:
 		busybox 1.20.0 -> 1.21.1
 		cryptsetup 1.4.3 -> 1.6.3
