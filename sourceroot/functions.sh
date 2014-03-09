@@ -537,3 +537,5 @@ rootdelay() {
 		ewarn "\$rootdelay variable must be numeric and greater than zero. Skipping rootdelay."
 	fi
 }
+
+# vim: noexpandtab

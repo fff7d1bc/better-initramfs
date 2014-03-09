@@ -89,3 +89,5 @@ boot_newroot
 
 ewarn "Something went wrong."
 rescueshell
+
+# vim: noexpandtab
