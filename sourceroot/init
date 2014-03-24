@@ -65,10 +65,9 @@ echo 0 > /proc/sys/kernel/printk
 
 process_commandline_options
 InitializeBusybox
-use rootdelay rootdelay
-SetupNetwork
-run_hooks early
 emount /dev
+run_hooks early
+SetupNetwork
 use sshd && setup_sshd
 loadkeymap
 use softraid InitializeSoftwareRaid
@@ -79,6 +78,7 @@ use swsusp && SwsuspResume
 use uswsusp && UswsuspResume
 use tuxonice TuxOnIceResume
 run_hooks pre_newroot_mount
+use rootdelay rootdelay
 emount /newroot
 emount /newroot/usr
 use sshd && was_shell || wait_sshd
