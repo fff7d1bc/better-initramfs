@@ -81,6 +81,7 @@ use tuxonice TuxOnIceResume
 run_hooks pre_newroot_mount
 emount /newroot
 emount /newroot/usr
+use sshd && was_shell || wait_sshd
 cleanup
 moveDev
 eumount /sys /proc

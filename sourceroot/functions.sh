@@ -53,7 +53,12 @@ rescueshell() {
 		sh --login
 	fi
 	echo
-	rm /rescueshell.pid
+	:> /rescueshell.pid
+}
+
+was_shell() {
+	[ -f '/rescueshell.pid' ]
+	return $?
 }
 
 run() {
@@ -389,7 +394,9 @@ setup_sshd() {
 
 	einfo 'Starting dropbear sshd ...'
 	run dropbear -s -p "${binit_net_addr%/*}:${sshd_port:-22}"
+}
 
+wait_sshd() {
 	if use sshd_wait; then
 		# sshd_wait exist, now we should sleep for X sec.
 		if [ "${sshd_wait}" -gt 0 2>/dev/null ]; then
@@ -416,6 +423,8 @@ cleanup() {
 		fi
 
 	fi
+
+	was_shell && rm /rescueshell.pid
 
 	if use sshd; then
 		run pkill -9 dropbear > /dev/null 2>&1
