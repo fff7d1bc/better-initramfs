@@ -401,7 +401,11 @@ wait_sshd() {
 		# sshd_wait exist, now we should sleep for X sec.
 		if [ "${sshd_wait}" -gt 0 2>/dev/null ]; then
 			einfo "Waiting ${sshd_wait}s (sshd_wait)"
-				run sleep "${sshd_wait}"
+			while [ ${sshd_wait} -gt 0 ]; do
+				[ -f '/remote-rescueshell.lock' ] && break
+				sshd_wait=$((sshd_wait - 1))
+				sleep 1
+			done
 		else
 			ewarn "\$sshd_wait variable must be numeric and greater than zero. Skipping sshd_wait."
 		fi
