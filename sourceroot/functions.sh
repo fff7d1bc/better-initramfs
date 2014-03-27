@@ -53,7 +53,12 @@ rescueshell() {
 		sh --login
 	fi
 	echo
-	rm /rescueshell.pid
+	:> /rescueshell.pid
+}
+
+was_shell() {
+	[ -f '/rescueshell.pid' ]
+	return $?
 }
 
 run() {
@@ -77,6 +82,7 @@ run_hooks() {
 	if [ -d "/hooks/$1" ]; then
 		for i in /hooks/$1/*; do
 			[ "$i" = "/hooks/$1/*" ] && break
+			einfo "Running hook:" $i
 			[ -x "$i" ] && . "$i"
 		done
 	fi
@@ -388,12 +394,18 @@ setup_sshd() {
 
 	einfo 'Starting dropbear sshd ...'
 	run dropbear -s -p "${binit_net_addr%/*}:${sshd_port:-22}"
+}
 
+wait_sshd() {
 	if use sshd_wait; then
 		# sshd_wait exist, now we should sleep for X sec.
 		if [ "${sshd_wait}" -gt 0 2>/dev/null ]; then
 			einfo "Waiting ${sshd_wait}s (sshd_wait)"
-				run sleep "${sshd_wait}"
+			while [ ${sshd_wait} -gt 0 ]; do
+				[ -f '/remote-rescueshell.lock' ] && break
+				sshd_wait=$((sshd_wait - 1))
+				sleep 1
+			done
 		else
 			ewarn "\$sshd_wait variable must be numeric and greater than zero. Skipping sshd_wait."
 		fi
@@ -415,6 +427,8 @@ cleanup() {
 		fi
 
 	fi
+
+	was_shell && rm /rescueshell.pid
 
 	if use sshd; then
 		run pkill -9 dropbear > /dev/null 2>&1
