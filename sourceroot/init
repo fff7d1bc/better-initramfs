@@ -81,6 +81,7 @@ run_hooks pre_newroot_mount
 use rootdelay rootdelay
 emount /newroot
 emount /newroot/usr
+# Wait for sshd connection only if rescueshell have never occur.
 use sshd && was_shell || wait_sshd
 cleanup
 moveDev
