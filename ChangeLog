@@ -16,7 +16,17 @@ devel branch:
 	- Drop luks_trim option.
 	- Add luks_no_discards option.
 	- Reorder network setup iproute2 calls.
-
+	- Don't wait remaining time for sshd if we send resume-boot from remote
+	  shell (Andrew Glinskiy)
+	- Fix misprint (Andrew Glinskiy)
+	- Move run early hooks before SetupNetwork to have the abillity to insert
+	  any kernel modules because on init hooks we are not have busybox symlinks.
+	  Also setup /dev before early hooks that we have a complete minimal
+	  environment. And move rootdelay nerly root mount point.(Andrew Glinskiy)
+	- Wait for sshd connection only if rescueshell have never occur (Andrew Glinskiy)
+	- Add support of profile source priority, it's useful with multiple
+	  initrds (Andrew Glinskiy)
+	- Show running hooks (Andrew Glinskiy)
 
 v0.8.0.1, 04-08-2013:
 	- Pass $PATH env variable to $init.
