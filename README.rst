@@ -93,6 +93,12 @@ luks
   do ``cryptsetup luksOpen`` on enc_root variable.
 enc_root=<device>
   for example ``/dev/sda2`` if sda2 is your encrypted rootfs. This variable is ignored if luks isn't enabled. You can specify multiple devices with colon as spearator, like ``enc_root=/dev/sda2:/dev/sdb2:/dev/vda1``.
+enc_keydev=<device>
+  for example ``/dev/mmcblk0p1`` if you have a keyfile on mmcblk0p1.
+enc_keyfile=<path/to/keyfile>
+  the path where the keyfile can be found, e.g. ``keyfile``.
+enc_keyoption=<option>
+  options for keyfile, .e.g ``--keyfile-size=byte --keyfile-offset=byte``.
 root=<device>
   for example ``/dev/mapper/enc_root`` if you have LUKS-encrypted rootfs, ``/dev/mapper/vg-rootfs`` or similar if lvm or just ``/dev/sdXX`` if you haven't rootfs over lvm or encrypted.
 rootfstype=<filesystem type>
@@ -103,6 +109,35 @@ rootflags=X
   pass X flag(s) to mount while mounting rootfs, you can use it to specify which btrfs subvolume you want to mount.
 luks_no_discards
   Disable discards support on LUKS level, use if you don't want to allow lvm layer (if used) to send discards on reduce/resize or filesystem layer on file deletions to underlaying storage thru dmcrypt luks layer. Disabling discards on SSD-type storage may noticable degradate performance over time.
+
+Keyfile
+=======
+
+We have luks-encrypted keyfile for luks-encrypted device. The function is inspired by `frostschutz <http://askubuntu.com/questions/323115/how-do-i-use-dm-crypt-luks-with-gnupg-to-use-two-factor-for-fde>`_. But this is a revised version. Here is how to generage and use a keyfile:
+
+First, start by create a keyfile container::
+
+        dd if=/dev/urandom of=keyfile bs=1M count=10
+
+Next, create the device node ``/dev/loop0``, so that we can mount or use out container:: 
+
+        losetup /dev/loop0 keyfile
+
+Then, setup luks encryption for the device::
+
+        cryptsetup options luksFormat /dev/loop0
+
+Open the device and you will get a keyfile filled with random numbers in ``/dev/mapper/lukskey``::
+
+        cryptsetup options luksOpen /dev/loop0 lukskey
+
+Add the keyfile (since we created a 10M file which is exceeded maximum keyfile size, we need to use --keyfile-size and optionally --keyfile-offset option)::
+
+        cryptsetup --new-keyfile-size=byte --new-keyfile-offset=byte lurksAddKey /your/lurk/partition /dev/mapper/lukskey
+
+Finally, add grub option like this::
+
+        enc_keyfile=path/to/your/keyfile enc_keydevice=/path/to/your/device enc_keyoption=--keyfile-size=byte enc_keyoption=--keyfile-offset=byte
 
 Hooks
 =====
