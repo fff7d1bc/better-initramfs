@@ -27,6 +27,7 @@ devel branch:
 	- Add support of profile source priority, it's useful with multiple
 	  initrds (Andrew Glinskiy)
 	- Show running hooks (Andrew Glinskiy)
+	- Stop dropbear gracefully and wait 1s before continuing.
 
 v0.8.0.1, 04-08-2013:
 	- Pass $PATH env variable to $init.
