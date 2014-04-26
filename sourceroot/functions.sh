@@ -431,6 +431,8 @@ cleanup() {
 	was_shell && rm /rescueshell.pid
 
 	if use sshd; then
+		run pkill dropbear > /dev/null 2>&1
+		sleep 1
 		run pkill -9 dropbear > /dev/null 2>&1
 	fi
 
