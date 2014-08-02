@@ -82,7 +82,7 @@ run_hooks() {
 	if [ -d "/hooks/$1" ]; then
 		for i in /hooks/$1/*; do
 			[ "$i" = "/hooks/$1/*" ] && break
-			einfo "Running hook:" $i
+			einfo "Running '$i' hook ..."
 			[ -x "$i" ] && . "$i"
 		done
 	fi
