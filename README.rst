@@ -107,6 +107,13 @@ luks_no_discards
 bcache
   Bring up bcache devices. This will get ready for use /dev/bcache* which means one can have rootfs on bcache as well as anything else.
 
+Custom storage layouts like LVM, Software RAID or BCACHE and 'real' system.
+===========================================================================
+
+When one gets storage initialized on better-initramfs level there's no need for 'real' system to provide anykind of userspace support for it later (unless some crazy usecases), meaning LVM will be up and running without lvm2 installed on system, same goes for software raid without mdadm, DM Crypt LUKS without cryptsetup and bcache without bcache-tools.
+
+From the system point of view, there are already block devices when /sbin/init of 'real' system is executed so there's no need to bring up any userspace for given storage solutions, fully transparent and effective.
+
 Hooks
 =====
 
