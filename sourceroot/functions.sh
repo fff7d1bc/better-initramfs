@@ -191,6 +191,9 @@ process_commandline_options() {
 			luks_no_discards)
 				luks_no_discards=true
 			;;
+			bcache)
+				bcache=true
+			;;
 		esac
 	done
 }
@@ -337,6 +340,26 @@ TuxOnIceResume() {
 	else
 		ewarn "Apparently this kernel does not support TuxOnIce."
 	fi
+}
+
+register_bcache_devices() {
+	# Push all the block devices to register_quiet
+	# If its bcache, it will bring it up, if not, it will simply ignore it.
+	if ! [ -e /sys/fs/bcache/register_quiet ]; then
+		ewarn "There's no bcache interface. Missing kernel driver?"
+		return 0
+	fi
+
+	for i in /sys/block/*; do
+		[ "$i" = '/sys/block/*' ] && break
+		# And here we do quite an assumption
+		# that whatever is in block is also under root of /dev.
+		if [ -e "/dev/${i##*/}" ]; then
+			echo "/dev/${i##*/}" >/sys/fs/bcache/register_quiet
+		else
+			echo "Looks like there's no '/dev/${i##*/}', but should be."
+		fi
+	done
 }
 
 SetupNetwork() {

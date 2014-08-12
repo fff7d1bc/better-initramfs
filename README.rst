@@ -13,6 +13,7 @@ Usecase
 
 Features
 ========
+- Support for BCACHE.
 - Support for LVM.
 - Support for dmcrypt LUKS
 - Support for software RAID
@@ -103,6 +104,8 @@ rootflags=X
   pass X flag(s) to mount while mounting rootfs, you can use it to specify which btrfs subvolume you want to mount.
 luks_no_discards
   Disable discards support on LUKS level, use if you don't want to allow lvm layer (if used) to send discards on reduce/resize or filesystem layer on file deletions to underlaying storage thru dmcrypt luks layer. Disabling discards on SSD-type storage may noticable degradate performance over time.
+bcache
+  Bring up bcache devices. This will get ready for use /dev/bcache* which means one can have rootfs on bcache as well as anything else.
 
 Hooks
 =====

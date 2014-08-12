@@ -70,9 +70,13 @@ run_hooks early
 SetupNetwork
 use sshd && setup_sshd
 loadkeymap
-use softraid InitializeSoftwareRaid
-use lvm InitializeLVM
-use luks InitializeLUKS && use lvm InitializeLVM
+
+# Let's try to support all possible combinations of storage layers.
+use bcache register_bcache_devices
+use softraid InitializeSoftwareRaid && use bcache register_bcache_devices
+use lvm InitializeLVM && use bcache register_bcache_devices
+use luks InitializeLUKS && use lvm InitializeLVM && use bcache register_bcache_devices
+
 use rescueshell rescueshell
 use swsusp && SwsuspResume
 use uswsusp && UswsuspResume
