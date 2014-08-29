@@ -381,6 +381,17 @@ SetupNetwork() {
 
 	run ip link set up dev lo
 
+	# setup vlan interface if requiered
+	if `echo "${binit_net_if}" | egrep -q "[[:alnum:]]+\.[[:digit:]]+"`; then
+		binit_net_physif=$(echo $binit_net_if | cut -d. -f1)
+		binit_net_vlan=$(echo $binit_net_if | cut -d. -f2)
+		einfo "Setting vlan ${binit_net_vlan} on ${binit_net_physif} ..."
+		run ip link set up dev "${binit_net_physif}"
+		# we use vconfig as ip busybox implementation has some bug with vlans
+		run vconfig add "${binit_net_physif}" "${binit_net_vlan}"
+	fi
+
+
 	einfo "Setting ${binit_net_addr} on ${binit_net_if} ..."
 	run ip link set up dev "${binit_net_if}"
 	run ip addr add "${binit_net_addr}" dev "${binit_net_if}"
@@ -461,6 +472,10 @@ cleanup() {
 		run ip addr flush dev "${binit_net_if}"
 		run ip route flush dev "${binit_net_if}"
 		run ip link set down dev "${binit_net_if}"
+		#cleanup vlan if needed
+                if `echo "${binit_net_if}" | egrep -q "[[:alnum:]]+\.[[:digit:]]+"`; then
+                        run ip link del ${binit_net_if}
+                fi
 	fi
 }
 
