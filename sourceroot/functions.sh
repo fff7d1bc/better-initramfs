@@ -350,14 +350,11 @@ register_bcache_devices() {
 		return 0
 	fi
 
-	for i in /sys/block/*; do
-		[ "$i" = '/sys/block/*' ] && break
-		# And here we do quite an assumption
-		# that whatever is in block is also under root of /dev.
-		if [ -e "/dev/${i##*/}" ]; then
-			echo "/dev/${i##*/}" >/sys/fs/bcache/register_quiet
+	for i in $(awk '$4 !~ /^(name$|$)/ { print $4 }' /proc/partitions); do
+		if [ -e "/dev/${i}" ]; then
+			echo "/dev/${i}" >/sys/fs/bcache/register_quiet
 		else
-			echo "Looks like there's no '/dev/${i##*/}', but should be."
+			echo "Looks like there's no '/dev/${i}', but should be."
 		fi
 	done
 }

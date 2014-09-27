@@ -1,6 +1,8 @@
 For details check git history.
 
 devel branch:
+	- Bcache bugfix: Use /proc/partitions instead of /sys/block/*.
+	  The latter one does not lists partitons on top level.
 
 v0.9:
 	- softraid: don't poke kernel to auto detect v0.9 arrays.
