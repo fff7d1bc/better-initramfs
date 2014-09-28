@@ -1,6 +1,7 @@
 For details check git history.
 
 devel branch:
+	- Support for console= kernel param. (Contributed by manwe)
 
 v0.9.0.1:
 	- Bcache bugfix: Use /proc/partitions instead of /sys/block/*.

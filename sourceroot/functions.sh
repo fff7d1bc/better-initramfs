@@ -47,7 +47,9 @@ rescueshell() {
 	ewarn "Rescue Shell (busybox's /bin/sh)"
 	ewarn "To reboot, press 'control-alt-delete'."
 	ewarn "If you wish resume booting process, run 'resume-boot'."
-	if [ -c '/dev/tty1' ]; then
+	if [ "$console" ] && [ -c "/dev/${console}" ]; then
+		setsid sh -c "exec sh --login </dev/"${console}" >/dev/${console} 2>&1"
+	elif [ -c '/dev/tty1' ]; then
 		setsid sh -c 'exec sh --login </dev/tty1 >/dev/tty1 2>&1'
 	else
 		sh --login
@@ -184,6 +186,10 @@ process_commandline_options() {
 			;;
 			rootdelay\=*)
 				rootdelay=$(get_opt $i)
+			;;
+			console\=*)
+				console=$(get_opt $i)
+				console="${console%,*}"
 			;;
 			mdev)
 				mdev=true
