@@ -1,6 +1,8 @@
 For details check git history.
 
 devel branch:
+
+v0.9.0.1:
 	- Bcache bugfix: Use /proc/partitions instead of /sys/block/*.
 	  The latter one does not lists partitons on top level.
 
