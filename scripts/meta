@@ -146,12 +146,12 @@ image() {
 	fi
 }
 
-image-no-gz() {
+image_no_gz() {
 	if ! [ -f "${sourceroot}/bin/busybox" ]; then die "Initramfs will not work without busybox."; fi
 
 	einfo 'Building image...'
 
-	( cd "${sourceroot}" && find . | cpio --quiet -H newc -o > ../output/initramfs.cpio.gz)
+	( cd "${sourceroot}" && find . | cpio --quiet -H newc -o > ../output/initramfs.cpio)
 
 	if [ -f "${sourceroot}/../output/initramfs.cpio" ]; then
 		einfo "output/initramfs.cpio is ready."
@@ -179,7 +179,7 @@ gen_sshd_keys() {
 
 
 case $1 in
-	prepare|image|clean|gen_sshd_keys)
+	prepare|image|image_no_gz|clean|gen_sshd_keys)
 		$1
 	;;
 	help)
@@ -190,6 +190,7 @@ case $1 in
 		echo "            make prepare"
 		echo " (OPTIONAL) make gen_sshd_keys"
 		echo "            make image"
+		echo "		  make image_no_gz"
 		echo
 	;;
 esac
