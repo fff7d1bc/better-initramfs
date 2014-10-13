@@ -124,7 +124,7 @@ process_commandline_options() {
 				enc_keyfile=$(get_opt $i)
 			;;
 			enc_keyoption\=*)
-				enc_keyoption="$(get_opt $i)"
+				enc_keyoption="${enc_keyoption} $(get_opt $i)"
 			;;
 			luks)
 				luks=true
