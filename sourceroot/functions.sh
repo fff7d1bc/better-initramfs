@@ -82,7 +82,7 @@ run_hooks() {
 	if [ -d "/hooks/$1" ]; then
 		for i in /hooks/$1/*; do
 			[ "$i" = "/hooks/$1/*" ] && break
-			einfo "Running hook:" $i
+			einfo "Running '$i' hook ..."
 			[ -x "$i" ] && . "$i"
 		done
 	fi
@@ -199,6 +199,9 @@ process_commandline_options() {
 			;;
 			luks_no_discards)
 				luks_no_discards=true
+			;;
+			bcache)
+				bcache=true
 			;;
 		esac
 	done
@@ -355,6 +358,23 @@ TuxOnIceResume() {
 	else
 		ewarn "Apparently this kernel does not support TuxOnIce."
 	fi
+}
+
+register_bcache_devices() {
+	# Push all the block devices to register_quiet
+	# If its bcache, it will bring it up, if not, it will simply ignore it.
+	if ! [ -e /sys/fs/bcache/register_quiet ]; then
+		ewarn "There's no bcache interface. Missing kernel driver?"
+		return 0
+	fi
+
+	for i in $(awk '$4 !~ /^(name$|$)/ { print $4 }' /proc/partitions); do
+		if [ -e "/dev/${i}" ]; then
+			echo "/dev/${i}" >/sys/fs/bcache/register_quiet
+		else
+			echo "Looks like there's no '/dev/${i}', but should be."
+		fi
+	done
 }
 
 SetupNetwork() {
@@ -561,7 +581,7 @@ eumount() {
 
 moveDev() {
 	einfo "Moving /dev to /newroot/dev..."
-	if mountpoint -q /dev/pts; then umount /dev/pts; fi
+	if mountpoint -q /dev/pts; then umount -l /dev/pts; fi
 	if use mdev; then run echo '' > /proc/sys/kernel/hotplug; fi
 	run mount --move /dev /newroot/dev
 }

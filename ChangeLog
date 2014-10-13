@@ -1,6 +1,12 @@
 For details check git history.
 
 devel branch:
+
+v0.9.0.1:
+	- Bcache bugfix: Use /proc/partitions instead of /sys/block/*.
+	  The latter one does not lists partitons on top level.
+
+v0.9:
 	- softraid: don't poke kernel to auto detect v0.9 arrays.
 	- Version bumps:
 		busybox 1.20.0 -> 1.21.1
@@ -27,6 +33,8 @@ devel branch:
 	- Add support of profile source priority, it's useful with multiple
 	  initrds (Andrew Glinskiy)
 	- Show running hooks (Andrew Glinskiy)
+	- Lazy umount /dev/pts in case of ssh login inside initramfs.
+	- Bcache support, now can boot with rootfs on bcache block device.
 
 v0.8.0.1, 04-08-2013:
 	- Pass $PATH env variable to $init.

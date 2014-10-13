@@ -13,6 +13,7 @@ Usecase
 
 Features
 ========
+- Support for BCACHE.
 - Support for LVM.
 - Support for dmcrypt LUKS
 - Support for software RAID
@@ -109,6 +110,15 @@ rootflags=X
   pass X flag(s) to mount while mounting rootfs, you can use it to specify which btrfs subvolume you want to mount.
 luks_no_discards
   Disable discards support on LUKS level, use if you don't want to allow lvm layer (if used) to send discards on reduce/resize or filesystem layer on file deletions to underlaying storage thru dmcrypt luks layer. Disabling discards on SSD-type storage may noticable degradate performance over time.
+bcache
+  Bring up bcache devices. This will get ready for use /dev/bcache* which means one can have rootfs on bcache as well as anything else.
+
+Custom storage layouts like LVM, Software RAID or BCACHE and 'real' system.
+===========================================================================
+
+When one gets storage initialized on better-initramfs level there's no need for 'real' system to provide anykind of userspace support for it later (unless some crazy usecases), meaning LVM will be up and running without lvm2 installed on system, same goes for software raid without mdadm, DM Crypt LUKS without cryptsetup and bcache without bcache-tools.
+
+From the system point of view, there are already block devices when /sbin/init of 'real' system is executed so there's no need to bring up any userspace for given storage solutions, fully transparent and effective.
 
 Keyfile
 =======
