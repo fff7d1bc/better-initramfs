@@ -32,6 +32,8 @@ workdir="${scriptpath%/*}"
 bootstrap="${workdir}/../bootstrap"
 sourceroot="${workdir}/../sourceroot"
 sourceroot="$(readlink -f "${sourceroot}")"
+sbindir="${bootstrap}/build_dir/usr/sbin"
+libdir="${bootstrap}/build_dir/lib"
 
 relaxed_mknod() {
 	if ! [ -e "${sourceroot}/dev/$1" ]; then
@@ -113,6 +115,32 @@ prepare() {
 	else
 		ewarn "No resume binary found, Swsusp will be disabled."
 	fi
+
+	E2_FILES="resize2fs
+		fsck
+		blkid
+		dumpe2fs
+		e2label
+		tune2fs
+		badblocks
+		mke2fs
+		mkfs.ext2
+		mkfs.ext3
+		mkfs.ext4
+		mkfs.ext4dev
+		e2fsck
+		fsck.ext2
+		fsck.ext3
+		fsck.ext4
+		fsck.ext4dev"
+	for f in $E2_FILES
+	do
+		if test -f ${sbindir}/${f}; then
+			cp "${sbindir}/${f}" "${sourceroot}/bin/"
+		else
+			ewarn "E2 file $f not found. E2 support will not be present."
+		fi
+	done
 
 	einfo "Attempting to create basic device nodes ..."
 	relaxed_mknod console c 5 1

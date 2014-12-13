@@ -1,0 +1,18 @@
+#!/bin/sh
+name='e2fsprogs'
+version='1.42.8'
+sources=( "https://www.kernel.org/pub/linux/kernel/people/tytso/$name/v$version/$name-$version.tar.gz" )
+homepage='http://e2fsprogs.sourceforge.net/'
+license='GPLv2'
+
+build_cmd="
+	cd /source/${name}-${version} && \
+	mkdir build && cd build && \
+	../configure --disable-elf-shlibs --disable-tls LDFLAGS=-static && \
+	make && \
+	make install
+"
+
+fetch_source
+install_source
+build_source
