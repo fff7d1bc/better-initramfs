@@ -2,6 +2,8 @@ For details check git history.
 
 devel branch:
 	- Support for console= kernel param. (Contributed by manwe)
+	- VLAN support (Artem Sidorenko)
+	- use() is now consistant with itself, 0 is also false.
 
 v0.9.0.1:
 	- Bcache bugfix: Use /proc/partitions instead of /sys/block/*.
