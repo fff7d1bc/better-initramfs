@@ -67,7 +67,7 @@ sshd_wait=X
 sshd_port=X
   Setup sshd to listen on X port. Default: 22.
 binit_net_if=<if>
-  Specify on which interface the network should be configured. Example: eth0
+  Specify on which interface the network should be configured. Optionally a vlan can be specified separated by a dot. Example: eth0 or eth0.55
 binit_net_addr=<addr/cidr>
   Configure <addr> with <cidr> netmask on binit_net_if. Usualy you want something like '1.2.3.4/24'. If you will not add /CIDR, the IP will be configured with /32 thus you will be not able to connect to it unless you specify binit_net_gw.
 binit_net_gw=<addr>

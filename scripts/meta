@@ -114,6 +114,12 @@ prepare() {
 		ewarn "No resume binary found, Swsusp will be disabled."
 	fi
 
+	if test -f vconfig; then
+		cp vconfig "${sourceroot}/bin/vconfig"
+	else
+		ewarn "No vconfig binary found, Vlan configuration will be disabled"
+	fi
+
 	einfo "Attempting to create basic device nodes ..."
 	relaxed_mknod console c 5 1
 	relaxed_mknod null c 1 3
