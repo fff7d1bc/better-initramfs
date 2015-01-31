@@ -207,7 +207,7 @@ process_commandline_options() {
 use() {
 	name="$(eval echo \$$1)"
 	# Check if $name isn't empty and if $name isn't set to false or zero.
-	if [ -n "${name}" ] && [ "${name}" != 'false' ]; then
+	if [ -n "${name}" ] && [ "${name}" != 'false' ] && [ "${name}" != '0' ]; then
 		if [ -n "$2" ]; then
 			$2
 		else
