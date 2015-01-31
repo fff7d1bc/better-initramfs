@@ -366,6 +366,9 @@ register_bcache_devices() {
 }
 
 SetupNetwork() {
+	# Defaults ...
+	vlan='false'
+
 	# backward compatibility
 	if [ "${sshd_interface}" ]; then
 		ewarn "sshd_interface is deprecated, check README"
@@ -384,8 +387,21 @@ SetupNetwork() {
 
 	run ip link set up dev lo
 
-	einfo "Setting ${binit_net_addr} on ${binit_net_if} ..."
+	case "${binit_net_if}" in
+		*'.'*)
+			vlan='true'
+			binit_net_physif="${binit_net_if%%.*}"
+			local binit_net_vlan="${binit_net_if##*.}"
+			einfo "Bringing up ${binit_net_physif} interface ..."
+			run ip link set up dev "${binit_net_physif}"
+			einfo "Adding VLAN ${binit_net_vlan} on ${binit_net_physif} interface ..."
+			run vconfig add "${binit_net_physif}" "${binit_net_vlan}"
+		;;
+	esac
+
+	einfo "Bringing up ${binit_net_if} interface ..."
 	run ip link set up dev "${binit_net_if}"
+	einfo "Setting ${binit_net_addr} on ${binit_net_if} ..."
 	run ip addr add "${binit_net_addr}" dev "${binit_net_if}"
 
 	if [ -n "${binit_net_gw}" ]; then
@@ -464,6 +480,10 @@ cleanup() {
 		run ip addr flush dev "${binit_net_if}"
 		run ip route flush dev "${binit_net_if}"
 		run ip link set down dev "${binit_net_if}"
+		if use vlan; then
+			run ip link del "${binit_net_if}"
+			run ip link set down dev "${binit_net_physif}"
+		fi
 	fi
 }
 
