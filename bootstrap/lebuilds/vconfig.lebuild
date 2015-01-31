@@ -5,7 +5,7 @@ sources=( "http://fossies.org/linux/misc/vlan.${version}.tar.gz" )
 homepage='http://www.candelatech.com/~greear/vlan.html'
 license='GPL-2'
 
-build_cmd="cd /source/${name}-${version} && make purge && make vconfig"
+build_cmd="cd /source/${name}-${version} && make purge && make CFLAGS='-Os' LDFLAGS='-static' vconfig"
 
 deploy="/source/${name}-${version}/vconfig"
 
