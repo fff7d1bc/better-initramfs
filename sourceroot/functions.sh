@@ -260,7 +260,7 @@ get_majorminor() {
 }
 
 InitializeLUKS() {
-	if [ ! -f /bin/cryptsetup ]; then
+	if ! command -v cryptsetup 1>/dev/null 2>&1; then
 		eerror "There is no cryptsetup binary into initramfs image."
 		rescueshell
 	fi
