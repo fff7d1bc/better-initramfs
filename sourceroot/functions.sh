@@ -219,11 +219,12 @@ use() {
 }
 
 musthave() {
+	local missing_variable
 	while [ -n "$1" ]; do
 		# We can handle it by use() function, yay!
 		if ! use "$1"; then
 			eerror "The \"$1\" variable is empty, set to false or zero but shoudn't be."
-			local missing_variable='true'
+			missing_variable='true'
 		fi
 		shift
 	done
@@ -269,6 +270,11 @@ InitializeLUKS() {
 	
 	local enc_num='1'
 	local dev_name="enc_root"
+	local cryptsetup_args=""
+	if ! use luks_no_discards; then
+		cryptsetup_args="${cryptsetup_args} --allow-discards"
+	fi
+
 	# We will use : to separate devices but we need normal IFS inside the for loop anyway.
 	local IFS=":"
 	for enc_dev in ${enc_root}; do
@@ -284,11 +290,6 @@ InitializeLUKS() {
 		# Hack for cryptsetup which trying to run /sbin/udevadm.
 		run echo -e "#!/bin/sh\nexit 0" > /sbin/udevadm
 		run chmod 755 /sbin/udevadm
-
-		local cryptsetup_args=""
-		if ! use luks_no_discards; then
-			cryptsetup_args="${cryptsetup_args} --allow-discards"
-		fi
 
 		if use sshd; then
 			askpass "Enter passphrase for ${enc_dev}: " | run cryptsetup --tries 1 --key-file=- luksOpen ${cryptsetup_args} "${enc_dev}" "${dev_name}"
@@ -513,6 +514,8 @@ boot_newroot() {
 
 emount() {
 	# All mounts into one place is good idea.
+	local mountparams
+	local devmountopts
 	while [ "$#" -gt 0 ]; do
 		case $1 in
 			'/newroot')
@@ -522,7 +525,7 @@ emount() {
 					einfo "Mounting /newroot..."
 					musthave root
 					if [ -n "${rootfstype}" ]; then 
-						local mountparams="${rootfsmountparams} -t ${rootfstype}"
+						mountparams="${rootfsmountparams} -t ${rootfstype}"
 					fi
 					resolve_device root
 					run mount -o ${root_rw_ro:-ro} ${mountparams} "${root}" '/newroot'
@@ -549,7 +552,7 @@ emount() {
 			;;
 	
 			'/dev')
-				local devmountopts='nosuid,relatime,size=10240k,mode=755'
+				devmountopts='nosuid,relatime,size=10240k,mode=755'
 
 				if grep -q 'devtmpfs' '/proc/filesystems' && ! use mdev; then
 					einfo "Mounting /dev (devtmpfs)..."
