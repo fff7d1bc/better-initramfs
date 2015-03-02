@@ -95,7 +95,7 @@ resolve_device() {
 	device="$(eval echo \$$1)"
 	case "${device}" in
 		LABEL\=*|UUID\=*)
-			eval $1="$(findfs $device)"
+			eval "$1=\"$(findfs $device)\""
 			if [ -z "$(eval echo \$$1)" ]; then
 				eerror "Wrong UUID or LABEL."
 				rescueshell
