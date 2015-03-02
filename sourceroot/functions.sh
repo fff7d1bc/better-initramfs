@@ -53,6 +53,8 @@ rescueshell() {
 	ewarn "If you wish resume booting process, run 'resume-boot'."
 	if [ "$console" ] && [ -c "/dev/${console}" ]; then
 		setsid sh -c "exec sh --login </dev/"${console}" >/dev/${console} 2>&1"
+	elif command -v cttyhack 1>/dev/null 2>&1; then
+		setsid cttyhack sh --login
 	elif [ -c '/dev/tty1' ]; then
 		setsid sh -c 'exec sh --login </dev/tty1 >/dev/tty1 2>&1'
 	else
