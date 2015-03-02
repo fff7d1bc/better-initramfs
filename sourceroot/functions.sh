@@ -91,12 +91,12 @@ run_hooks() {
 }
 
 resolve_device() {
-	# This function will check if variable at $1 contain LABEL or UUID and then, if LABEL/UUID is vaild.	
-	device="$(eval echo \$$1)"
+	# This function will check if variable at $1 contain LABEL or UUID and then, if LABEL/UUID is valid.
+	eval "device=\"\$$1\""
 	case "${device}" in
 		LABEL\=*|UUID\=*)
 			eval "$1=\"$(findfs $device)\""
-			if [ -z "$(eval echo \$$1)" ]; then
+			if eval "[ -z \"\$$1\" ]"; then
 				eerror "Wrong UUID or LABEL."
 				rescueshell
 			fi
@@ -205,7 +205,7 @@ process_commandline_options() {
 }
 
 use() {
-	name="$(eval echo \$$1)"
+	eval "name=\"\$$1\""
 	# Check if $name isn't empty and if $name isn't set to false or zero.
 	if [ -n "${name}" ] && [ "${name}" != 'false' ] && [ "${name}" != '0' ]; then
 		if [ -n "$2" ]; then
