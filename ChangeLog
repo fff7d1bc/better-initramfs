@@ -4,6 +4,9 @@ devel branch:
 	- Support for console= kernel param. (Contributed by manwe)
 	- VLAN support (Artem Sidorenko)
 	- use() is now consistant with itself, 0 is also false.
+	- Probe for partitions table on all block devices after assembling
+	  mdadm-driven arrays. Fixes the issue when partitions made on RAID arrays
+	  has not been visable. (Reported by Coornaert David)
 
 v0.9.0.1:
 	- Bcache bugfix: Use /proc/partitions instead of /sys/block/*.

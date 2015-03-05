@@ -314,6 +314,18 @@ InitializeSoftwareRaid() {
 		run mdadm --examine --scan > /etc/mdadm.conf
 	fi
 	run mdadm --assemble --scan
+
+	# The software raid arrays may have partitions on them.
+	rereadpt
+}
+
+rereadpt() {
+	# Check for partition table on all block devices.
+	for i in /dev/*; do
+		if [ -b "${i}" ]; then
+			blockdev --rereadpt "${i}" >/dev/null 2>&1
+		fi
+	done
 }
 
 SwsuspResume() {
