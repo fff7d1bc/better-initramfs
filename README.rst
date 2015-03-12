@@ -96,6 +96,7 @@ enc_root=<device>
   for example ``/dev/sda2`` if sda2 is your encrypted rootfs. This variable is ignored if luks isn't enabled. You can specify multiple devices with colon as spearator, like ``enc_root=/dev/sda2:/dev/sdb2:/dev/vda1``.
 root=<device>
   for example ``/dev/mapper/enc_root`` if you have LUKS-encrypted rootfs, ``/dev/mapper/vg-rootfs`` or similar if lvm or just ``/dev/sdXX`` if you haven't rootfs over lvm or encrypted.
+  If you would like to use a SquashFS as your root, use the following: ``root=SQUASHFS=device:pathToSquash``, where you've replaced device and pathToSquash with the device to mount and the path to the squashed file system on that device, respectively.
 rootfstype=<filesystem type>
   Set type of filesystem on your rootfs if you do not want to use 'auto',
 rootdelay=<integer>
@@ -106,6 +107,8 @@ luks_no_discards
   Disable discards support on LUKS level, use if you don't want to allow lvm layer (if used) to send discards on reduce/resize or filesystem layer on file deletions to underlaying storage thru dmcrypt luks layer. Disabling discards on SSD-type storage may noticable degradate performance over time.
 bcache
   Bring up bcache devices. This will get ready for use /dev/bcache* which means one can have rootfs on bcache as well as anything else.
+tmpfssize=<integer><k,m,g>
+  Set the size of the AuFS read-write tmpfs for SquashFS.
 
 Custom storage layouts like LVM, Software RAID or BCACHE and 'real' system.
 ===========================================================================

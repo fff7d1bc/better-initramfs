@@ -200,6 +200,9 @@ process_commandline_options() {
 			bcache)
 				bcache=true
 			;;
+			tmpfssize)
+				tmpfssize=$(get_opt $i)
+			;;
 		esac
 	done
 }
@@ -517,8 +520,26 @@ emount() {
 					einfo "Mounting /newroot..."
 					musthave root
 					if [ -n "${rootfstype}" ]; then local mountparams="${rootfsmountparams} -t ${rootfstype}"; fi
+					case "$root" in
+						SQUASHFS\=*)
+							einfo "Detected SQUASHFS"
+							is_squash=1
+							squashfs_name=${root##*:}
+							einfo "SQUASHFS_NAME=${squashfs_name}"
+							root=${root%%:*}
+							root=${root##SQUASHFS=}
+							einfo "TEMP_ROOT=${root}"
+							;;
+					esac
 					resolve_device root
-					run mount -o ${root_rw_ro:-ro} ${mountparams} "${root}" '/newroot'
+					if [ -n "$is_squash" ]; then
+						run mount -o ro "${root}" '/tmpmount'
+						run mount -o loop -t squashfs -o ro ${mountparams} "/tmpmount/${squashfs_name}" '/roroot'
+						run mount -t tmpfs -o size=${tmpfssize:-512m} tmpfs /rwroot
+						run mount -t aufs -o br=/rwroot=rw:/roroot=ro -o udba=none none /newroot
+					else
+						run mount -o ${root_rw_ro:-ro} ${mountparams} "${root}" '/newroot'
+					fi
 				fi
 			;;
 

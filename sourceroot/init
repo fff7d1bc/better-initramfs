@@ -33,7 +33,7 @@
 run_hooks init
 
 # Prepare dirs
-run dodir /dev /newroot /sbin /proc /sys /etc /var/log /var/run
+run dodir /dev /newroot /tmpmount /roroot /rwroot /sbin /proc /sys /etc /var/log /var/run
 [ -d /lib ] && run ln -s /lib /lib64
 [ -d /usr/lib ] && run ln -s /usr/lib /usr/lib64
 
