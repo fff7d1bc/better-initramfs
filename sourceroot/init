@@ -38,12 +38,12 @@ run dodir /dev /newroot /sbin /proc /sys /etc /var/log /var/run
 [ -d /usr/lib ] && run ln -s /usr/lib /usr/lib64
 
 # Basic /dev content, we need it as fast as possible.
-[ ! -e /dev/console ]	&& run mknod /dev/console c 5 1
-[ ! -e /dev/null ]	&& run mknod /dev/null c 1 3
-[ ! -e /dev/tty ]	&& run mknod /dev/tty c 5 0
-[ ! -e /dev/urandom ]	&& run mknod /dev/urandom c 1 9
-[ ! -e /dev/random ]	&& run mknod /dev/random c 1 8
-[ ! -e /dev/zero ]	&& run mknod /dev/zero c 1 5
+[ ! -e /dev/console ]  && run mknod /dev/console c 5 1
+[ ! -e /dev/null ]     && run mknod /dev/null c 1 3
+[ ! -e /dev/tty ]      && run mknod /dev/tty c 5 0
+[ ! -e /dev/urandom ]  && run mknod /dev/urandom c 1 9
+[ ! -e /dev/random ]   && run mknod /dev/random c 1 8
+[ ! -e /dev/zero ]     && run mknod /dev/zero c 1 5
 
 # Clear the screen
 clear

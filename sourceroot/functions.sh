@@ -433,8 +433,10 @@ setup_sshd() {
 
 	# Generate host keys.
 	einfo "Generating dropbear ssh host keys ..."
-	test -f /etc/dropbear/dropbear_rsa_host_key || run dropbearkey -t rsa -f /etc/dropbear/dropbear_rsa_host_key > /dev/null
-	test -f /etc/dropbear/dropbear_dss_host_key || run dropbearkey -t dss -f /etc/dropbear/dropbear_dss_host_key > /dev/null
+	test -f /etc/dropbear/dropbear_rsa_host_key || \
+		run dropbearkey -t rsa -f /etc/dropbear/dropbear_rsa_host_key > /dev/null
+	test -f /etc/dropbear/dropbear_dss_host_key || \
+		run dropbearkey -t dss -f /etc/dropbear/dropbear_dss_host_key > /dev/null
 
 	# Prepare root account.
 	run echo 'root:x:0:0:root:/root:/bin/sh' > /etc/passwd
@@ -503,7 +505,10 @@ boot_newroot() {
 	init="${init:-/sbin/init}"
 	einfo "Switching root to /newroot and executing ${init}."
 	if ! [ -x "/newroot/${init}" ]; then die "There is no executable '/newroot/${init}'."; fi
-	exec env -i TERM="${TERM:-linux}" PATH="${PATH:-/bin:/sbin:/usr/bin:/usr/sbin}" switch_root /newroot "${init}"
+	exec env -i \
+		TERM="${TERM:-linux}" \
+		PATH="${PATH:-/bin:/sbin:/usr/bin:/usr/sbin}" \
+			switch_root /newroot "${init}"
 }
 
 emount() {
@@ -516,7 +521,9 @@ emount() {
 				else	
 					einfo "Mounting /newroot..."
 					musthave root
-					if [ -n "${rootfstype}" ]; then local mountparams="${rootfsmountparams} -t ${rootfstype}"; fi
+					if [ -n "${rootfstype}" ]; then 
+						local mountparams="${rootfsmountparams} -t ${rootfstype}"
+					fi
 					resolve_device root
 					run mount -o ${root_rw_ro:-ro} ${mountparams} "${root}" '/newroot'
 				fi
