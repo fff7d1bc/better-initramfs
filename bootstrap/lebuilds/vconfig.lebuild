@@ -1,7 +1,7 @@
 #!/bin/sh
 name='vconfig'
 version='1.9'
-sources=( "http://fossies.org/linux/misc/vlan.${version}.tar.gz" )
+sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/vlan.${version}.tar.gz" )
 homepage='http://www.candelatech.com/~greear/vlan.html'
 license='GPL-2'
 
