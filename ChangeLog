@@ -1,6 +1,6 @@
 For details check git history.
 
-devel branch:
+v0.9.1:
 	- Support for console= kernel param. (Contributed by manwe)
 	- VLAN support (Artem Sidorenko)
 	- use() is now consistant with itself, 0 is also false.
