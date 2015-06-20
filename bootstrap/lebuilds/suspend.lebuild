@@ -1,7 +1,7 @@
 #!/bin/sh
 name='suspend'
 version='1.0'
-sources=( "http://switch.dl.sourceforge.net/sourceforge/$name/$name-utils-$version.tar.bz2" )
+sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/$name-utils-$version.tar.bz2" )
 homepage="http://suspend.sourceforge.net/"
 license='GPLv2'
 
