@@ -181,6 +181,9 @@ process_commandline_options() {
 			binit_net_addr\=*)
 				binit_net_addr=$(get_opt $i)
 			;;
+			binit_net_route\=*)
+				binit_net_routes="${binit_net_routes} $(get_opt $i)"
+			;;
 			binit_net_gw\=*)
 				binit_net_gw=$(get_opt $i)
 			;;
@@ -413,8 +416,16 @@ SetupNetwork() {
 
 	einfo "Bringing up ${binit_net_if} interface ..."
 	run ip link set up dev "${binit_net_if}"
+
 	einfo "Setting ${binit_net_addr} on ${binit_net_if} ..."
 	run ip addr add "${binit_net_addr}" dev "${binit_net_if}"
+
+	if [ -n "${binit_net_routes}" ]; then
+		einfo "Adding routes${binit_net_routes}"
+		for route in ${binit_net_routes} ; do
+			run ip route add "${route}" dev "${binit_net_if}"
+		done
+	fi
 
 	if [ -n "${binit_net_gw}" ]; then
 		einfo "Setting default routing via '${binit_net_gw}' ..."
