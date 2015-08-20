@@ -1,5 +1,8 @@
 For details check git history.
 
+devel branch:
+	- Support for additonal routing tables via binit_net_route= param (Aaron Jones)
+
 v0.9.1:
 	- Support for console= kernel param. (Contributed by manwe)
 	- VLAN support (Artem Sidorenko)
