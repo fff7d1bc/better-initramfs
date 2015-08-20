@@ -421,8 +421,8 @@ SetupNetwork() {
 	run ip addr add "${binit_net_addr}" dev "${binit_net_if}"
 
 	if [ -n "${binit_net_routes}" ]; then
-		einfo "Adding routes${binit_net_routes}"
-		for route in ${binit_net_routes} ; do
+		for route in ${binit_net_routes}; do
+			einfo "Adding additional route '${route}' ..."
 			run ip route add "${route}" dev "${binit_net_if}"
 		done
 	fi
