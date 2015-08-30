@@ -90,6 +90,39 @@ run_hooks() {
 	fi
 }
 
+populate_dev_disk_by_label_and_uuid() {
+	# Create /dev/disk/by-{uuid,label} symlinks.
+	# We could run it with mdev as a trigger on event,
+	# but binit uses devtmpfs by default.
+
+	# It is possible that later whatever manages /dev
+	# will not probe block device and create symlinks,
+	# so we should do it before we move /dev to /newroot/dev
+
+	# Fix for an issue reported under Gentoo's bug #559026.
+
+	local block_device blkid_output LABEL UUID TYPE
+	local vars
+
+	einfo "Populating /dev/disk/by-{uuid,label} ..."
+
+	dodir /dev/disk /dev/disk/by-uuid /dev/disk/by-label
+
+	for block_device in /sys/class/block/*; do
+		unset blkid_output LABEL UUID TYPE
+
+		block_device="${block_device##*/}"
+
+		blkid_output="$(blkid "/dev/${block_device}")"
+		[ "${blkid_output}" ] || continue
+		vars="${blkid_output#*:}"
+		eval "${vars}"
+
+		[ "${LABEL}" ] && run ln -s "../../${block_device}" "/dev/disk/by-label/${LABEL}"
+		[ "${UUID}" ] && run ln -s "../../${block_device}" "/dev/disk/by-uuid/${UUID}"
+	done
+}
+
 resolve_device() {
 	# This function will check if variable at $1 contain LABEL or UUID and then, if LABEL/UUID is vaild.	
 	device="$(eval echo \$$1)"

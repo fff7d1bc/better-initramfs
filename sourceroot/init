@@ -77,6 +77,8 @@ use softraid InitializeSoftwareRaid && use bcache register_bcache_devices
 use lvm InitializeLVM && use bcache register_bcache_devices
 use luks InitializeLUKS && use lvm InitializeLVM && use bcache register_bcache_devices
 
+populate_dev_disk_by_label_and_uuid
+
 use rescueshell rescueshell
 use swsusp && SwsuspResume
 use uswsusp && UswsuspResume
