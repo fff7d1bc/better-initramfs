@@ -370,6 +370,7 @@ SwsuspResume() {
 	if [ -f '/sys/power/resume' ]; then
 		local resume_majorminor="$(get_majorminor "${resume}")"
 		musthave resume_majorminor
+		einfo 'Sending resume device to /sys/power/resume ...'
 		echo "${resume_majorminor}" > /sys/power/resume
 	else
 		ewarn "Apparently this kernel does not support suspend."
