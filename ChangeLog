@@ -4,6 +4,8 @@ devel branch:
 	- Support for additonal routing tables via binit_net_route= param (Aaron Jones)
 	- Populate /dev/disk/ with by-uuid and by-label symlinks before switching
 	  to newroot. Fixes bug reported at Gentoo's bugzilla #559026.
+	- Fix rootflags not being passed to mount if rootfstype is not provided.
+	  Reported by grondinm on github as issue #34.
 
 v0.9.1:
 	- Support for console= kernel param. (Contributed by manwe)

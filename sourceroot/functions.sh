@@ -558,6 +558,7 @@ boot_newroot() {
 
 emount() {
 	# All mounts into one place is good idea.
+	local mountparams
 	while [ "$#" -gt 0 ]; do
 		case $1 in
 			'/newroot')
@@ -566,8 +567,11 @@ emount() {
 				else	
 					einfo "Mounting /newroot..."
 					musthave root
+					if [ "${rootfsmountparams}" ]; then
+						mountparams="${rootfsmountparams}"
+					fi
 					if [ -n "${rootfstype}" ]; then 
-						local mountparams="${rootfsmountparams} -t ${rootfstype}"
+						mountparams="${mountparams} -t ${rootfstype}"
 					fi
 					resolve_device root
 					run mount -o ${root_rw_ro:-ro} ${mountparams} "${root}" '/newroot'
