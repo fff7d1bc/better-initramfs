@@ -1,8 +1,8 @@
 #!/bin/sh
 name='cryptsetup'
-version='1.6.3'
-sources=( "http://$name.googlecode.com/files/$name-$version.tar.bz2" )
-homepage='http://busybox.net/'
+version='1.6.8'
+sources=( "https://www.kernel.org/pub/linux/utils/${name}/v1.6/${name}-${version}.tar.xz" )
+homepage='https://gitlab.com/cryptsetup/cryptsetup'
 license='GPLv2'
 
 build_cmd="
