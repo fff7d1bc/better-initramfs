@@ -6,6 +6,8 @@ devel branch:
 	  to newroot. Fixes bug reported at Gentoo's bugzilla #559026.
 	- Fix rootflags not being passed to mount if rootfstype is not provided.
 	  Reported by grondinm on github as issue #34.
+	- Version bumps:
+		cryptsetup 1.6.3 -> 1.6.8
 
 v0.9.1:
 	- Support for console= kernel param. (Contributed by manwe)
