@@ -1,6 +1,6 @@
 #!/bin/sh
 name='lzo'
-version='2.06'
+version='2.09'
 sources=( "http://www.oberhumer.com/opensource/lzo/download/$name-$version.tar.gz" )
 homepage='http://www.oberhumer.com/opensource/lzo/'
 license='GPLv2'

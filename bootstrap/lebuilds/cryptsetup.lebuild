@@ -1,7 +1,7 @@
 #!/bin/sh
 name='cryptsetup'
-version='1.6.8'
-sources=( "https://www.kernel.org/pub/linux/utils/${name}/v1.6/${name}-${version}.tar.xz" )
+version='1.7.0'
+sources=( "https://www.kernel.org/pub/linux/utils/${name}/v1.7/${name}-${version}.tar.xz" )
 homepage='https://gitlab.com/cryptsetup/cryptsetup'
 license='GPLv2'
 

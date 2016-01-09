@@ -1,6 +1,6 @@
 #!/bin/sh
 name='mdadm'
-version='3.2.6'
+version='3.3.4'
 sources=( "http://www.kernel.org/pub/linux/utils/raid/$name/$name-$version.tar.xz" )
 homepage='http://neil.brown.name/blog/mdadm'
 license='GPLv2'

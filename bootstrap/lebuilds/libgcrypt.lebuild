@@ -1,6 +1,6 @@
 #!/bin/sh
 name='libgcrypt'
-version='1.6.0'
+version='1.6.4'
 sources=( "ftp://ftp.gnupg.org/gcrypt/libgcrypt/$name-$version.tar.bz2" )
 homepage='http://www.gnupg.org/'
 license='LGPLv2.1'

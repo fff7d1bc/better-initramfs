@@ -7,7 +7,13 @@ devel branch:
 	- Fix rootflags not being passed to mount if rootfstype is not provided.
 	  Reported by grondinm on github as issue #34.
 	- Version bumps:
-		cryptsetup 1.6.3 -> 1.6.8
+		cryptsetup 1.6.3 -> 1.7.0
+		dropbear 2013.62 -> 2015.71
+		libgcrypt 1.6.0 -> 1.6.4
+		libgpg-error 1.12 -> 1.20
+		lzo 2.06 -> 2.09
+		mdadm 3.2.6 -> 3.3.4 (also dropped patches for mdadm)
+		pciutils 3.1.10 -> 3.4.1
 
 v0.9.1:
 	- Support for console= kernel param. (Contributed by manwe)
