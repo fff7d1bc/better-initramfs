@@ -1,3 +1,5 @@
+* Switch to latest Aboriginal with MUSL
+* Update all the deps to latests version
 * Support loadable kernel modules.
 * Support for key on external device (enc_keydev and enc_keyfile).
 * Support for squashfs in root variable, example: root=SQUASHFS=livecd.img
