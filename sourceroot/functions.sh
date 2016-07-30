@@ -118,8 +118,8 @@ populate_dev_disk_by_label_and_uuid() {
 		vars="${blkid_output#*:}"
 		eval "${vars}"
 
-		[ "${LABEL}" ] && run ln -sf "../../${block_device}" "/dev/disk/by-label/${LABEL}"
-		[ "${UUID}" ] && run ln -sf "../../${block_device}" "/dev/disk/by-uuid/${UUID}"
+		[ "${LABEL}" ] && ! [ -e "/dev/disk/by-label/${LABEL}" ] && run ln -s "../../${block_device}" "/dev/disk/by-label/${LABEL}"
+		[ "${UUID}" ] && ! [ -e "/dev/disk/by-uuid/${UUID}" ] && run ln -s "../../${block_device}" "/dev/disk/by-uuid/${UUID}"
 	done
 }
 
