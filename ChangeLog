@@ -14,6 +14,7 @@ devel branch:
 		lzo 2.06 -> 2.09
 		mdadm 3.2.6 -> 3.3.4 (also dropped patches for mdadm)
 		pciutils 3.1.10 -> 3.4.1
+	- populate_dev_disk_by_label_and_uuid: do not overwrite symlinks.
 
 v0.9.1:
 	- Support for console= kernel param. (Contributed by manwe)
