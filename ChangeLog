@@ -1,6 +1,8 @@
 For details check git history.
 
 devel branch:
+
+v0.9.1:
 	- Support for additonal routing tables via binit_net_route= param (Aaron Jones)
 	- Populate /dev/disk/ with by-uuid and by-label symlinks before switching
 	  to newroot. Fixes bug reported at Gentoo's bugzilla #559026.
