@@ -155,6 +155,9 @@ process_commandline_options() {
 			luks)
 				luks=true
 			;;
+			crypto_args)
+				crypto_args=$(get_opt $i)
+			;;
 			lvm)
 				lvm=true
 			;;
@@ -321,7 +324,7 @@ InitializeLUKS() {
 		run echo -e "#!/bin/sh\nexit 0" > /sbin/udevadm
 		run chmod 755 /sbin/udevadm
 
-		local cryptsetup_args=""
+		local cryptsetup_args=${crypto_args}
 		if ! use luks_no_discards; then
 			cryptsetup_args="${cryptsetup_args} --allow-discards"
 		fi

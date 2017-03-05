@@ -94,6 +94,8 @@ lvm
   Scan all disks for volume groups and activate them.
 luks
   do ``cryptsetup luksOpen`` on enc_root variable.
+crypto_args=<args>
+  pass arguments onto cryptsetup if luks is used, like ``crypto_args="--key-file /key.file"``. Note that ``--tries`` is set to 25 and that the ``--allow-discards`` argument is handeled by the ``luks_no_discards`` paramater.
 enc_root=<device>
   for example ``/dev/sda2`` if sda2 is your encrypted rootfs. This variable is ignored if luks isn't enabled. You can specify multiple devices with colon as spearator, like ``enc_root=/dev/sda2:/dev/sdb2:/dev/vda1``.
 root=<device>
