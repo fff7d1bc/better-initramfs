@@ -152,6 +152,15 @@ process_commandline_options() {
 			enc_root\=*)
 				enc_root=$(get_opt $i)
 			;;
+			enc_keydev\=*)
+				enc_keydev=$(get_opt $i)
+			;;
+			enc_keyfile\=*)
+				enc_keyfile=$(get_opt $i)
+			;;
+			enc_keyoption\=*)
+				enc_keyoption="${enc_keyoption} $(get_opt $i)"
+			;;
 			luks)
 				luks=true
 			;;
@@ -330,6 +339,15 @@ InitializeLUKS() {
 			askpass "Enter passphrase for ${enc_dev}: " | run cryptsetup --tries 1 --key-file=- luksOpen ${cryptsetup_args} "${enc_dev}" "${dev_name}"
 			# Remove the fifo, askpass will create new if needed (ex multiple devices).
 			rm '/luks_passfifo'
+		elif use enc_keyfile; then
+			emount '/var/run/enc_keydev'
+			local enc_loop=$(losetup -f)
+			run losetup ${enc_loop} "/var/run/enc_keydev/${enc_keyfile}"
+			run cryptsetup luksOpen ${enc_loop} lukskey
+			run cryptsetup --key-file=/dev/mapper/lukskey ${enc_keyoption} luksOpen "${enc_dev}" "${dev_name}"
+			run cryptsetup luksClose lukskey
+			run losetup -d ${enc_loop}
+			eumount '/var/run/enc_keydev'
 		else
 			run cryptsetup luksOpen --tries 25 ${cryptsetup_args} "${enc_dev}" "${dev_name}"
 		fi
@@ -628,6 +646,11 @@ emount() {
 			'/sys')
 				einfo "Mounting /sys..."
 				run mount -t sysfs sysfs /sys
+			;;
+
+			'/var/run/enc_keydev')
+				einfo "Mounting /var/run/enc_keydev..."
+				run mount ${enc_keydev} '/var/run/enc_keydev'
 			;;
 
 			*)

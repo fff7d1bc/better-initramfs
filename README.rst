@@ -96,6 +96,12 @@ luks
   do ``cryptsetup luksOpen`` on enc_root variable.
 enc_root=<device>
   for example ``/dev/sda2`` if sda2 is your encrypted rootfs. This variable is ignored if luks isn't enabled. You can specify multiple devices with colon as spearator, like ``enc_root=/dev/sda2:/dev/sdb2:/dev/vda1``.
+enc_keydev=<device>
+  for example ``/dev/mmcblk0p1`` if you have a keyfile on mmcblk0p1.
+enc_keyfile=<path/to/keyfile>
+  the path where the keyfile can be found, e.g. ``keyfile``.
+enc_keyoption=<option>
+  options for keyfile, .e.g ``--keyfile-size=byte --keyfile-offset=byte``.
 root=<device>
   for example ``/dev/mapper/enc_root`` if you have LUKS-encrypted rootfs, ``/dev/mapper/vg-rootfs`` or similar if lvm or just ``/dev/sdXX`` if you haven't rootfs over lvm or encrypted.
 rootfstype=<filesystem type>
@@ -115,6 +121,35 @@ Custom storage layouts like LVM, Software RAID or BCACHE and 'real' system.
 When one gets storage initialized on better-initramfs level there's no need for 'real' system to provide anykind of userspace support for it later (unless some crazy usecases), meaning LVM will be up and running without lvm2 installed on system, same goes for software raid without mdadm, DM Crypt LUKS without cryptsetup and bcache without bcache-tools.
 
 From the system point of view, there are already block devices when /sbin/init of 'real' system is executed so there's no need to bring up any userspace for given storage solutions, fully transparent and effective.
+
+Keyfile
+=======
+
+We have luks-encrypted keyfile for luks-encrypted device. The function is inspired by `frostschutz <http://askubuntu.com/questions/323115/how-do-i-use-dm-crypt-luks-with-gnupg-to-use-two-factor-for-fde>`_. But this is a revised version. Here is how to generage and use a keyfile:
+
+First, start by create a keyfile container::
+
+        dd if=/dev/urandom of=keyfile bs=1M count=10
+
+Next, create the device node ``/dev/loop0``, so that we can mount or use out container:: 
+
+        losetup /dev/loop0 keyfile
+
+Then, setup luks encryption for the device::
+
+        cryptsetup options luksFormat /dev/loop0
+
+Open the device and you will get a keyfile filled with random numbers in ``/dev/mapper/lukskey``::
+
+        cryptsetup options luksOpen /dev/loop0 lukskey
+
+Add the keyfile (since we created a 10M file which is exceeded maximum keyfile size, we need to use --keyfile-size and optionally --keyfile-offset option)::
+
+        cryptsetup --new-keyfile-size=byte --new-keyfile-offset=byte lurksAddKey /your/lurk/partition /dev/mapper/lukskey
+
+Finally, add grub option like this::
+
+        enc_keyfile=path/to/your/keyfile enc_keydevice=/path/to/your/device enc_keyoption=--keyfile-size=byte enc_keyoption=--keyfile-offset=byte
 
 Hooks
 =====
