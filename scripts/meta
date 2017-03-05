@@ -152,6 +152,28 @@ image() {
 	fi
 }
 
+image-no-gz() {
+	if ! [ -f "${sourceroot}/bin/busybox" ]; then die "Initramfs will not work without busybox."; fi
+
+	einfo 'Building image...'
+
+	( cd "${sourceroot}" && find . | cpio --quiet -H newc -o > ../output/initramfs.cpio.gz)
+
+	if [ -f "${sourceroot}/../output/initramfs.cpio" ]; then
+		einfo "output/initramfs.cpio is ready."
+	else
+		die "There is no initramfs.cpio, something goes wrong."
+	fi
+
+	if [ -f "${sourceroot}/etc/dropbear/dropbear_rsa_host_key" ] || [ -f "${sourceroot}/etc/dropbear/dropbear_dss_host_key" ]; then
+		echo
+		ewarn "Your initramfs image contains sshd's server-side keys."
+		ewarn "Redistributing this image will be a security risk"
+		ewarn "for any server you use this initramfs on."
+		echo
+	fi
+}
+
 gen_sshd_keys() {
 	umask 077
 	if ! [ -f "${sourceroot}/bin/dropbearkey" ]; then die "You need dropbear ssh to generate keys."; fi

@@ -4,6 +4,8 @@ help:
 	@scripts/meta help
 image:
 	@scripts/meta image
+image-no-gz:
+	@scripts/meta image-no-gz
 clean:
 	@scripts/meta clean
 prepare:
