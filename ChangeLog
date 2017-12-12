@@ -1,6 +1,8 @@
 For details check git history.
 
 devel branch:
+	- Version bumps:
+		dropbear: 2015.71 -> 2017.75
 
 v0.9.1:
 	- Support for additonal routing tables via binit_net_route= param (Aaron Jones)
