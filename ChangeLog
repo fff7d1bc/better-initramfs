@@ -2,8 +2,10 @@ For details check git history.
 
 devel branch:
 	- Version bumps:
+	    sysroot Aboriginal Linux 1.2.0 -> Alpine Linux 3.7.0
 		dropbear 2015.71 -> 2017.75
 		lvm2 2.02.103 -> 2.02.177
+		busybox 1.21.1 -> 1.27.2
 
 v0.9.1:
 	- Support for additonal routing tables via binit_net_route= param (Aaron Jones)
