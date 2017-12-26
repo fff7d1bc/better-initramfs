@@ -7,7 +7,7 @@ license='MIT'
 
 build_cmd="
     cd /source/${name}-${version} && \
-    ./configure --prefix=/binit/prefix --with-zlib=\$(pkg-config --variable=prefix zlib) && \
+    ./configure --prefix=/binit/prefix && \
     make MULTI='1' PROGRAMS='dropbear dropbearkey dbclient' -j ${cores_num:-1} && \
     make MULTI='1' PROGRAMS='dropbear dropbearkey dbclient' install
 "
