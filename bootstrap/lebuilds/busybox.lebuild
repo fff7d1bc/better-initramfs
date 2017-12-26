@@ -9,6 +9,7 @@ build_cmd="
     cd /source/${name}-${version} && \
     make silentoldconfig && \
     make -j ${cores_num:-1} && \
+    true > busybox.links && \
     make CONFIG_PREFIX=/binit/prefix install
 "
 
