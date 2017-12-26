@@ -1,7 +1,7 @@
 For details check git history.
 
 devel branch:
-	- libgcrypt is now always built with O3 instead of Os.
+	- cryptsetup and libgcrypt is now always built with O3 instead of Os.
 	- Version bumps:
 	    sysroot Aboriginal Linux 1.2.0 -> Alpine Linux 3.7.0
 		dropbear 2015.71 -> 2017.75
@@ -11,6 +11,7 @@ devel branch:
 		libuuid 2.21.2 -> 2.31.1
 		libgpg-error 1.20 -> 1.27
 		libgcrypt 1.6.4 -> 1.8.2
+		json-c 0.13 (new dependency)
 
 v0.9.2:
 	- Support for additonal routing tables via binit_net_route= param (Aaron Jones)
