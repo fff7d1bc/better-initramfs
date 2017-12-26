@@ -98,7 +98,17 @@ install_source() {
 }
 
 build_source() {
-	if env -i PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" HOME="/root" TERM="${TERM}" CFLAGS="-Os -pipe -fomit-frame-pointer" CXXFLAGS="-Os -pipe -fomit-frame-pointer" chroot "${build_dir}" /bin/sh -c "${build_cmd:-false}"; then
+	if env -i \
+        PATH="/binit/prefix/bin:/binit/prefix/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+        HOME="/root" \
+        TERM="${TERM}" \
+        CFLAGS="-Os -pipe -fomit-frame-pointer -static" \
+        CXXFLAGS="-Os -pipe -fomit-frame-pointer -static" \
+        LDFLAGS='-static -L/binit/prefix/lib' \
+        CPPFLAGS='-I/binit/prefix/include' \
+        PKG_CONFIG_PATH='/binit/prefix/lib/pkgconfig/' \
+        chroot "${build_dir}" /bin/sh -c "umask 022 && ${build_cmd:-false}"
+    then
 		einfo "Finished: $name-$version"
 	else
 		die "Failed: $name-$version"
@@ -107,7 +117,7 @@ build_source() {
 
 print_help() {
 cat << EOF
-${0##*/} v0.1 - Simple build system using Aboriginal Linux - http://landley.net/aboriginal/.
+${0##*/} v0.1.1 - Simple build system using Alpine Linux sysroot.
 	
 	You should run it as root (as we use chroot).
 
@@ -125,7 +135,7 @@ case "$1" in
 	init)
 		case "$2" in
 			i586|i686|x86)
-				arch='i586'
+				arch='x86'
 			;;
 			x86_64)
 				arch='x86_64'
@@ -135,10 +145,9 @@ case "$1" in
 			;;
 		esac
 		einfo "Preparing '${build_dir}' ..."
-		aboriginal_version='1.2.0'
-		aboriginal_url="https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/aboriginal-${aboriginal_version}-${arch}_with_ftw+nftw.tar.bz2"
-		rootfs_tarball="${distfiles}/${aboriginal_url##*/}"
-		fetch_source "${aboriginal_url}"
+		sysroot_url="https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/alpine-3.7.0-${arch}-sysroot.tar.xz"
+		rootfs_tarball="${distfiles}/${sysroot_url##*/}"
+		fetch_source "${sysroot_url}"
 		if [ -d "${build_dir}" ]; then
 			einfo "Build dir exist, cleaning ..."
 			rm -rf "${build_dir}"
