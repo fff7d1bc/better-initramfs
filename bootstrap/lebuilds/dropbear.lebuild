@@ -1,7 +1,7 @@
 #!/bin/sh
 name='dropbear'
 version='2017.75'
-sources=( "http://matt.ucc.asn.au/${name}/releases/${name}-${version}.tar.bz2" )
+sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/${name}-${version}.tar.bz2" )
 homepage='https://matt.ucc.asn.au/dropbear/dropbear.html'
 license='MIT'
 

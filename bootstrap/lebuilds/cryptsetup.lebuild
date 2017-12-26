@@ -1,7 +1,7 @@
 #!/bin/sh
 name='cryptsetup'
 version='2.0.0'
-sources=( "https://www.kernel.org/pub/linux/utils/${name}/v2.0/${name}-${version}.tar.xz" )
+sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/${name}-${version}.tar.xz" )
 homepage='https://gitlab.com/cryptsetup/cryptsetup'
 license='GPLv2'
 
