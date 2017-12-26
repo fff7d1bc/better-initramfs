@@ -14,7 +14,7 @@ build_cmd="
 	--disable-libsmartcols \
 	--disable-libfdisk && \
 	make -j ${cores_num:-1} libuuid.la && \
-	make install-usrlib_execLTLIBRARIES
+	make install-usrlib_execLTLIBRARIES install-uuidincHEADERS
 "
 
 fetch_source
