@@ -1,6 +1,7 @@
 For details check git history.
 
 devel branch:
+	- libgcrypt is now always built with O3 instead of Os.
 	- Version bumps:
 	    sysroot Aboriginal Linux 1.2.0 -> Alpine Linux 3.7.0
 		dropbear 2015.71 -> 2017.75
@@ -8,8 +9,10 @@ devel branch:
 		busybox 1.21.1 -> 1.27.2
 		zlib 1.2.8 -> 1.2.11
 		libuuid 2.21.2 -> 2.31.1
+		libgpg-error 1.20 -> 1.27
+		libgcrypt 1.6.4 -> 1.8.2
 
-v0.9.1:
+v0.9.2:
 	- Support for additonal routing tables via binit_net_route= param (Aaron Jones)
 	- Populate /dev/disk/ with by-uuid and by-label symlinks before switching
 	  to newroot. Fixes bug reported at Gentoo's bugzilla #559026.
