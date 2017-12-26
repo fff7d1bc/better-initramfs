@@ -89,8 +89,8 @@ prepare() {
 		ewarn "No askpass found, LUKS support will not work if sshd is enabled."
 	fi
 
-	if test -f lvm.static; then
-		cp lvm.static "${sourceroot}/bin/lvm"
+	if test -f lvm; then
+		cp lvm "${sourceroot}/bin/lvm"
 	else
 		ewarn "No lvm binary found, LVM support will be disabled."
 	fi
