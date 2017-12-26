@@ -8,16 +8,16 @@ license='LGPLv2.1'
 build_cmd="
     export CFLAGS=\"\$CFLAGS -O3\" && \
     export CXXFLAGS=\"\$CXXFLAGS -O3\" && \
-	cd /source/${name}-${version} && \
-	./configure \
+    cd /source/${name}-${version} && \
+    ./configure \
     --prefix=/binit/prefix \
     --with-libgpg-error-prefix=/binit/prefix \
-	--enable-static=yes \
-	--disable-padlock-support \
-	--enable-shared=no \
-	--enable-static=yes && \
-	make -j ${cores_num:-1} && \
-	make install
+    --enable-static=yes \
+    --disable-padlock-support \
+    --enable-shared=no \
+    --enable-static=yes && \
+    make -j ${cores_num:-1} && \
+    make install
 "
 
 fetch_source
