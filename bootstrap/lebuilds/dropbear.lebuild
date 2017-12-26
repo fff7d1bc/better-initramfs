@@ -5,9 +5,14 @@ sources=( "http://matt.ucc.asn.au/${name}/releases/${name}-${version}.tar.bz2" )
 homepage='https://matt.ucc.asn.au/dropbear/dropbear.html'
 license='MIT'
 
-build_cmd="cd /source/${name}-${version} && ./configure --prefix=/usr && PROGRAMS='dropbear dropbearkey dbclient' STATIC='1' MULTI=1 make -j ${cores_num:-1}"
+build_cmd="
+    cd /source/${name}-${version} && \
+    ./configure --prefix=/binit/prefix --with-zlib=\$(pkg-config --variable=prefix zlib) && \
+    make MULTI='1' PROGRAMS='dropbear dropbearkey dbclient' -j ${cores_num:-1} && \
+    make MULTI='1' PROGRAMS='dropbear dropbearkey dbclient' install
+"
 
-deploy="/source/${name}-${version}/dropbearmulti"
+deploy="/binit/prefix/bin/dropbearmulti"
 
 fetch_source
 install_source
