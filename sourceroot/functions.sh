@@ -143,46 +143,21 @@ process_commandline_options() {
 			initramfsdebug)
 				set -x
 			;;
-			luks)
-				luks=true
-			;;
-			lvm)
-				lvm=true
-			;;
-			softraid)
-				softraid=true
-			;;
-			rescueshell)
-				rescueshell=true
-			;;
-			swsusp)
-				swsusp=true
-			;;
-			tuxonice)
-				tuxonice=true
-			;;
 			ro|rw)
 				root_rw_ro=$i
 			;;
-			sshd)
-				sshd=true
-			;;
 			binit_net_route\=*)
+				# support multiple binit_net_route=.
 				binit_net_routes="${binit_net_routes} ${i#*=}"
 			;;
-			mdev)
-				mdev=true
-			;;
-			luks_no_discards)
-				luks_no_discards=true
-			;;
-			bcache)
-				bcache=true
-			;;
 			*=*)
-				# Catch-all.
+				# Catch-all for foo=bar.
 				export "${i%%=*}=${i#*=}"
 			;;
+			*)
+				# Everything that is not foo=bar should be just exported as 'true'
+				export "${i%%=*}=true"
+			:;
 		esac
 	done
 }
