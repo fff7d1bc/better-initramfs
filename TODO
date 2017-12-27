@@ -13,6 +13,5 @@
 * Support for remote unlock of multiple luks device (Note to self: check whatever fifo is open)
 * earlymount option to mount everything possible from /newroot/etc/fstab - that should be good idea if we want to have mountpoints in /var/log for example.
 * use debian's idea to rename suspend binary into uswsusp to make it less confusing.
-* rework process_commandline_options function, auto-add all cmdline options with equal sign.
 * Add deleyed_block_devices option. Whenever resolv_device() does not find device, wait 1s and repeat, default repeat 30 times. Make the counter configurable.
 * Support squash+union for system dirs, like /usr. Squashfs with lz4 pared with OverlayFS (v22+) for rw-layer and image rebuilding on-boot.
