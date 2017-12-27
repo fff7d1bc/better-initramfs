@@ -1,6 +1,11 @@
 For details check git history.
 
 devel branch:
+	- uswsusp support removed.
+	  I had mixed luck with this one, and found that the in-kernel swsusp just
+	  works, and after resume system is snappier. I don't think anyone used
+	  uswsusp, if there's any user, ping me, so I can make suspend-1.0 to be
+	  buildable with musl toolchain and restore the feature.
 	- All the dependencies are re-hosted under bitbucket account.
 	- cryptsetup and libgcrypt is now always built with O3 instead of Os.
 	- Version bumps:
@@ -14,6 +19,8 @@ devel branch:
 		libgcrypt 1.6.4 -> 1.8.2
 		json-c 0.13 (new dependency)
 		cryptsetup 1.7.0 -> 2.0.0
+		mdadm 3.3.6 -> 4.0
+		uswsusp/suspend removed
 
 v0.9.2:
 	- Support for additonal routing tables via binit_net_route= param (Aaron Jones)
