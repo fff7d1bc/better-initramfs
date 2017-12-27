@@ -39,66 +39,66 @@ die() { eerror "$@"; exit 1; }
 run() { "$@" || die "Command '$@' failed."; }
 
 fetch_source () {
-	if ! [ -d "${distfiles}" ]; then mkdir "${distfiles}"; fi
-	for source in "${sources[@]}" "$@"; do
-		if ! [ -f "${distfiles}/${source##*/}" ]; then
-			case "${source}" in
-				http://*|https://*|ftp://*)
-					einfo "Fetching ${source##*/} ..."
-					if [ -f "${distfiles}/${source##*/}.tmp" ]; then
-						rm -f "${distfiles}/${source##*/}.tmp"
-					fi
-					run wget "${source}" -O "${distfiles}/${source##*/}.tmp" && \
-					mv "${distfiles}/${source##*/}.tmp" "${distfiles}/${source##*/}"
-					if ! [ -s "${distfiles}/${source##*/}" ]; then
-						rm -f "${distfiles}/${source##*/}"
-						die "Unable to fetch ${source##*/}."
-					fi
-					
-				;;
-				*)
-					die "You have to provide '${source##*/}'."
-				;;
-			esac
-		fi
-	done; unset source
+    if ! [ -d "${distfiles}" ]; then mkdir "${distfiles}"; fi
+    for source in "${sources[@]}" "$@"; do
+        if ! [ -f "${distfiles}/${source##*/}" ]; then
+            case "${source}" in
+                http://*|https://*|ftp://*)
+                    einfo "Fetching ${source##*/} ..."
+                    if [ -f "${distfiles}/${source##*/}.tmp" ]; then
+                        rm -f "${distfiles}/${source##*/}.tmp"
+                    fi
+                    run wget "${source}" -O "${distfiles}/${source##*/}.tmp" && \
+                    mv "${distfiles}/${source##*/}.tmp" "${distfiles}/${source##*/}"
+                    if ! [ -s "${distfiles}/${source##*/}" ]; then
+                        rm -f "${distfiles}/${source##*/}"
+                        die "Unable to fetch ${source##*/}."
+                    fi
+                    
+                ;;
+                *)
+                    die "You have to provide '${source##*/}'."
+                ;;
+            esac
+        fi
+    done; unset source
 }
 
 install_source() {
-	if ! [ -d "${build_dir}/source" ]; then
-		mkdir "${build_dir}/source"
-	fi
-	for source in "${sources[@]}"; do
-		if ! [ -f "${distfiles}/${source##*/}" ]; then
-			die "Missing source."
-		else
-			case "${source##*/}" in
-				*.tar|*.tar.bz2|*.tar.xz|*.tar.gz|l*.tar.lzma|*.tgz|*.txz|*.tbz2)
-					einfo "Extracting '${source##*/}' ..."
-					if [ -d "${build_dir}/source/${name}-${version}" ]; then
-						einfo "Cleaning old source dir ..."
-						rm -rf "${build_dir}/source/${name}-${version}"
-					fi
-					mkdir -p "${build_dir}/source/${name}-${version}"
-					run tar xf "${distfiles}/${source##*/}" --strip-components 1 -C "${build_dir}/source/${name}-${version}"
-				;;
-				*)
-					mkdir -p "${build_dir}/source/${name}-${version}"
-					cp "${distfiles}/${source##*/}" "${build_dir}/source/${name}-${version}"
-				;;
-			esac
-			if [ -d "${workdir}/patches/${name}" ]; then
-				for patch in "${workdir}/patches/${name}"/*; do
-					einfo "Applying ${patch##*/} ..."
-					run patch -d "${build_dir}/source/${name}-${version}/" -p1 -i "${patch}" --silent
-				done
-			fi
-		fi
-	done; unset source
+    if ! [ -d "${build_dir}/source" ]; then
+        mkdir "${build_dir}/source"
+    fi
+    for source in "${sources[@]}"; do
+        if ! [ -f "${distfiles}/${source##*/}" ]; then
+            die "Missing source."
+        else
+            case "${source##*/}" in
+                *.tar|*.tar.bz2|*.tar.xz|*.tar.gz|l*.tar.lzma|*.tgz|*.txz|*.tbz2)
+                    einfo "Extracting '${source##*/}' ..."
+                    if [ -d "${build_dir}/source/${name}-${version}" ]; then
+                        einfo "Cleaning old source dir ..."
+                        rm -rf "${build_dir}/source/${name}-${version}"
+                    fi
+                    mkdir -p "${build_dir}/source/${name}-${version}"
+                    run tar xf "${distfiles}/${source##*/}" --strip-components 1 -C "${build_dir}/source/${name}-${version}"
+                ;;
+                *)
+                    mkdir -p "${build_dir}/source/${name}-${version}"
+                    cp "${distfiles}/${source##*/}" "${build_dir}/source/${name}-${version}"
+                ;;
+            esac
+            if [ -d "${workdir}/patches/${name}" ]; then
+                for patch in "${workdir}/patches/${name}"/*; do
+                    einfo "Applying ${patch##*/} ..."
+                    run patch -d "${build_dir}/source/${name}-${version}/" -p1 -i "${patch}" --silent
+                done
+            fi
+        fi
+    done; unset source
 }
 
 build_source() {
-	if env -i \
+    if env -i \
         PATH="/binit/prefix/bin:/binit/prefix/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
         HOME="/root" \
         TERM="${TERM}" \
@@ -109,92 +109,92 @@ build_source() {
         PKG_CONFIG_PATH='/binit/prefix/lib/pkgconfig/' \
         chroot "${build_dir}" /bin/sh -c "umask 022 && ${build_cmd:-false}"
     then
-		einfo "Finished: $name-$version"
-	else
-		die "Failed: $name-$version"
-	fi
+        einfo "Finished: $name-$version"
+    else
+        die "Failed: $name-$version"
+    fi
 }
 
 print_help() {
 cat << EOF
 ${0##*/} v0.1.1 - Simple build system using Alpine Linux sysroot.
-	
-	You should run it as root (as we use chroot).
+    
+    You should run it as root (as we use chroot).
 
 Usage:
-	$0 init <arch> - prepare build_root with specified arch. i486, i586, i686 and x86_64 is supported.
-	$0 build <name> - build <name> package.
+    $0 init <arch> - prepare build_root with specified arch. i486, i586, i686 and x86_64 is supported.
+    $0 build <name> - build <name> package.
 
 Example workflow, preparing dropbear.
-	$0 init i586
-	$0 build zlib dropbear
+    $0 init i586
+    $0 build zlib dropbear
 EOF
 }
 
 case "$1" in 
-	init)
-		case "$2" in
-			i586|i686|x86)
-				arch='x86'
-			;;
-			x86_64)
-				arch='x86_64'
-			;;
-			*)
-				die "init need arch argument, x86 or x86_64!"
-			;;
-		esac
-		einfo "Preparing '${build_dir}' ..."
-		sysroot_url="https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/alpine-3.7.0-${arch}-sysroot.tar.xz"
-		rootfs_tarball="${distfiles}/${sysroot_url##*/}"
-		fetch_source "${sysroot_url}"
-		if [ -d "${build_dir}" ]; then
-			einfo "Build dir exist, cleaning ..."
-			rm -rf "${build_dir}"
-		fi
-		mkdir "${build_dir}"
-		einfo "Unpacking '${rootfs_tarball##*/}' ..."
-		tar xf "${rootfs_tarball}" -C "${build_dir}/" --strip-components 1
-		cat /etc/resolv.conf > "${build_dir}/etc/resolv.conf"
-		echo "${arch}" > "${build_dir}/arch"
-		rmdir "${build_dir}/proc"
-		#mknod "${build_dir}/dev/console" c 5 1
-		mknod -m 666 "${build_dir}/"dev/null c 1 3
-		mknod -m 666 "${build_dir}/"dev/urandom c 1 9
-		mknod -m 666 "${build_dir}/"dev/random c 1 8
-		mknod -m 666 "${build_dir}/"dev/zero c 1 5
-	;;
-	build)
-		shift
-		if [ -z "${1}" ]; then
-			die "What do you want to build?"
-		fi
-		arguments="$#"
-		building_num='1'
-		if ! [ -d "${build_dir}" ]; then die "No build_dir, forgot to ${0} init <arch>?"; fi
-		while [ -n "$1" ]; do
-			if [ -f "${workdir}/lebuilds/$1.lebuild" ]; then
-				einfo "Building $1 (${building_num} of $arguments) ..."
-				(
-					unset name version sources build_cmd deploy
-					. "${workdir}/lebuilds/$1.lebuild"
-					if [ -n "${deploy}" ] && [ -f "${build_dir}/${deploy}" ]; then
-						if ! [ -d "${workdir}/output" ]; then mkdir "${workdir}/output"; fi
-						cp "${build_dir}/${deploy}" "${workdir}/output/"
-						strip -s "${workdir}/output/${deploy##*/}"
-					fi
-				) || die "Build failed: '$1'."
-			else
-				die "Wrong lebuild name."
-			fi
-		shift
-		building_num=$((building_num+1))
-		done
-		if [ "$#" = '0' ]; then
-			einfo "Everyting done."
-		fi
-	;;
-	*)
-		print_help; exit 1
-	;;
+    init)
+        case "$2" in
+            i586|i686|x86)
+                arch='x86'
+            ;;
+            x86_64)
+                arch='x86_64'
+            ;;
+            *)
+                die "init need arch argument, x86 or x86_64!"
+            ;;
+        esac
+        einfo "Preparing '${build_dir}' ..."
+        sysroot_url="https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/alpine-3.7.0-${arch}-sysroot.tar.xz"
+        rootfs_tarball="${distfiles}/${sysroot_url##*/}"
+        fetch_source "${sysroot_url}"
+        if [ -d "${build_dir}" ]; then
+            einfo "Build dir exist, cleaning ..."
+            rm -rf "${build_dir}"
+        fi
+        mkdir "${build_dir}"
+        einfo "Unpacking '${rootfs_tarball##*/}' ..."
+        tar xf "${rootfs_tarball}" -C "${build_dir}/" --strip-components 1
+        cat /etc/resolv.conf > "${build_dir}/etc/resolv.conf"
+        echo "${arch}" > "${build_dir}/arch"
+        rmdir "${build_dir}/proc"
+        #mknod "${build_dir}/dev/console" c 5 1
+        mknod -m 666 "${build_dir}/"dev/null c 1 3
+        mknod -m 666 "${build_dir}/"dev/urandom c 1 9
+        mknod -m 666 "${build_dir}/"dev/random c 1 8
+        mknod -m 666 "${build_dir}/"dev/zero c 1 5
+    ;;
+    build)
+        shift
+        if [ -z "${1}" ]; then
+            die "What do you want to build?"
+        fi
+        arguments="$#"
+        building_num='1'
+        if ! [ -d "${build_dir}" ]; then die "No build_dir, forgot to ${0} init <arch>?"; fi
+        while [ -n "$1" ]; do
+            if [ -f "${workdir}/lebuilds/$1.lebuild" ]; then
+                einfo "Building $1 (${building_num} of $arguments) ..."
+                (
+                    unset name version sources build_cmd deploy
+                    . "${workdir}/lebuilds/$1.lebuild"
+                    if [ -n "${deploy}" ] && [ -f "${build_dir}/${deploy}" ]; then
+                        if ! [ -d "${workdir}/output" ]; then mkdir "${workdir}/output"; fi
+                        cp "${build_dir}/${deploy}" "${workdir}/output/"
+                        strip -s "${workdir}/output/${deploy##*/}"
+                    fi
+                ) || die "Build failed: '$1'."
+            else
+                die "Wrong lebuild name."
+            fi
+        shift
+        building_num=$((building_num+1))
+        done
+        if [ "$#" = '0' ]; then
+            einfo "Everyting done."
+        fi
+    ;;
+    *)
+        print_help; exit 1
+    ;;
 esac
