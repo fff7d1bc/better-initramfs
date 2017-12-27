@@ -39,6 +39,10 @@ InitializeBusybox() {
 }
 
 rescueshell() {
+	if [ "${console}" ]; then
+		console="${console%,*}"
+	fi
+
 	if [ "$rescueshell" != 'true' ]; then
 		# If we did not forced rescueshell by kernel opt, print additional message.
 		ewarn "Dropping to rescueshell because of above error."
@@ -72,10 +76,6 @@ run() {
 		echo "$@" >> /.ash_history
 		rescueshell
 	fi
-}
-
-get_opt() {
-	echo "${*#*=}"
 }
 
 run_hooks() {
@@ -143,15 +143,6 @@ process_commandline_options() {
 			initramfsdebug)
 				set -x
 			;;
-			root\=*)
-				root=$(get_opt $i)
-			;;
-			init\=*)
-				init=$(get_opt $i)
-			;;
-			enc_root\=*)
-				enc_root=$(get_opt $i)
-			;;
 			luks)
 				luks=true
 			;;
@@ -170,59 +161,14 @@ process_commandline_options() {
 			tuxonice)
 				tuxonice=true
 			;;
-			resume\=*)
-				resume=$(get_opt $i)
-			;;
-			rootfstype\=*)
-				rootfstype=$(get_opt $i)
-			;;
-	
-			rootflags\=*)
-				rootfsmountparams="-o $(get_opt $i)"
-			;;
-	
 			ro|rw)
 				root_rw_ro=$i
 			;;
 			sshd)
 				sshd=true
 			;;
-			sshd_wait\=*)
-				sshd_wait=$(get_opt $i)
-			;;
-			sshd_port\=*)
-				sshd_port=$(get_opt $i)
-			;;
-			sshd_interface\=*)
-				# deprecated
-				sshd_interface=$(get_opt $i)
-			;;
-			sshd_ipv4\=*)
-				# deprecated
-				sshd_ipv4=$(get_opt $i)
-			;;
-			sshd_ipv4_gateway\=*)
-				# deprecated
-				sshd_ipv4_gateway=$(get_opt $i)
-			;;
-			binit_net_if\=*)
-				binit_net_if=$(get_opt $i)
-			;;
-			binit_net_addr\=*)
-				binit_net_addr=$(get_opt $i)
-			;;
 			binit_net_route\=*)
-				binit_net_routes="${binit_net_routes} $(get_opt $i)"
-			;;
-			binit_net_gw\=*)
-				binit_net_gw=$(get_opt $i)
-			;;
-			rootdelay\=*)
-				rootdelay=$(get_opt $i)
-			;;
-			console\=*)
-				console=$(get_opt $i)
-				console="${console%,*}"
+				binit_net_routes="${binit_net_routes} ${i#*=}"
 			;;
 			mdev)
 				mdev=true
@@ -232,6 +178,10 @@ process_commandline_options() {
 			;;
 			bcache)
 				bcache=true
+			;;
+			*=*)
+				# Catch-all.
+				export "${i%%=*}=${i#*=}"
 			;;
 		esac
 	done

@@ -1,6 +1,8 @@
 For details check git history.
 
 devel branch:
+	- simplify process_commandline_options() by dropping get_opt() all
+	  together
 	- uswsusp support removed.
 	  I had mixed luck with this one, and found that the in-kernel swsusp just
 	  works, and after resume system is snappier. I don't think anyone used
