@@ -2,6 +2,7 @@
 * Support root-less building with bubblewrap
 * Support root-less building with proot
 * rewrite lebuild to work inside sysroot instead of interacting with it from outside
+* Add fsck for ext2/3/4, btrfs and xfs as optional binaries.
 
 # OLD:
 * Support loadable kernel modules.
