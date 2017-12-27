@@ -167,9 +167,6 @@ process_commandline_options() {
 			swsusp)
 				swsusp=true
 			;;
-			uswsusp)
-				uswsusp=true
-			;;
 			tuxonice)
 				tuxonice=true
 			;;
@@ -372,16 +369,6 @@ SwsuspResume() {
 		musthave resume_majorminor
 		einfo 'Sending resume device to /sys/power/resume ...'
 		echo "${resume_majorminor}" > /sys/power/resume
-	else
-		ewarn "Apparently this kernel does not support suspend."
-	fi
-}
-
-UswsuspResume() {
-	musthave resume
-	resolve_device resume
-	if [ -f '/sys/power/resume' ]; then
-		run resume --resume_device "${resume}"
 	else
 		ewarn "Apparently this kernel does not support suspend."
 	fi
