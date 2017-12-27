@@ -1,7 +1,6 @@
 #!/bin/sh
 name='lvm2'
 version='2.02.177'
-sources=( "https://www.sourceware.org/pub/lvm2/releases/LVM2.${version}.tgz" )
 sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/LVM2.${version}.tgz" )
 homepage='http://sources.redhat.com/lvm2/'
 license='GPLv2'
