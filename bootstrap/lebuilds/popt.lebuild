@@ -1,7 +1,7 @@
 #!/bin/sh
 name='popt'
 version='1.16'
-sources=( "ftp://anduin.linuxfromscratch.org/BLFS/svn/p/$name-$version.tar.gz" )
+sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/${name}-${version}.tar.gz" )
 homepage='http://rpm5.org/'
 license='MIT'
 
