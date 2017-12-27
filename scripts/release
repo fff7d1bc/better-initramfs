@@ -81,7 +81,7 @@ generate_README.binary() {
 		)
 	done
 	echo
-	echo "All built via Aboriginal Linux - http://landley.net/aboriginal/"
+	echo "All built using Alpine Linux sysroot"
 }
 
 if ! [ -d "${workdir}/tmp" ]; then
