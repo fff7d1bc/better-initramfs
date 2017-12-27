@@ -5,9 +5,14 @@ sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/vlan.
 homepage='http://www.candelatech.com/~greear/vlan.html'
 license='GPL-2'
 
-build_cmd="cd /source/${name}-${version} && make purge && make CFLAGS='-Os' LDFLAGS='-static' vconfig"
+build_cmd="
+    cd /source/${name}-${version} && \
+    make purge && \
+    make vconfig && \
+    install vconfig -m 755 /binit/prefix/sbin/vconfig
+"
 
-deploy="/source/${name}-${version}/vconfig"
+deploy="/binit/prefix/sbin/vconfig"
 
 fetch_source
 install_source
