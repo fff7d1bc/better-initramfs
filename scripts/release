@@ -31,7 +31,7 @@ scriptpath="$(readlink -f "${0}")"
 workdir="${scriptpath%/*}"
 workdir="$(readlink -f "${workdir}/../")"
 
-arches='i586 x86_64'
+arches='x86 x86_64'
 
 die() {
 	echo -e "\033[1;30m>\033[0;31m>\033[1;31m> ERROR:\033[0m ${@}" && exit 1

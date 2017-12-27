@@ -50,7 +50,7 @@ fi
 
 case "${arch}" in
 	i586|i686|x86)
-		arch='i586'
+		arch='i686'
 	;;
 	x86_64)
 		arch='x86_64'

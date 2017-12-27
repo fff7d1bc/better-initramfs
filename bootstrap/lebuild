@@ -122,11 +122,11 @@ ${0##*/} v0.1.1 - Simple build system using Alpine Linux sysroot.
     You should run it as root (as we use chroot).
 
 Usage:
-    $0 init <arch> - prepare build_root with specified arch. i486, i586, i686 and x86_64 is supported.
+    $0 init <arch> - prepare build_root with specified arch. x86 and x86_64 is supported.
     $0 build <name> - build <name> package.
 
 Example workflow, preparing dropbear.
-    $0 init i586
+    $0 init x86
     $0 build zlib dropbear
 EOF
 }
