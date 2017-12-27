@@ -1,22 +1,24 @@
 #!/bin/sh
 name='cryptsetup'
-version='1.7.0'
-sources=( "https://www.kernel.org/pub/linux/utils/${name}/v1.7/${name}-${version}.tar.xz" )
+version='2.0.0'
+sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/${name}-${version}.tar.xz" )
 homepage='https://gitlab.com/cryptsetup/cryptsetup'
 license='GPLv2'
 
 build_cmd="
-	cd /source/${name}-${version} && \
-	./configure --prefix=/usr \
-	--mandir=/usr/man \
-	--disable-nls \
-	--enable-static=yes \
-	--enable-shared=no \
-	--enable-static-cryptsetup && \
-	make -j ${cores_num:-1}
+    export CFLAGS=\"\$CFLAGS -O3\" && \
+    export CXXFLAGS=\"\$CXXFLAGS -O3\" && \
+    cd /source/${name}-${version} && \
+    ./configure --prefix=/binit/prefix \
+    --disable-nls \
+    --enable-static=yes \
+    --enable-shared=no \
+    --enable-static-cryptsetup && \
+    make -j ${cores_num:-1} && \
+    make install
 "
 
-deploy="/source/${name}-${version}/src/cryptsetup.static"
+deploy="/binit/prefix/sbin/cryptsetup.static"
 
 fetch_source
 install_source

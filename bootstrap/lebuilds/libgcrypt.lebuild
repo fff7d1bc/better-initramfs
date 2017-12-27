@@ -1,19 +1,23 @@
 #!/bin/sh
 name='libgcrypt'
-version='1.6.4'
-sources=( "ftp://ftp.gnupg.org/gcrypt/libgcrypt/$name-$version.tar.bz2" )
+version='1.8.2'
+sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/${name}-${version}.tar.bz2" )
 homepage='http://www.gnupg.org/'
 license='LGPLv2.1'
 
 build_cmd="
-	cd /source/${name}-${version} && \
-	./configure --prefix=/usr \
-	--disable-padlock-support \
-	--enable-shared=no \
-	--enable-static=yes && \
-	make -j ${cores_num:-1} && \
-	make install && \
-	if ! [ -e /bin/fgrep ]; then ln -s /bin/busybox /bin/fgrep; fi
+    export CFLAGS=\"\$CFLAGS -O3\" && \
+    export CXXFLAGS=\"\$CXXFLAGS -O3\" && \
+    cd /source/${name}-${version} && \
+    ./configure \
+    --prefix=/binit/prefix \
+    --with-libgpg-error-prefix=/binit/prefix \
+    --enable-static=yes \
+    --disable-padlock-support \
+    --enable-shared=no \
+    --enable-static=yes && \
+    make -j ${cores_num:-1} && \
+    make install
 "
 
 fetch_source

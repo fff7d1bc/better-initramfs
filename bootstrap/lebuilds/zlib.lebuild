@@ -1,11 +1,15 @@
 #!/bin/sh
 name='zlib'
-version='1.2.8'
+version='1.2.11'
 sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/${name}-${version}.tar.gz" )
 homepage="http://www.zlib.net/"
 license='ZLIB'
 
-build_cmd="cd /source/${name}-${version} && ./configure --prefix=/usr && make -j ${cores_num:-1} && make install"
+build_cmd="
+    cd /source/${name}-${version} && \
+    ./configure --prefix=/binit/prefix --static && \
+    make -j ${cores_num:-1} && \
+    make install"
 
 fetch_source
 install_source

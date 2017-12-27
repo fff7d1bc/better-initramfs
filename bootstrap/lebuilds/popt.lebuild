@@ -6,12 +6,11 @@ homepage='http://rpm5.org/'
 license='MIT'
 
 build_cmd="
-	cd /source/${name}-${version} && \
-	./configure --prefix=/usr \
-	--mandir=/usr/man \
-	--disable-nls && \
-	make -j ${cores_num:-1} && \
-	make install
+    cd /source/${name}-${version} && \
+    ./configure --prefix=/binit/prefix \
+    --disable-nls && \
+    make -j ${cores_num:-1} && \
+    make install
 "
 
 fetch_source

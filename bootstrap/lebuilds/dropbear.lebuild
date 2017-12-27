@@ -1,13 +1,18 @@
 #!/bin/sh
 name='dropbear'
 version='2017.75'
-sources=( "http://matt.ucc.asn.au/${name}/releases/${name}-${version}.tar.bz2" )
+sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/${name}-${version}.tar.bz2" )
 homepage='https://matt.ucc.asn.au/dropbear/dropbear.html'
 license='MIT'
 
-build_cmd="cd /source/${name}-${version} && ./configure --prefix=/usr && PROGRAMS='dropbear dropbearkey dbclient' STATIC='1' MULTI=1 make -j ${cores_num:-1}"
+build_cmd="
+    cd /source/${name}-${version} && \
+    ./configure --prefix=/binit/prefix && \
+    make MULTI='1' PROGRAMS='dropbear dropbearkey dbclient' -j ${cores_num:-1} && \
+    make MULTI='1' PROGRAMS='dropbear dropbearkey dbclient' install
+"
 
-deploy="/source/${name}-${version}/dropbearmulti"
+deploy="/binit/prefix/bin/dropbearmulti"
 
 fetch_source
 install_source

@@ -1,22 +1,20 @@
 #!/bin/sh
 name='lvm2'
-version='2.02.103'
-sources=( "ftp://sources.redhat.com/pub/lvm2/releases/LVM2.${version}.tgz" )
+version='2.02.177'
+sources=( "https://www.sourceware.org/pub/lvm2/releases/LVM2.${version}.tgz" )
+sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/LVM2.${version}.tgz" )
 homepage='http://sources.redhat.com/lvm2/'
 license='GPLv2'
 
-# Something is badly wrong with the lvm2 package, we will create symlinks to autoconf dir to workaround it.
 build_cmd="
-	cd /source/${name}-${version} && \
-	for i in \$(find . -type d -maxdepth 1); do (cd \$i && ln -s ../autoconf 2>/dev/null); done; \
-	sed 's#-Wl,--no-export-dynamic##g' tools/Makefile.in -i && \
-	./configure --prefix=/usr --enable-static_link && \
-	make -j ${cores_num:-1} && \
-	make device-mapper && \
-	make install device-mapper
+    cd /source/${name}-${version} && \
+    ln -snfv ioctl/libdevmapper.a libdm/libdevmapper.a &&
+    ./configure --prefix=/binit/prefix --enable-static_link && \
+    make -j ${cores_num:-1} all device-mapper && \
+    make install
 "
 
-deploy="/source/${name}-${version}/tools/lvm.static"
+deploy="/binit/prefix/sbin/lvm"
 
 fetch_source
 install_source

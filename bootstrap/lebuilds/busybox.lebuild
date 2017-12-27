@@ -1,18 +1,19 @@
 #!/bin/sh
 name='busybox'
-version='1.21.1'
-sources=( "http://www.busybox.net/downloads/${name}-${version}.tar.bz2" )
+version='1.27.2'
+sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/${name}-${version}.tar.bz2" )
 homepage='http://busybox.net/'
 license='GPLv2'
 
 build_cmd="
-	cd /source/${name}-${version} && \
-	make silentoldconfig && \
-	make -j ${cores_num:-1} && \
-	/source/${name}-${version}/busybox cp /source/${name}-${version}/busybox /bin/busybox
+    cd /source/${name}-${version} && \
+    make silentoldconfig && \
+    make -j ${cores_num:-1} && \
+    true > busybox.links && \
+    make CONFIG_PREFIX=/binit/prefix install
 "
 
-deploy="/source/${name}-${version}/busybox"
+deploy="/binit/prefix/bin/busybox"
 
 fetch_source
 install_source

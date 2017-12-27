@@ -1,4 +1,9 @@
-* Update all the deps to latests version
+* Check checksum for distfiles
+* Support root-less building with bubblewrap
+* Support root-less building with proot
+* rewrite lebuild to work inside sysroot instead of interacting with it from outside
+
+# OLD:
 * Support loadable kernel modules.
 * Support for key on external device (enc_keydev and enc_keyfile).
 * Support for squashfs in root variable, example: root=SQUASHFS=livecd.img
@@ -10,6 +15,4 @@
 * use debian's idea to rename suspend binary into uswsusp to make it less confusing.
 * rework process_commandline_options function, auto-add all cmdline options with equal sign.
 * Add deleyed_block_devices option. Whenever resolv_device() does not find device, wait 1s and repeat, default repeat 30 times. Make the counter configurable.
-* rework lebuild, instead of passing cmd as chroot argument, deploy lebuild script inside, chroot and run lebuild from there.
 * Support squash+union for system dirs, like /usr. Squashfs with lz4 pared with OverlayFS (v22+) for rw-layer and image rebuilding on-boot.
-* Migrate to Alpine Linux as build root.

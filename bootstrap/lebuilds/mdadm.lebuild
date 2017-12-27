@@ -1,16 +1,17 @@
 #!/bin/sh
 name='mdadm'
-version='3.3.4'
-sources=( "http://www.kernel.org/pub/linux/utils/raid/$name/$name-$version.tar.xz" )
+version='4.0'
+sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/${name}-${version}.tar.xz" )
 homepage='http://neil.brown.name/blog/mdadm'
 license='GPLv2'
 
 build_cmd="
 	cd /source/${name}-${version} && \
-	make MAP_DIR='/dev/.mdadm' CXFLAGS='-Os -DUCLIBC -DHAVE_STDINT_H -pipe ${CFLAGS}' CWFLAGS='-Wall' mdadm.static
+    make MAP_DIR='/dev/.mdadm'
+    make DESTDIR=/binit/prefix install
 "
 
-deploy="/source/${name}-${version}/mdadm.static"
+deploy="/binit/prefix/sbin/mdadm"
 
 fetch_source
 install_source

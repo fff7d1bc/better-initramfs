@@ -89,14 +89,14 @@ prepare() {
 		ewarn "No askpass found, LUKS support will not work if sshd is enabled."
 	fi
 
-	if test -f lvm.static; then
-		cp lvm.static "${sourceroot}/bin/lvm"
+	if test -f lvm; then
+		cp lvm "${sourceroot}/bin/lvm"
 	else
 		ewarn "No lvm binary found, LVM support will be disabled."
 	fi
 
-	if test -f mdadm.static; then
-		cp mdadm.static "${sourceroot}/bin/mdadm"
+	if test -f mdadm; then
+		cp mdadm "${sourceroot}/bin/mdadm"
 	else
 		ewarn "No mdadm binary found, Software Raid support will be disabled."
 	fi
@@ -106,12 +106,6 @@ prepare() {
 		( cd "${sourceroot}/bin/" && rm -f dropbear dropbearkey dbclient && ln -s dropbearmulti dropbear && ln -s dropbearmulti dropbearkey && ln -s dropbearmulti dbclient )
 	else
 		ewarn "No dropbearmulti binary found, Remote rescue shell support will be disabled."
-	fi
-
-	if test -f resume; then
-		cp resume "${sourceroot}/bin/resume"
-	else
-		ewarn "No resume binary found, Swsusp will be disabled."
 	fi
 
 	if test -f vconfig; then

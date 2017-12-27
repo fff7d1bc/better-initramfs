@@ -1,0 +1,17 @@
+#!/bin/sh
+name='json-c'
+version='0.13-20171207'
+sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/${name}-${version}.tar.gz" )
+homepage='https://github.com/json-c/json-c/wiki'
+license='MIT'
+
+build_cmd="
+	cd /source/${name}-${version} && \
+	./configure --prefix=/binit/prefix && \
+	make -j ${cores_num:-1} && \
+    make install
+"
+
+fetch_source
+install_source
+build_source

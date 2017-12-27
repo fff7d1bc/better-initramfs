@@ -81,7 +81,6 @@ populate_dev_disk_by_label_and_uuid
 
 use rescueshell rescueshell
 use swsusp && SwsuspResume
-use uswsusp && UswsuspResume
 use tuxonice TuxOnIceResume
 run_hooks pre_newroot_mount
 use rootdelay rootdelay
