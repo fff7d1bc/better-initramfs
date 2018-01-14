@@ -1,6 +1,7 @@
 For details check git history.
 
 devel branch:
+	- use rootdelay before trying to activate dmcrypt/lvm/etc.
 	- simplify process_commandline_options() by dropping get_opt() all
 	  together
 	- uswsusp support removed.

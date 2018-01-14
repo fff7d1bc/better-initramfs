@@ -71,6 +71,8 @@ SetupNetwork
 use sshd && setup_sshd
 loadkeymap
 
+use rootdelay rootdelay
+
 # Let's try to support all possible combinations of storage layers.
 use bcache register_bcache_devices
 use softraid InitializeSoftwareRaid && use bcache register_bcache_devices
@@ -83,7 +85,6 @@ use rescueshell rescueshell
 use swsusp && SwsuspResume
 use tuxonice TuxOnIceResume
 run_hooks pre_newroot_mount
-use rootdelay rootdelay
 emount /newroot
 emount /newroot/usr
 # Wait for sshd connection only if rescueshell have never occur.
