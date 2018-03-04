@@ -152,7 +152,15 @@ process_commandline_options() {
 			;;
 			*=*)
 				# Catch-all for foo=bar.
-				export "${i%%=*}=${i#*=}"
+				# And ignore foo.bar=1 etc.
+				case "${i%%=*}" in
+					*'.'*)
+						true
+					;;
+					*)
+						export "${i%%=*}=${i#*=}"
+					;;
+				esac
 			;;
 			*)
 				# Everything that is not foo=bar should be just exported as 'true'
