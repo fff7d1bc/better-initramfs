@@ -107,7 +107,7 @@ luks_no_discards
 bcache
   Bring up bcache devices. This will get ready for use /dev/bcache* which means one can have rootfs on bcache as well as anything else.
 
-.. note:: The ``enc_root``, ``root`` and ``resum`` can use LABEL= and UUID=, instead of device path, like ``root=LABEL=rootfs`` or ``resume=LABEL=swap``.
+.. important:: The ``enc_root``, ``root`` and ``resume`` can use LABEL= and UUID=, instead of device path, like ``root=LABEL=rootfs`` or ``resume=LABEL=swap``.
 
 Custom storage layouts like LVM, Software RAID or BCACHE and 'real' system.
 ===========================================================================
