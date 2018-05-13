@@ -3,6 +3,7 @@ dev/*
 *.swp
 sourceroot/bin/*
 !sourceroot/bin/resume-boot
+!sourceroot/bin/dhcp-query
 sourceroot/VERSION
 output/*
 !*.keep
