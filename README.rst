@@ -68,12 +68,12 @@ sshd_port=X
   Setup sshd to listen on X port. Default: 22.
 binit_net_if=<if>
   Specify on which interface the network should be configured. Optionally a vlan can be specified separated by a dot. Example: eth0 or eth0.55
-binit_net_addr=<addr/cidr>
-  Configure <addr> with <cidr> netmask on binit_net_if. Usualy you want something like '1.2.3.4/24'. If you will not add /CIDR, the IP will be configured with /32 thus you will be not able to connect to it unless you specify binit_net_gw.
+binit_net_addr=<addr/cidr> or binit_net_addr=dhcp
+  Configure <addr> with <cidr> netmask on binit_net_if. Usualy you want something like '1.2.3.4/24'. If you will not add /CIDR, the IP will be configured with /32 thus you will be not able to connect to it unless you specify binit_net_gw. One may put ``dhcp`` there instead of address.
 binit_net_route=<addr/cidr>
   Optional static on-link route(s) to add (can be given multiple times).
 binit_net_gw=<addr>
-  Optional gateway config, if you want to connect via WAN.
+  Optional gateway config, if you want to connect via WAN. If ``binit_net_addr`` is set to ``dhcp``, it will be configured automatically.
 rw
   Mount rootfs in read-write. Default: read-only.
 mdev
