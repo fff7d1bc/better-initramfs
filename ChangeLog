@@ -1,6 +1,8 @@
 For details check git history.
 
 devel branch:
+	- Support for binit_net_addr=dhcp. Requested by  Mathieu Garstecki in
+	  issue #46
 	- use rootdelay before trying to activate dmcrypt/lvm/etc.
 	- simplify process_commandline_options() by dropping get_opt() all
 	  together
