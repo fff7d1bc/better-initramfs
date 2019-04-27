@@ -164,6 +164,10 @@ process_commandline_options() {
 					;;
 				esac
 			;;
+			*.*)
+				# ignore foo.bar
+				true
+			;;
 			*)
 				# Everything that is not foo=bar should be just exported as 'true'
 				export "${i}=true"
