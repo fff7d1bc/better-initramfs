@@ -53,6 +53,8 @@ rescueshell() {
 	ewarn "If you wish resume booting process, run 'resume-boot'."
 	if [ "$console" ] && [ -c "/dev/${console}" ]; then
 		setsid sh -c "exec sh --login </dev/"${console}" >/dev/${console} 2>&1"
+	elif command -v cttyhack 1>/dev/null 2>&1; then
+		setsid cttyhack sh --login
 	elif [ -c '/dev/tty1' ]; then
 		setsid sh -c 'exec sh --login </dev/tty1 >/dev/tty1 2>&1'
 	else
@@ -124,12 +126,12 @@ populate_dev_disk_by_label_and_uuid() {
 }
 
 resolve_device() {
-	# This function will check if variable at $1 contain LABEL or UUID and then, if LABEL/UUID is vaild.	
-	device="$(eval echo \$$1)"
+	# This function will check if variable at $1 contain LABEL or UUID and then, if LABEL/UUID is valid.
+	eval "device=\"\$$1\""
 	case "${device}" in
 		LABEL\=*|UUID\=*)
-			eval $1="$(findfs $device)"
-			if [ -z "$(eval echo \$$1)" ]; then
+			eval "$1=\"$(findfs $device)\""
+			if eval "[ -z \"\$$1\" ]"; then
 				eerror "Wrong UUID or LABEL."
 				rescueshell
 			fi
@@ -162,16 +164,20 @@ process_commandline_options() {
 					;;
 				esac
 			;;
+			*.*)
+				# ignore foo.bar
+				true
+			;;
 			*)
 				# Everything that is not foo=bar should be just exported as 'true'
-				export "${i%%=*}=true"
+				export "${i}=true"
 			:;
 		esac
 	done
 }
 
 use() {
-	name="$(eval echo \$$1)"
+	eval "name=\"\$$1\""
 	# Check if $name isn't empty and if $name isn't set to false or zero.
 	if [ -n "${name}" ] && [ "${name}" != 'false' ] && [ "${name}" != '0' ]; then
 		if [ -n "$2" ]; then
@@ -226,7 +232,7 @@ get_majorminor() {
 }
 
 InitializeLUKS() {
-	if [ ! -f /bin/cryptsetup ]; then
+	if ! command -v cryptsetup 1>/dev/null 2>&1; then
 		eerror "There is no cryptsetup binary into initramfs image."
 		rescueshell
 	fi

@@ -27,7 +27,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE
 
-if [ -n "$SSH_TTY" ] || [ -n "$SSH_CONNECTiON" ]; then
+if [ -n "$SSH_TTY" ] || [ -n "$SSH_CONNECTION" ]; then
 	export PS1='remote rescueshell \w \# '
 	touch /remote-rescueshell.lock
 	. /functions.sh
