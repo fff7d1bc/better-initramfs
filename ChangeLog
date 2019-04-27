@@ -1,7 +1,14 @@
 For details check git history.
 
 devel branch:
-	- Support for binit_net_addr=dhcp. Requested by  Mathieu Garstecki in
+	- Typo fix in 00_profile.sh (André Erdmann)
+	- The cryptsetup path is no longer hardcoded (André Erdmann)
+	- Number of changes around `eval` usage to not crash if ever findfs return
+	  white character, eval no longer running in subshells. (André Erdmann)
+	- Fixes around parsing cmdline options, no longer export variables with
+	  dot in its name (André Erdmann)
+	- cttyhack support (André Erdmann)
+	- Support for binit_net_addr=dhcp. Requested by Mathieu Garstecki in
 	  issue #46
 	- use rootdelay before trying to activate dmcrypt/lvm/etc.
 	- simplify process_commandline_options() by dropping get_opt() all
