@@ -3,6 +3,7 @@
 * Support root-less building with proot
 * rewrite lebuild to work inside sysroot instead of interacting with it from outside
 * Add fsck for ext2/3/4, btrfs and xfs as optional binaries.
+* lookup for bcache lvm softrwaid dmcrypt and generate all combinations with enabled modules for true support of all the storage layers
 
 # OLD:
 * Support loadable kernel modules.
