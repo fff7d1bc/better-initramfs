@@ -426,7 +426,7 @@ setup_sshd() {
 	fi
 
 	einfo 'Starting dropbear sshd ...'
-	run dropbear -s -p "${binit_net_addr%/*}:${sshd_port:-22}"
+	run dropbear -j -k -s -p "${binit_net_addr%/*}:${sshd_port:-22}"
 }
 
 wait_sshd() {
