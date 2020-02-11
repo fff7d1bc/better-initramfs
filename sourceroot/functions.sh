@@ -379,8 +379,8 @@ SetupNetwork() {
 
 	if [ "${binit_net_addr}" =  'dhcp' ]; then
 		einfo "Using DHCP on ${binit_net_if} ..."
-		run udhcpc -i "${binit_net_if}" -s /bin/dhcp-query -q -f
-		. /dhcp-query-result
+		udhcpc -i "${binit_net_if}" -s /bin/dhcp-query -q -f -t 6 -n || run zcip -q "${binit_net_if}" -f -v  /bin/autoip-query
+		run . /dhcp-query-result
 	fi
 
 	einfo "Setting ${binit_net_addr} on ${binit_net_if} ..."

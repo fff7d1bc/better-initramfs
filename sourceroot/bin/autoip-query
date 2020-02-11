@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# A simple plug for zcap for better-initramfs.
+# Does what dhcp-query would do if dhcp-query fails
+  
+exec > /dhcp-query-result
+
+case "$1" in
+    config)
+        printf 'binit_net_addr=%s\n' "${ip}"
+    ;;  
+esac
