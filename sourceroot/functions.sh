@@ -148,6 +148,9 @@ process_commandline_options() {
 			ro|rw)
 				root_rw_ro=$i
 			;;
+			rootflags\=*)
+				rootfsmountparams="-o ${i#*=}"
+			;;
 			binit_net_route\=*)
 				# support multiple binit_net_route=.
 				binit_net_routes="${binit_net_routes} ${i#*=}"
