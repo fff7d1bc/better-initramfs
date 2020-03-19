@@ -148,9 +148,6 @@ process_commandline_options() {
 			ro|rw)
 				root_rw_ro=$i
 			;;
-			rootflags\=*)
-				rootfsmountparams="-o ${i#*=}"
-			;;
 			binit_net_route\=*)
 				# support multiple binit_net_route=.
 				binit_net_routes="${binit_net_routes} ${i#*=}"
@@ -502,14 +499,11 @@ emount() {
 				else	
 					einfo "Mounting /newroot..."
 					musthave root
-					if [ "${rootfsmountparams}" ]; then
-						mountparams="${rootfsmountparams}"
-					fi
 					if [ -n "${rootfstype}" ]; then 
 						mountparams="${mountparams} -t ${rootfstype}"
 					fi
 					resolve_device root
-					run mount -o ${root_rw_ro:-ro} ${mountparams} "${root}" '/newroot'
+					run mount -o "${rootflags:+${rootflags},}${root_rw_ro:-ro}" ${mountparams} "${root}" '/newroot'
 				fi
 			;;
 
