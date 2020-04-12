@@ -1,7 +1,7 @@
 For details check git history.
 
 devel branch:
-	- /run exists within initramfs. Fixes cryptsetup with luks2 header.
+	- Provide /run/cryptsetup within initramfs. Fixes cryptsetup with luks2 header.
 	- rootflags= support added (unqueued)
 	- Typo fix in 00_profile.sh (André Erdmann)
 	- The cryptsetup path is no longer hardcoded (André Erdmann)
