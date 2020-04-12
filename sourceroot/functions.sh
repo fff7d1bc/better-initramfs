@@ -499,14 +499,11 @@ emount() {
 				else	
 					einfo "Mounting /newroot..."
 					musthave root
-					if [ "${rootfsmountparams}" ]; then
-						mountparams="${rootfsmountparams}"
-					fi
 					if [ -n "${rootfstype}" ]; then 
 						mountparams="${mountparams} -t ${rootfstype}"
 					fi
 					resolve_device root
-					run mount -o ${root_rw_ro:-ro} ${mountparams} "${root}" '/newroot'
+					run mount -o "${rootflags:+${rootflags},}${root_rw_ro:-ro}" ${mountparams} "${root}" '/newroot'
 				fi
 			;;
 
