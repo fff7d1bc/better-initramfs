@@ -1,6 +1,6 @@
 #!/bin/sh
 name='cryptsetup'
-version='2.0.0'
+version='2.3.1'
 sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/${name}-${version}.tar.xz" )
 homepage='https://gitlab.com/cryptsetup/cryptsetup'
 license='GPLv2'
@@ -13,6 +13,7 @@ build_cmd="
     --disable-nls \
     --enable-static=yes \
     --enable-shared=no \
+    --with-crypto_backend=gcrypt \
     --enable-static-cryptsetup && \
     make -j ${cores_num:-1} && \
     make install
