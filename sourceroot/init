@@ -33,7 +33,7 @@
 run_hooks init
 
 # Prepare dirs
-run dodir /dev /newroot /sbin /proc /sys /etc /var/log /var/run /run
+run dodir /dev /newroot /sbin /proc /sys /etc /var/log /var/run /run /run/cryptsetup
 for d in /lib /usr/lib; do
    # ! -e && ! -h: also skip broken symlinks
    if [ -d "${d}" ] && [ ! -e "${d}64" ] && [ ! -h "${d}64" ]; then
