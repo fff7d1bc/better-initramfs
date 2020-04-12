@@ -26,7 +26,7 @@ v0.10.0:
 	- All the dependencies are re-hosted under bitbucket account.
 	- cryptsetup and libgcrypt is now always built with O3 instead of Os.
 	- Version bumps:
-	    sysroot Aboriginal Linux 1.2.0 -> Alpine Linux 3.7.0
+	    sysroot Aboriginal Linux 1.2.0 -> Alpine Linux 3.11.5
 		dropbear 2015.71 -> 2019.78
 		lvm2 2.02.103 -> 2.02.186
 		busybox 1.21.1 -> 1.31.1
