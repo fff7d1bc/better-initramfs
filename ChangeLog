@@ -24,7 +24,7 @@ devel branch:
 	- cryptsetup and libgcrypt is now always built with O3 instead of Os.
 	- Version bumps:
 	    sysroot Aboriginal Linux 1.2.0 -> Alpine Linux 3.7.0
-		dropbear 2015.71 -> 2017.75
+		dropbear 2015.71 -> 2019.78
 		lvm2 2.02.103 -> 2.02.186
 		busybox 1.21.1 -> 1.31.1
 		zlib 1.2.8 -> 1.2.11
