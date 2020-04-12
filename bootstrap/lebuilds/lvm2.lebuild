@@ -1,13 +1,17 @@
 #!/bin/sh
 name='lvm2'
-version='2.02.177'
+version='2.02.186'
 sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/LVM2.${version}.tgz" )
 homepage='http://sources.redhat.com/lvm2/'
 license='GPLv2'
 
+# The reason why CPPFLAGS is appended to CFLAGS is that lvm2 build system
+# ignores CPPFLAGS resulting in being unable to find libaio.h.
+
 build_cmd="
+    export CFLAGS=\"\$CFLAGS \$CPPFLAGS\" && \
     cd /source/${name}-${version} && \
-    ln -snfv ioctl/libdevmapper.a libdm/libdevmapper.a &&
+    ln -snfv ioctl/libdevmapper.a libdm/libdevmapper.a && \
     ./configure --prefix=/binit/prefix --enable-static_link && \
     make -j ${cores_num:-1} all device-mapper && \
     make install

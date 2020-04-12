@@ -25,7 +25,7 @@ devel branch:
 	- Version bumps:
 	    sysroot Aboriginal Linux 1.2.0 -> Alpine Linux 3.7.0
 		dropbear 2015.71 -> 2017.75
-		lvm2 2.02.103 -> 2.02.177
+		lvm2 2.02.103 -> 2.02.186
 		busybox 1.21.1 -> 1.31.1
 		zlib 1.2.8 -> 1.2.11
 		libuuid 2.21.2 -> 2.31.1
