@@ -1,0 +1,22 @@
+#!/bin/sh
+name='libblkid'
+version='2.35.1'
+sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/util-linux-${version}.tar.xz" )
+homepage='http://www.kernel.org/pub/linux/utils/util-linux/'
+license='BSD'
+
+build_cmd="
+	cd /source/${name}-${version} && \
+	./configure --prefix=/binit/prefix \
+	--disable-libtool-lock \
+	--disable-libuuid \
+	--disable-libmount \
+	--disable-libsmartcols \
+	--disable-libfdisk && \
+	make -j ${cores_num:-1} libblkid.la && \
+	make install-usrlib_execLTLIBRARIES install-nodist_blkidincHEADERS
+"
+
+fetch_source
+install_source
+build_source
