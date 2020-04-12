@@ -34,6 +34,7 @@ devel branch:
 		json-c 0.13 (new dependency)
 		cryptsetup 1.7.0 -> 2.0.0
 		mdadm 3.3.6 -> 4.0
+		libaio 0.3.112 (new dependency)
 		suspend removed
 		libx86 removed
 		lzo removed

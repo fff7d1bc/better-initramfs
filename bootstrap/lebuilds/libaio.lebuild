@@ -1,0 +1,23 @@
+#!/bin/sh
+name='libaio'
+version='0.3.112'
+sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/libaio-${version}.tar.gz" )
+homepage='https://pagure.io/libaio'
+license='LGPLv2'
+
+build_cmd="
+    cd /source/${name}-${version} && \
+    make \
+        prefix=/binit/prefix \
+        sysconfdir=/binit/prefix/etc \
+        mandir=/binit/prefix/share/main \
+        infodir=/binit/prefix/share/info \
+        -j ${cores_num:-1} install
+"
+
+deploy="/binit/prefix/sbin/lvm"
+
+fetch_source
+install_source
+build_source
+
