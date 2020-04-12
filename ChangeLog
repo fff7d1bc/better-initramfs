@@ -29,7 +29,7 @@ devel branch:
 		busybox 1.21.1 -> 1.31.1
 		zlib 1.2.8 -> 1.2.11
 		libuuid 2.21.2 -> 2.35.1
-		libgpg-error 1.20 -> 1.27
+		libgpg-error 1.20 -> 1.37
 		libgcrypt 1.6.4 -> 1.8.2
 		json-c 0.13 (new dependency)
 		cryptsetup 1.7.0 -> 2.0.0

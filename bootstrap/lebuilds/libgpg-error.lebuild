@@ -1,6 +1,6 @@
 #!/bin/sh
 name='libgpg-error'
-version='1.27'
+version='1.37'
 sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/${name}-${version}.tar.bz2" )
 homepage='http://www.gnupg.org/related_software/libgpg-error/'
 license='GPLv2, LGPLv2.1'
