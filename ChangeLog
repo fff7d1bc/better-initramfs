@@ -1,6 +1,9 @@
 For details check git history.
 
 devel branch:
+	- Placeholder
+
+v0.10.0:
 	- Provide /run/cryptsetup within initramfs. Fixes cryptsetup with luks2 header.
 	- rootflags= support added (unqueued)
 	- Typo fix in 00_profile.sh (André Erdmann)
