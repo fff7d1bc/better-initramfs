@@ -30,7 +30,7 @@ devel branch:
 		zlib 1.2.8 -> 1.2.11
 		libuuid 2.21.2 -> 2.35.1
 		libgpg-error 1.20 -> 1.37
-		libgcrypt 1.6.4 -> 1.8.2
+		libgcrypt 1.6.4 -> 1.8.5
 		json-c 0.13 (new dependency)
 		cryptsetup 1.7.0 -> 2.0.0
 		mdadm 3.3.6 -> 4.0
