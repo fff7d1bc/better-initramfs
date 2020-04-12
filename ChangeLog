@@ -28,7 +28,7 @@ devel branch:
 		lvm2 2.02.103 -> 2.02.186
 		busybox 1.21.1 -> 1.31.1
 		zlib 1.2.8 -> 1.2.11
-		libuuid 2.21.2 -> 2.31.1
+		libuuid 2.21.2 -> 2.35.1
 		libgpg-error 1.20 -> 1.27
 		libgcrypt 1.6.4 -> 1.8.2
 		json-c 0.13 (new dependency)
