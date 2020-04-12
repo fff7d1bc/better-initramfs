@@ -33,7 +33,7 @@ devel branch:
 		libgcrypt 1.6.4 -> 1.8.5
 		json-c 0.13.1 (new dependency)
 		cryptsetup 1.7.0 -> 2.3.1
-		mdadm 3.3.6 -> 4.0
+		mdadm 3.3.6 -> 4.1
 		libaio 0.3.112 (new dependency)
 		libblkid 2.35.1 (new dependency)
 		suspend removed
