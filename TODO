@@ -1,3 +1,7 @@
+- preserve /run tmpfs, mount move.
+- https://systemd.io/INITRD_INTERFACE/
+- https://bugs.gentoo.org/706434
+
 * Check checksum for distfiles
 * Support root-less building with bubblewrap
 * Support root-less building with proot
