@@ -1,6 +1,6 @@
 #!/bin/sh
 name='lvm2'
-version='2.02.186'
+version='2.02.188'
 sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/LVM2.${version}.tgz" )
 homepage='http://sources.redhat.com/lvm2/'
 license='GPLv2'
@@ -12,12 +12,12 @@ build_cmd="
     export CFLAGS=\"\$CFLAGS \$CPPFLAGS\" && \
     cd /source/${name}-${version} && \
     ln -snfv ioctl/libdevmapper.a libdm/libdevmapper.a && \
-    ./configure --prefix=/binit/prefix --enable-static_link && \
+    ./configure --prefix=/binit/prefix --enable-static_link --with-thin=internal && \
     make -j ${cores_num:-1} all device-mapper && \
     make install
 "
 
-deploy="/binit/prefix/sbin/lvm"
+deploy="/binit/prefix/sbin/lvm.static"
 
 fetch_source
 install_source
