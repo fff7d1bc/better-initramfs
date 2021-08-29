@@ -1,6 +1,6 @@
 #!/bin/sh
 name='popt'
-version='1.16'
+version='1.18'
 sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/${name}-${version}.tar.gz" )
 homepage='http://rpm5.org/'
 license='MIT'
