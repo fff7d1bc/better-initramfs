@@ -1,6 +1,6 @@
 #!/bin/sh
 name='libuuid'
-version='2.35.1'
+version='2.37'
 sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/util-linux-${version}.tar.xz" )
 homepage='http://www.kernel.org/pub/linux/utils/util-linux/'
 license='BSD'
