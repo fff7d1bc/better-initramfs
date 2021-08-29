@@ -7,7 +7,7 @@ license='LGPLv2'
 
 build_cmd="
     cd /source/${name}-${version} && \
-    make \
+    ENABLE_SHARED=0 make \
         prefix=/binit/prefix \
         sysconfdir=/binit/prefix/etc \
         mandir=/binit/prefix/share/main \
