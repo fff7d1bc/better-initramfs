@@ -80,7 +80,7 @@ install_source() {
                         rm -rf "${build_dir}/source/${name}-${version}"
                     fi
                     mkdir -p "${build_dir}/source/${name}-${version}"
-                    run tar xf "${distfiles}/${source##*/}" --strip-components 1 -C "${build_dir}/source/${name}-${version}"
+                    run tar xf  "${distfiles}/${source##*/}" --strip-components 1 -C "${build_dir}/source/${name}-${version}"
                 ;;
                 *)
                     mkdir -p "${build_dir}/source/${name}-${version}"
@@ -98,16 +98,21 @@ install_source() {
 }
 
 build_source() {
+    LDFLAGS="-L/binit/prefix/lib"
+    if [ "${STATIC}" = '1' ]; then
+        LDFLAGS="${LDFLAGS} -static"
+    fi
+
     if env -i \
         PATH="/binit/prefix/bin:/binit/prefix/sbin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
         HOME="/root" \
         TERM="${TERM}" \
-        CFLAGS="-Os -pipe -fomit-frame-pointer -static" \
-        CXXFLAGS="-Os -pipe -fomit-frame-pointer -static" \
-        LDFLAGS='-static -L/binit/prefix/lib' \
+        CFLAGS="-Os -pipe -fomit-frame-pointer" \
+        CXXFLAGS="-Os -pipe -fomit-frame-pointer" \
         CPPFLAGS='-I/binit/prefix/include' \
+        LDFLAGS="${LDFLAGS}" \
         PKG_CONFIG_PATH='/binit/prefix/lib/pkgconfig/' \
-        chroot "${build_dir}" /bin/sh -c "umask 022 && ${build_cmd:-false}"
+        bwrap --bind "${build_dir}" / --dev /dev --proc /proc /bin/sh -c "umask 022 && ${build_cmd:-false}"
     then
         einfo "Finished: $name-$version"
     else
@@ -119,8 +124,6 @@ print_help() {
 cat << EOF
 ${0##*/} v0.1.1 - Simple build system using Alpine Linux sysroot.
     
-    You should run it as root (as we use chroot).
-
 Usage:
     $0 init <arch> - prepare build_root with specified arch. x86 and x86_64 is supported.
     $0 build <name> - build <name> package.
@@ -145,7 +148,7 @@ case "$1" in
             ;;
         esac
         einfo "Preparing '${build_dir}' ..."
-        sysroot_url="https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/alpine-3.11.5-${arch}-sysroot.tar.xz"
+        sysroot_url="https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/alpine-3.14.2-${arch}-sysroot.tar.xz"
         rootfs_tarball="${distfiles}/${sysroot_url##*/}"
         fetch_source "${sysroot_url}"
         if [ -d "${build_dir}" ]; then
@@ -154,15 +157,10 @@ case "$1" in
         fi
         mkdir "${build_dir}"
         einfo "Unpacking '${rootfs_tarball##*/}' ..."
-        tar xf "${rootfs_tarball}" -C "${build_dir}/" --strip-components 1
+        tar xf "${rootfs_tarball}" --exclude 'dev/*' -C "${build_dir}/" --strip-components 1
         cat /etc/resolv.conf > "${build_dir}/etc/resolv.conf"
         echo "${arch}" > "${build_dir}/arch"
         rmdir "${build_dir}/proc"
-        #mknod "${build_dir}/dev/console" c 5 1
-        mknod -m 666 "${build_dir}/"dev/null c 1 3
-        mknod -m 666 "${build_dir}/"dev/urandom c 1 9
-        mknod -m 666 "${build_dir}/"dev/random c 1 8
-        mknod -m 666 "${build_dir}/"dev/zero c 1 5
     ;;
     build)
         shift
@@ -180,7 +178,7 @@ case "$1" in
                     . "${workdir}/lebuilds/$1.lebuild"
                     if [ -n "${deploy}" ] && [ -f "${build_dir}/${deploy}" ]; then
                         if ! [ -d "${workdir}/output" ]; then mkdir "${workdir}/output"; fi
-                        cp "${build_dir}/${deploy}" "${workdir}/output/"
+                        install --mode=0755  "${build_dir}/${deploy}" "${workdir}/output/"
                         strip -s "${workdir}/output/${deploy##*/}"
                     fi
                 ) || die "Build failed: '$1'."
