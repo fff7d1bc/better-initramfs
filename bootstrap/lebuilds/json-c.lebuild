@@ -1,13 +1,15 @@
 #!/bin/sh
 name='json-c'
-version='0.13.1'
+version='0.15'
 sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/${name}-${version}.tar.gz" )
 homepage='https://github.com/json-c/json-c/wiki'
 license='MIT'
 
 build_cmd="
 	cd /source/${name}-${version} && \
-	./configure --prefix=/binit/prefix && \
+    mkdir build && \
+    cd build && \
+    cmake -DBUILD_STATIC_LIBS=ON -DBUILD_SHARED_LIBS=OFF -DCMAKE_INSTALL_PREFIX=/binit/prefix .. && \
 	make -j ${cores_num:-1} && \
     make install
 "
