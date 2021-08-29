@@ -1,6 +1,6 @@
 #!/bin/sh
 name='libgcrypt'
-version='1.8.5'
+version='1.8.8'
 sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/${name}-${version}.tar.bz2" )
 homepage='http://www.gnupg.org/'
 license='LGPLv2.1'
