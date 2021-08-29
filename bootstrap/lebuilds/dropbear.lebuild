@@ -1,13 +1,13 @@
 #!/bin/sh
 name='dropbear'
-version='2019.78'
+version='2020.81'
 sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/${name}-${version}.tar.bz2" )
 homepage='https://matt.ucc.asn.au/dropbear/dropbear.html'
 license='MIT'
 
 build_cmd="
     cd /source/${name}-${version} && \
-    ./configure --prefix=/binit/prefix && \
+    ./configure --prefix=/binit/prefix --enable-static && \
     make MULTI='1' PROGRAMS='dropbear dropbearkey dbclient' -j ${cores_num:-1} && \
     make MULTI='1' PROGRAMS='dropbear dropbearkey dbclient' install
 "
