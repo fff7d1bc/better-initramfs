@@ -1,13 +1,13 @@
 For details check git history.
 
 devel branch:
-	- replace chroot with bwrap (bubblewrap) - full support for building as
-	unprivileged user! But also requires 'bwrap' to be part of $PATH on the
-	host build system.
+	- Replace chroot with bwrap (bubblewrap) - full support for building as
+	  unprivileged user! But also requires 'bwrap' to be part of $PATH on the
+	  host build system.a
 	- Version bumps:
 		sysroot Alpine Linux 3.11.5 -> 3.14.2
 		busybox 1.31.1 -> 1.33.1
-		lvm2 2.02.186 -> 2.02.186
+		lvm2 2.02.186 -> 2.02.188
 		dropbear 2019.78 -> 2020.81
 		libuuid (util-linux ) 2.35.1 -> 2.37
 		libblkid (util-linux ) 2.35.1 -> 2.37
