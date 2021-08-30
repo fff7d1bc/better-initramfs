@@ -14,6 +14,8 @@ build_cmd="
 
 deploy="/binit/prefix/sbin/vconfig"
 
+STATIC=1
+
 fetch_source
 install_source
 build_source
