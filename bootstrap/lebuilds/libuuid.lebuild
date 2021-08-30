@@ -8,6 +8,7 @@ license='BSD'
 build_cmd="
 	cd /source/${name}-${version} && \
 	./configure --prefix=/binit/prefix \
+    --disable-shared \
 	--disable-libtool-lock \
 	--disable-libblkid \
 	--disable-libmount \

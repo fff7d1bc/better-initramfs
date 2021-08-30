@@ -10,6 +10,7 @@ build_cmd="
 	cd /source/${name}-${version} && \
 	./configure --prefix=/binit/prefix \
 	--disable-nls  \
+    --disable-shared \
 	--enable-static && \
 	make -j ${cores_num:-1} && \
 	make install

@@ -8,6 +8,7 @@ license='MIT'
 build_cmd="
     cd /source/${name}-${version} && \
     ./configure --prefix=/binit/prefix \
+    --disable-shared \
     --disable-nls && \
     make -j ${cores_num:-1} && \
     make install
