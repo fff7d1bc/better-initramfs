@@ -4,7 +4,6 @@ version='4.1'
 sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/${name}-${version}.tar.xz" )
 homepage='http://neil.brown.name/blog/mdadm'
 license='GPLv2'
-
 build_cmd="
 	cd /source/${name}-${version} && \
     make MAP_DIR='/dev/.mdadm'
@@ -12,6 +11,8 @@ build_cmd="
 "
 
 deploy="/binit/prefix/sbin/mdadm"
+
+STATIC=1
 
 fetch_source
 install_source
