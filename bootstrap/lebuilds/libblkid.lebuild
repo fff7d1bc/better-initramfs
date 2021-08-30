@@ -1,6 +1,6 @@
 #!/bin/sh
 name='libblkid'
-version='2.35.1'
+version='2.37'
 sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/util-linux-${version}.tar.xz" )
 homepage='http://www.kernel.org/pub/linux/utils/util-linux/'
 license='BSD'
@@ -8,6 +8,7 @@ license='BSD'
 build_cmd="
 	cd /source/${name}-${version} && \
 	./configure --prefix=/binit/prefix \
+    --disable-shared \
 	--disable-libtool-lock \
 	--disable-libuuid \
 	--disable-libmount \
