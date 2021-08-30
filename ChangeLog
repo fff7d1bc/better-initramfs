@@ -1,7 +1,20 @@
 For details check git history.
 
 devel branch:
-	- Placeholder
+	- replace chroot with bwrap (bubblewrap) - full support for building as
+	unprivileged user! But also requires 'bwrap' to be part of $PATH on the
+	host build system.
+	- Version bumps:
+		sysroot Alpine Linux 3.11.5 -> 3.14.2
+		busybox 1.31.1 -> 1.33.1
+		lvm2 2.02.186 -> 2.02.186
+		dropbear 2019.78 -> 2020.81
+		libuuid (util-linux ) 2.35.1 -> 2.37
+		libblkid (util-linux ) 2.35.1 -> 2.37
+		popt 1.16 -> 1.18
+		libgpg-error 1.37 -> 1.42
+		libgcrypt 1.8.5 -> 1.8.8
+		json-c 0.13.1 -> 0.15
 
 v0.10.0:
 	- Provide /run/cryptsetup within initramfs. Fixes cryptsetup with luks2 header.
