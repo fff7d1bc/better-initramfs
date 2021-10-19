@@ -3,7 +3,9 @@ For details check git history.
 devel branch:
 	- Replace chroot with bwrap (bubblewrap) - full support for building as
 	  unprivileged user! But also requires 'bwrap' to be part of $PATH on the
-	  host build system.a
+	  host build system.
+	- Removal or mknod calls, might require manual mknod in sourceroot/dev in
+	  case of embeddeding initramfs into kernel image.
 	- Version bumps:
 		sysroot Alpine Linux 3.11.5 -> 3.14.2
 		busybox 1.31.1 -> 1.33.1
