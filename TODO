@@ -1,3 +1,10 @@
+- switch to gen_init_cpio.c from kernel sources to generate cpio with device nodes
+  for the usage with CONFIG_INITRAMFS_SOURCE
+
+- sysroot update
+- static udev -all-static
+
+- add ed25519 for dropbear, drop dsa.
 - preserve /run tmpfs, mount move.
 - https://systemd.io/INITRD_INTERFACE/
 - https://bugs.gentoo.org/706434
