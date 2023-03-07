@@ -1,6 +1,8 @@
 For details check git history.
 
 devel branch:
+	- Use install instead of cp to make sure the static binaries are
+	  executable, fixes potential kernel panic on /init start failure.
 	- Replace chroot with bwrap (bubblewrap) - full support for building as
 	  unprivileged user! But also requires 'bwrap' to be part of $PATH on the
 	  host build system.

@@ -65,45 +65,45 @@ prepare() {
 	einfo "Deploying bootstraped binaries into source root ..."
 	cd "${bootstrap}/output" || die "Failed to cd into bootstrap/output/"
 	if test -f busybox; then
-		cp busybox "${sourceroot}/bin/busybox"
+		install -m 755 busybox "${sourceroot}/bin/busybox"
 		( cd "${sourceroot}/bin/" && rm -f sh && ln -s busybox sh )
 	else
 		die "No busybox binary found."
 	fi
 
 	if test -f cryptsetup.static; then
-		cp cryptsetup.static "${sourceroot}/bin/cryptsetup"
+		install -m 755 cryptsetup.static "${sourceroot}/bin/cryptsetup"
 	else
 		ewarn "No cryptsetup binary found, DMCrypt LUKS support will be disabled."
 	fi
 
 	if test -f askpass; then
-		cp askpass "${sourceroot}/bin/askpass"
+		install -m 755 askpass "${sourceroot}/bin/askpass"
 	else
 		ewarn "No askpass found, LUKS support will not work if sshd is enabled."
 	fi
 
 	if test -f lvm.static; then
-		cp lvm.static "${sourceroot}/bin/lvm"
+		install -m 755 lvm.static "${sourceroot}/bin/lvm"
 	else
 		ewarn "No lvm binary found, LVM support will be disabled."
 	fi
 
 	if test -f mdadm; then
-		cp mdadm "${sourceroot}/bin/mdadm"
+		install -m 755 mdadm "${sourceroot}/bin/mdadm"
 	else
 		ewarn "No mdadm binary found, Software Raid support will be disabled."
 	fi
 
 	if test -f dropbearmulti; then
-		cp dropbearmulti "${sourceroot}/bin/dropbearmulti"
+		install -m 755 dropbearmulti "${sourceroot}/bin/dropbearmulti"
 		( cd "${sourceroot}/bin/" && rm -f dropbear dropbearkey dbclient && ln -s dropbearmulti dropbear && ln -s dropbearmulti dropbearkey && ln -s dropbearmulti dbclient )
 	else
 		ewarn "No dropbearmulti binary found, Remote rescue shell support will be disabled."
 	fi
 
 	if test -f vconfig; then
-		cp vconfig "${sourceroot}/bin/vconfig"
+		install -m 755 vconfig "${sourceroot}/bin/vconfig"
 	else
 		ewarn "No vconfig binary found, Vlan configuration will be disabled"
 	fi
