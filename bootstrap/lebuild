@@ -148,7 +148,7 @@ case "$1" in
             ;;
         esac
         einfo "Preparing '${build_dir}' ..."
-        sysroot_url="https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/alpine-3.14.2-${arch}-sysroot-r1.tar.xz"
+        sysroot_url="https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/alpine-3.17.2-${arch}-sysroot.tar.xz"
         rootfs_tarball="${distfiles}/${sysroot_url##*/}"
         fetch_source "${sysroot_url}"
         if [ -d "${build_dir}" ]; then

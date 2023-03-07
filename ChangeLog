@@ -7,7 +7,7 @@ devel branch:
 	- Removal or mknod calls, might require manual mknod in sourceroot/dev in
 	  case of embeddeding initramfs into kernel image.
 	- Version bumps:
-		sysroot Alpine Linux 3.11.5 -> 3.14.2
+		sysroot Alpine Linux 3.11.5 -> 3.17.2
 		busybox 1.31.1 -> 1.33.1
 		lvm2 2.02.186 -> 2.02.188
 		dropbear 2019.78 -> 2020.81
