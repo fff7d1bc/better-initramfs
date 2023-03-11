@@ -7,7 +7,7 @@ set -e
 export chroot_dir=`pwd`/build_dir/
 export arch=x86_64
 export mirror=http://dl-cdn.alpinelinux.org/alpine/
-export version='2.12.7-r0'
+export version='2.12.10-r1'
 
 mkdir -p \
     "${chroot_dir}" \
