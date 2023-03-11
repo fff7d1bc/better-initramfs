@@ -137,6 +137,7 @@ gen_sshd_keys() {
 	einfo "Generating sshd keys ..."
 	mkdir -p "${sourceroot}/etc/dropbear"
 	"${sourceroot}/bin/dropbearkey" -t rsa -f "${sourceroot}/etc/dropbear/dropbear_rsa_host_key" > /dev/null
+	"${sourceroot}/bin/dropbearkey" -t ecdsa -f "${sourceroot}/etc/dropbear/dropbear_ecdsa_host_key" > /dev/null
 	"${sourceroot}/bin/dropbearkey" -t dss -f "${sourceroot}/etc/dropbear/dropbear_dss_host_key" > /dev/null
 }
 
