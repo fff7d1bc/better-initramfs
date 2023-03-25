@@ -1,6 +1,6 @@
 #!/bin/sh
 name='busybox'
-version='1.33.1'
+version='1.36.0'
 sources=( "https://bitbucket.org/piotrkarbowski/better-initramfs/downloads/${name}-${version}.tar.bz2" )
 homepage='http://busybox.net/'
 license='GPLv2'

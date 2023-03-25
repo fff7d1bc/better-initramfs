@@ -10,7 +10,7 @@ devel branch:
 	  case of embeddeding initramfs into kernel image.
 	- Version bumps since last release:
 		sysroot Alpine Linux 3.11.5 -> 3.17.2
-		busybox 1.31.1 -> 1.33.1
+		busybox 1.31.1 -> 1.36.0
 		lvm2 2.02.186 -> 2.02.188
 		dropbear 2019.78 -> 2022.83
 		libuuid (util-linux ) 2.35.1 -> 2.37
