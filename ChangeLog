@@ -1,8 +1,6 @@
 For details check git history.
 
 devel branch:
-	- Do not wait forever for DHCP, continue without network if there's no
-	  response from DHCP server (#58).
 	- Use install instead of cp to make sure the static binaries are
 	  executable, fixes potential kernel panic on /init start failure.
 	- Replace chroot with bwrap (bubblewrap) - full support for building as

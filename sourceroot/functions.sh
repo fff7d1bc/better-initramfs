@@ -379,12 +379,8 @@ SetupNetwork() {
 
 	if [ "${binit_net_addr}" =  'dhcp' ]; then
 		einfo "Using DHCP on ${binit_net_if} ..."
-		if udhcpc -i "${binit_net_if}" -s /bin/dhcp-query -q -f -n
-			. /dhcp-query-result
-		else
-			ewarn "Failed to get network address via DHCP, continuing without network configured ..."
-			return
-		fi
+		run udhcpc -i "${binit_net_if}" -s /bin/dhcp-query -q -f
+		. /dhcp-query-result
 	fi
 
 	einfo "Setting ${binit_net_addr} on ${binit_net_if} ..."

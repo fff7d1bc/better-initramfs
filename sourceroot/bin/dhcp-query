@@ -3,11 +3,11 @@
 # A simple plug for dhcp for better-initramfs.
 # Pass thru what udhcpc pass to script into a file for inclusion.
   
+exec > /dhcp-query-result
 
 case "$1" in
     'renew'|'bound')
-        : >/dhcp-query-result
-        printf 'binit_net_addr=%s\n' "${ip}/${mask}" >>/dhcp-query-result
-        printf 'binit_net_gw=%s\n' "${router}" >>/dhcp-query-result
+        printf 'binit_net_addr=%s\n' "${ip}/${mask}"
+        printf 'binit_net_gw=%s\n' "${router}"
     ;;  
 esac
