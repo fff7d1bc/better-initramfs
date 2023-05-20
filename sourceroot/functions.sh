@@ -70,14 +70,26 @@ was_shell() {
 }
 
 run() {
-	if "$@"; then
-		echo "Executed: '$@'" >> /init.log
+	if [ "$1" = "--non-zero-ok" ]; then
+		non_zero_ok="true"
+		shift
 	else
+		non_zero_ok="false"
+	fi
+
+	"$@"
+	return_code="$?"
+
+	echo "Executed: '$@'" >> /init.log
+
+	if [ "${return_code}" != "0" ] && [ "${non_zero_ok}" != "true" ]; then
 		eerror "'$@' failed."
 		echo "Failed: '$@'" >> /init.log
 		echo "$@" >> /.ash_history
 		rescueshell
 	fi
+
+	return "${return_code}"
 }
 
 run_hooks() {

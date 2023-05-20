@@ -1,6 +1,7 @@
 For details check git history.
 
 devel branch:
+	- Support --non-zero-ok in run function.
 	- Make DHCP fallback into link local on failed attempt to get lease (#58),
 	- Use install instead of cp to make sure the static binaries are
 	  executable, fixes potential kernel panic on /init start failure.
