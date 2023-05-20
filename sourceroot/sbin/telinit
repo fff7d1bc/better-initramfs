@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Dumb wrapper around sysrq-trigger interface to support reboot and shutdown without real init system.
+
+if ! [ -f /proc/sysrq-trigger ]; then
+    echo 'Error: Missing /proc/sysrq-trigger interface'
+    exit 1
+fi
+
+case "$1" in
+    0)
+        echo 's' >/proc/sysrq-trigger
+        echo 'u' >/proc/sysrq-trigger
+        echo 'o' >/proc/sysrq-trigger
+    ;;
+    6)
+        echo 's' >/proc/sysrq-trigger
+        echo 'u' >/proc/sysrq-trigger
+        echo 'b' >/proc/sysrq-trigger
+    ;;
+    *|'')
+        exit 1
+    ;;
+esac
