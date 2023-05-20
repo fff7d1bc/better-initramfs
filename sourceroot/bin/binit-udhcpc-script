@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# A simple plug for dhcp for better-initramfs.
+# Pass thru what udhcpc pass to script into a file for inclusion.
+  
+results="/binit-dhcp-results"
+
+case "$1" in
+    'renew'|'bound')
+        : > "${results}"
+        printf 'binit_net_addr=%s\n' "${ip}/${mask}" >>"${results}"
+        printf 'binit_net_gw=%s\n' "${router}" >>"${results}"
+    ;;  
+esac

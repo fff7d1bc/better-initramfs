@@ -1,0 +1,12 @@
+#!/bin/sh
+
+results="/binit-dhcp-results"
+
+case "$1" in
+    'config')
+        : > "${results}"
+        printf 'binit_net_addr=%s\n' "${ip}/16" >>"${results}"
+        printf 'binit_net_gw=\n' >>"${results}"
+        printf 'binit_net_scope=local\n' >>"${results}"
+    ;;  
+esac

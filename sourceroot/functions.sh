@@ -377,14 +377,22 @@ SetupNetwork() {
 	einfo "Bringing up ${binit_net_if} interface ..."
 	run ip link set up dev "${binit_net_if}"
 
-	if [ "${binit_net_addr}" =  'dhcp' ]; then
+	if [ "${binit_net_addr}" = 'dhcp' ]; then
 		einfo "Using DHCP on ${binit_net_if} ..."
-		run udhcpc -i "${binit_net_if}" -s /bin/dhcp-query -q -f
-		. /dhcp-query-result
+		if ! run --non-zero-ok udhcpc -i "${binit_net_if}" -s /bin/binit-udhcpc-script -q -f -n; then
+			einfo "Falling back to link local on ${binit_net_if} ..."
+			run zcip -f -q "${binit_net_if}" /bin/binit-zcip-script
+		fi
+
+		. /binit-dhcp-results
 	fi
 
 	einfo "Setting ${binit_net_addr} on ${binit_net_if} ..."
-	run ip addr add "${binit_net_addr}" dev "${binit_net_if}"
+	if [ "${binit_net_scope}" = 'local' ]; then
+		run ip addr add scope link local "${binit_net_addr}" dev "${binit_net_if}" broadcast +
+	else
+		run ip addr add "${binit_net_addr}" dev "${binit_net_if}"
+	fi
 
 	if [ -n "${binit_net_routes}" ]; then
 		for route in ${binit_net_routes}; do
