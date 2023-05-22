@@ -160,6 +160,10 @@ process_commandline_options() {
 			ro|rw)
 				root_rw_ro=$i
 			;;
+			binit_net_ns\=*)
+				# support multiple binit_net_ns=.
+				binit_net_nss="${binit_net_nss} ${i#*=}"
+			;;
 			binit_net_route\=*)
 				# support multiple binit_net_route=.
 				binit_net_routes="${binit_net_routes} ${i#*=}"
@@ -417,6 +421,16 @@ SetupNetwork() {
 		einfo "Setting default routing via '${binit_net_gw}' ..."
 		run ip route add default via "${binit_net_gw}" dev "${binit_net_if}"
 	fi
+
+	if [ -n "${binit_net_nss}" ]; then
+		einfo "Adding nameservers: ${binit_net_nss} ..."
+		set -f
+		for i in ${binit_net_nss}; do
+			printf 'nameserver %s\n' "${i}" >> /etc/resolv.conf
+		done
+		set +f
+	fi
+
 }
 
 setup_sshd() {

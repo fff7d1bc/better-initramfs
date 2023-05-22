@@ -74,6 +74,8 @@ binit_net_route=<addr/cidr>
   Optional static on-link route(s) to add (can be given multiple times).
 binit_net_gw=<addr>
   Optional gateway config, if you want to connect via WAN. If ``binit_net_addr`` is set to ``dhcp``, it will be configured automatically.
+binit_net_ns=<addr>
+  Optional dns servers. (can be given multiple times for multiple dns servers). If ``binit_net_addr`` is set to ``dhcp``, it will be configured automatically.
 rw
   Mount rootfs in read-write. Default: read-only.
 mdev
