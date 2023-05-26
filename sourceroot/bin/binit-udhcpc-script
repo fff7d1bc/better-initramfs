@@ -10,5 +10,6 @@ case "$1" in
         : > "${results}"
         printf 'binit_net_addr=%s\n' "${ip}/${mask}" >>"${results}"
         printf 'binit_net_gw=%s\n' "${router}" >>"${results}"
+        printf 'binit_net_nss=%s\n' "${dns}" >>"${results}"
     ;;  
 esac
